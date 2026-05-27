@@ -1,0 +1,243 @@
+"use client";
+import Link from 'next/link';
+import { useState } from 'react';
+
+export default function AgentesPage() {
+  const [activeChat, setActiveChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [inputMsg, setInputMsg] = useState('');
+
+  const agents = [
+    {
+      id: "vitalis",
+      name: "Dr. Vitalis",
+      role: "Agente Médico de Viajes",
+      color: "#00d4ff",
+      img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      skills: ["Vacunación Global", "Emergencias", "Seguros Médicos"],
+      desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones de salud locales y los mejores hospitales cercanos a tu hotel.",
+      isPrivate: false,
+      greeting: "¡Hola! Qué gusto saludarte. Soy el Dr. Vitalis. ¿Ya tienes pensado a dónde vas a viajar? Cuéntame y te ayudo a revisar qué vacunas o precauciones médicas necesitas para que viajes con total tranquilidad."
+    },
+    {
+      id: "nicolas",
+      name: "Nicolás",
+      role: "Asistente de Compras",
+      color: "#ff9900",
+      img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
+      desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino. Garantiza que siempre compres al precio más bajo.",
+      isPrivate: false,
+      greeting: "¡Hola, hola! Soy Nicolás 🛒. ¿Qué andamos buscando hoy? ¿Una buena maleta que aguante todo, un adaptador o ropita térmica? Dime a dónde vas y te busco las mejores opciones y precios."
+    },
+    {
+      id: "altamar",
+      name: "Capitán Altamar",
+      role: "Especialista en Cruceros",
+      color: "#ffd700",
+      img: "https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
+      desc: "Tiene acceso a la base de datos maestra de las navieras. Te avisa antes que nadie de nuevas aperturas de cruceros y te consigue mejoras gratuitas de cabina.",
+      isPrivate: true
+    },
+    {
+      id: "cyberguard",
+      name: "CyberGuard",
+      role: "Oficial de Ciberseguridad",
+      color: "#ff0055",
+      img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      skills: ["Anti-Phishing", "Pagos Encriptados", "Auditoría de Enlaces"],
+      desc: "Tu guardaespaldas digital. Bloquea fraudes, te alerta si recibes correos falsos a nombre de agencias y garantiza que tus transacciones con tarjeta sean 100% blindadas.",
+      isPrivate: true
+    }
+  ];
+
+  const speak = (text) => {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-CO';
+    const voices = window.speechSynthesis.getVoices();
+    
+    let selectedVoice;
+
+    if (activeChat?.id === 'vitalis' || activeChat?.id === 'nicolas') {
+      // Voces masculinas
+      selectedVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Alvaro') || v.name.includes('Pablo') || v.name.includes('Raul') || v.name.includes('Male')));
+      // Si no hay voz masculina obvia, elegir cualquier voz en español que NO sea abiertamente femenina
+      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es') && !v.name.includes('Sabina') && !v.name.includes('Salome') && !v.name.includes('Helena') && !v.name.includes('Laura'));
+      // Último recurso: cualquiera en español
+      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es')); 
+    } else {
+      // 1. Prioridad: Voz femenina de Colombia (Salome en Windows, o Google es-CO)
+      selectedVoice = voices.find(v => v.lang === 'es-CO' && (v.name.includes('Salome') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Female')));
+      if (!selectedVoice) selectedVoice = voices.find(v => v.lang === 'es-CO');
+      // 2. Respaldo: Voz femenina de México o US
+      if (!selectedVoice) selectedVoice = voices.find(v => (v.lang === 'es-MX' || v.lang === 'es-US') && (v.name.includes('Sabina') || v.name.includes('Natural') || v.name.includes('Google')));
+      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es'));
+    }
+    
+    if (selectedVoice) utterance.voice = selectedVoice;
+    utterance.rate = 0.95; // Un poco más lento para sonar natural
+    // Si es hombre, bajamos drásticamente el tono (pitch) para que suene más grave (0.4 a 0.7)
+    utterance.pitch = (activeChat?.id === 'vitalis' || activeChat?.id === 'nicolas') ? 0.6 : 1.1; 
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleConnect = (agent) => {
+    if (agent.isPrivate) return;
+    setActiveChat(agent);
+    setMessages([{ text: agent.greeting, sender: 'ai' }]);
+    setTimeout(() => speak(agent.greeting), 300);
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!inputMsg.trim()) return;
+
+    // Add user message
+    const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
+    setMessages(newMessages);
+    setInputMsg('');
+
+    // Simulate AI response based on agent
+    setTimeout(() => {
+      let reply = "Dame un segundito que lo reviso...";
+      if (activeChat.id === 'vitalis') {
+        reply = "¡Perfecto! Ya revisé los datos más recientes. Para esa zona, lo mejor es llevar repelente fuerte y estar al día con la vacuna de la Fiebre Amarilla. También te sugiero un buen seguro médico por si acaso. ¿Quieres que te pase unos links recomendados?";
+      } else if (activeChat.id === 'nicolas') {
+        reply = "¡Excelente elección! Acabo de hacer una búsqueda rápida y hay unas mochilas antirrobo súper en tendencia hoy con buen descuento. ¿Te paso el link para que las veas?";
+      }
+      setMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      speak(reply);
+    }, 1500);
+  };
+
+  return (
+    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px', position: 'relative' }} className="container">
+      <div style={{ textAlign: 'center', marginBottom: '70px' }}>
+        <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
+          El Escuadrón <span className="text-gradient">IdarThur IA</span>
+        </h1>
+        <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
+          No estás solo. Detrás de cada reserva, un equipo de especialistas de Inteligencia Artificial audita, protege y optimiza cada detalle de tu viaje. Conoce a tu equipo de élite.
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
+        {agents.map(agent => (
+          <div key={agent.id} className="glass" style={{ borderRadius: '25px', overflow: 'hidden', border: `1px solid ${agent.color}40`, transition: 'transform 0.4s, box-shadow 0.4s' }}
+               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = `0 15px 40px ${agent.color}30`; }}
+               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+            
+            <div style={{ height: '250px', position: 'relative' }}>
+              <img src={agent.img} alt={agent.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%', background: 'linear-gradient(to top, rgba(10,15,25,1), transparent)' }}></div>
+              <h2 style={{ position: 'absolute', bottom: '15px', left: '20px', fontSize: '2rem', fontWeight: 'bold', color: 'white', textShadow: '0 2px 5px rgba(0,0,0,0.8)' }}>
+                {agent.name}
+              </h2>
+            </div>
+            
+            <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', height: 'calc(100% - 250px)' }}>
+              <h4 style={{ color: agent.color, fontSize: '1.1rem', marginBottom: '15px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                {agent.role}
+              </h4>
+              <p style={{ color: '#a0aab5', fontSize: '1rem', lineHeight: '1.6', marginBottom: '25px' }}>
+                {agent.desc}
+              </p>
+              
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: 'auto', marginBottom: '20px' }}>
+                {agent.skills.map((skill, i) => (
+                  <span key={i} style={{ padding: '6px 12px', background: `${agent.color}15`, border: `1px solid ${agent.color}40`, borderRadius: '15px', fontSize: '0.85rem', color: 'white' }}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+
+              {/* Chat Connect Button */}
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px', textAlign: 'center' }}>
+                 <button 
+                   onClick={() => handleConnect(agent)}
+                   style={{ 
+                     width: '100%', padding: '12px', borderRadius: '15px', 
+                     background: agent.isPrivate ? `${agent.color}20` : `${agent.color}30`, 
+                     border: `1px solid ${agent.color}`, color: agent.isPrivate ? agent.color : '#fff', fontWeight: 'bold', fontSize: '1rem', 
+                     cursor: agent.isPrivate ? 'not-allowed' : 'pointer', opacity: agent.isPrivate ? '0.7' : '1',
+                     transition: 'background 0.3s'
+                   }}
+                   onMouseEnter={e => { if(!agent.isPrivate) e.currentTarget.style.background = agent.color }}
+                   onMouseLeave={e => { if(!agent.isPrivate) e.currentTarget.style.background = `${agent.color}30` }}
+                 >
+                   {agent.isPrivate ? '🔒 Acceso Restringido (Admin)' : '💬 Iniciar Diagnóstico'}
+                 </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: '80px', padding: '40px', background: 'rgba(255,0,85,0.05)', borderRadius: '20px', border: '1px dashed #ff005550' }}>
+         <h3 style={{ fontSize: '1.8rem', color: 'white', marginBottom: '15px' }}>¿Intento de Fraude?</h3>
+         <p style={{ color: '#a0aab5', maxWidth: '600px', margin: '0 auto 25px' }}>
+           Si recibiste un correo sospechoso pidiendo pagos a nombre de IdarThur, envíalo a nuestro equipo inmediatamente. CyberGuard auditará el enlace y bloqueará al atacante.
+         </p>
+         <button className="btn-primary" style={{ background: 'linear-gradient(45deg, #ff0055, #cc0044)', border: 'none', padding: '12px 30px', borderRadius: '20px', fontWeight: 'bold' }}>
+           Reportar con CyberGuard
+         </button>
+      </div>
+
+      {/* Chat Modal Simulator */}
+      {activeChat && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
+          <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid ${activeChat.color}`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px ${activeChat.color}30` }}>
+            
+            {/* Chat Header */}
+            <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
+              <img src={activeChat.img} alt={activeChat.name} style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${activeChat.color}` }} />
+              <div style={{ flexGrow: 1 }}>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>{activeChat.name}</h3>
+                <span style={{ color: activeChat.color, fontSize: '0.85rem' }}>{activeChat.role}</span>
+              </div>
+              <button onClick={() => setActiveChat(null)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                ×
+              </button>
+            </div>
+
+            {/* Chat Body */}
+            <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {messages.map((msg, i) => (
+                <div key={i} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%' }}>
+                  <div style={{ 
+                    background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', 
+                    color: 'white', padding: '12px 18px', borderRadius: '20px', 
+                    borderBottomRightRadius: msg.sender === 'user' ? '5px' : '20px',
+                    borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
+                    lineHeight: '1.5', fontSize: '0.95rem'
+                  }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Input */}
+            <form onSubmit={handleSendMessage} style={{ padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '10px' }}>
+              <input 
+                type="text" 
+                value={inputMsg}
+                onChange={e => setInputMsg(e.target.value)}
+                placeholder={`Escribe a ${activeChat.name}...`} 
+                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
+              />
+              <button type="submit" style={{ background: activeChat.color, border: 'none', borderRadius: '15px', padding: '0 20px', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}>
+                Enviar
+              </button>
+            </form>
+
+          </div>
+        </div>
+      )}
+
+    </main>
+  );
+}
