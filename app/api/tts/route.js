@@ -1,42 +1,41 @@
 import { NextResponse } from 'next/server';
-import { EdgeTTS } from 'node-edge-tts';
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import { Communicate } from 'edge-tts-universal';
+
+export const runtime = 'edge'; // Obliga a Next.js a compilar para Cloudflare
 
 export async function POST(req) {
   try {
     const { text, agentId } = await req.json();
     
     // Configuración por defecto (Candy)
-    let voiceId = 'es-CO-SalomeNeural'; // Voz colombiana ultra-realista
+    let voiceId = 'es-CO-SalomeNeural'; 
 
     // Personalidad de voces según el agente
     if (agentId === 'nicolas') {
-      voiceId = 'es-MX-JorgeNeural'; // Voz de hombre muy grave y masculina (México)
+      voiceId = 'es-MX-JorgeNeural'; 
     } else if (agentId === 'vitalis') {
-      voiceId = 'es-MX-DaliaNeural'; // Voz de doctora formal (México)
+      voiceId = 'es-MX-DaliaNeural'; 
     }
 
-    const tts = new EdgeTTS({
-        voice: voiceId,
-        lang: 'es-ES',
-        outputFormat: 'audio-24khz-48kbitrate-mono-mp3'
-    });
+    // Usamos el cliente universal que funciona en memoria sin disco duro
+    const communicate = new Communicate(text, voiceId);
+    let audioChunks = [];
+    
+    for await (const chunk of communicate.stream()) {
+      if (chunk.type === 'audio') {
+        audioChunks.push(chunk.data);
+      }
+    }
 
-    // Creamos un archivo temporal para guardar el audio
-    const tmpFilePath = path.join(os.tmpdir(), `tts-${Date.now()}-${Math.random().toString(36).substring(7)}.mp3`);
-    
-    // Generamos la voz con la IA de Microsoft Edge
-    await tts.ttsPromise(text, tmpFilePath);
-    
-    // Leemos el archivo y lo convertimos a datos
-    const audioBuffer = await fs.promises.readFile(tmpFilePath);
-    
-    // Borramos el archivo temporal para no llenar el disco
-    await fs.promises.unlink(tmpFilePath).catch(console.error);
+    // Juntamos los pedazos de audio en un solo buffer
+    const totalLength = audioChunks.reduce((acc, val) => acc + val.length, 0);
+    const audioBuffer = new Uint8Array(totalLength);
+    let offset = 0;
+    for (let chunk of audioChunks) {
+      audioBuffer.set(chunk, offset);
+      offset += chunk.length;
+    }
 
-    // Le entregamos el audio binario a la página web
     return new NextResponse(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
@@ -44,7 +43,7 @@ export async function POST(req) {
       },
     });
   } catch (error) {
-    console.error('Error TTS Edge:', error);
-    return NextResponse.json({ error: 'Fallo al generar el audio' }, { status: 500 });
+    console.error('Error TTS Edge Universal:', error);
+    return NextResponse.json({ error: 'Fallo al generar el audio en memoria' }, { status: 500 });
   }
 }
