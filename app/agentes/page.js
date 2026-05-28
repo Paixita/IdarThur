@@ -10,14 +10,14 @@ export default function AgentesPage() {
   const agents = [
     {
       id: "vitalis",
-      name: "Dr. Vitalis",
+      name: "Dra. Vitalis",
       role: "Agente Médico de Viajes",
       color: "#00d4ff",
-      img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       skills: ["Vacunación Global", "Emergencias", "Seguros Médicos"],
       desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones de salud locales y los mejores hospitales cercanos a tu hotel.",
       isPrivate: false,
-      greeting: "¡Hola! Qué gusto saludarte. Soy el Dr. Vitalis. ¿Ya tienes pensado a dónde vas a viajar? Cuéntame y te ayudo a revisar qué vacunas o precauciones médicas necesitas para que viajes con total tranquilidad."
+      greeting: "¡Hola! Qué gusto saludarte. Soy la Dra. Vitalis. ¿Ya tienes pensado a dónde vas a viajar? Cuéntame y te ayudo a revisar qué vacunas o precauciones médicas necesitas para que viajes con total tranquilidad."
     },
     {
       id: "nicolas",
@@ -28,7 +28,7 @@ export default function AgentesPage() {
       skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
       desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino. Garantiza que siempre compres al precio más bajo.",
       isPrivate: false,
-      greeting: "¡Hola, hola! Soy Nicolás 🛒. ¿Qué andamos buscando hoy? ¿Una buena maleta que aguante todo, un adaptador o ropita térmica? Dime a dónde vas y te busco las mejores opciones y precios."
+      greeting: "¡Hola, hola! Soy Nicolás. ¿Qué andamos buscando hoy? ¿Una buena maleta que aguante todo, un adaptador o ropita térmica? Dime a dónde vas y te busco las mejores opciones y precios."
     },
     {
       id: "altamar",
@@ -52,43 +52,45 @@ export default function AgentesPage() {
     }
   ];
 
-  const speak = (text) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-CO';
-    const voices = window.speechSynthesis.getVoices();
-    
-    let selectedVoice;
-
-    if (activeChat?.id === 'vitalis' || activeChat?.id === 'nicolas') {
-      // Voces masculinas
-      selectedVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Alvaro') || v.name.includes('Pablo') || v.name.includes('Raul') || v.name.includes('Male')));
-      // Si no hay voz masculina obvia, elegir cualquier voz en español que NO sea abiertamente femenina
-      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es') && !v.name.includes('Sabina') && !v.name.includes('Salome') && !v.name.includes('Helena') && !v.name.includes('Laura'));
-      // Último recurso: cualquiera en español
-      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es')); 
-    } else {
-      // 1. Prioridad: Voz femenina de Colombia (Salome en Windows, o Google es-CO)
-      selectedVoice = voices.find(v => v.lang === 'es-CO' && (v.name.includes('Salome') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Female')));
-      if (!selectedVoice) selectedVoice = voices.find(v => v.lang === 'es-CO');
-      // 2. Respaldo: Voz femenina de México o US
-      if (!selectedVoice) selectedVoice = voices.find(v => (v.lang === 'es-MX' || v.lang === 'es-US') && (v.name.includes('Sabina') || v.name.includes('Natural') || v.name.includes('Google')));
-      if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es'));
+  const speak = async (text, overrideAgentId = null) => {
+    // Si hay un audio reproduciéndose, lo detenemos
+    if (window.currentAudio) {
+      window.currentAudio.pause();
+      window.currentAudio = null;
     }
     
-    if (selectedVoice) utterance.voice = selectedVoice;
-    utterance.rate = 0.95; // Un poco más lento para sonar natural
-    // Si es hombre, bajamos drásticamente el tono (pitch) para que suene más grave (0.4 a 0.7)
-    utterance.pitch = (activeChat?.id === 'vitalis' || activeChat?.id === 'nicolas') ? 0.6 : 1.1; 
-    window.speechSynthesis.speak(utterance);
+    // Limpiamos emojis del texto para evitar que el TTS haga pausas raras
+    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+
+    try {
+      // Llamamos a nuestro puente en el servidor
+      const targetAgentId = overrideAgentId || activeChat?.id;
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText, agentId: targetAgentId })
+      });
+      
+      if (!res.ok) throw new Error('Error al generar la voz');
+      
+      // Convertimos la respuesta binaria a un archivo de audio reproducible
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      
+      window.currentAudio = audio; // Lo guardamos globalmente por si queremos detenerlo
+      audio.play();
+      
+    } catch (error) {
+      console.error('Error al reproducir audio de VoiceRSS:', error);
+    }
   };
 
   const handleConnect = (agent) => {
     if (agent.isPrivate) return;
     setActiveChat(agent);
     setMessages([{ text: agent.greeting, sender: 'ai' }]);
-    setTimeout(() => speak(agent.greeting), 300);
+    setTimeout(() => speak(agent.greeting, agent.id), 300);
   };
 
   const handleSendMessage = (e) => {

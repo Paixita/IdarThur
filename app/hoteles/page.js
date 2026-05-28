@@ -9,22 +9,29 @@ export default function HotelesPage() {
   ]);
   const [inputMsg, setInputMsg] = useState('');
 
-  const speak = (text) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-CO';
-    const voices = window.speechSynthesis.getVoices();
-    
-    let selectedVoice = voices.find(v => v.lang === 'es-CO' && (v.name.includes('Salome') || v.name.includes('Natural') || v.name.includes('Google')));
-    if (!selectedVoice) selectedVoice = voices.find(v => v.lang === 'es-CO');
-    if (!selectedVoice) selectedVoice = voices.find(v => (v.lang === 'es-MX' || v.lang === 'es-US') && (v.name.includes('Sabina') || v.name.includes('Natural') || v.name.includes('Google')));
-    if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es'));
-    
-    if (selectedVoice) utterance.voice = selectedVoice;
-    utterance.rate = 0.95; // Un poco más lento
-    utterance.pitch = 1.1; 
-    window.speechSynthesis.speak(utterance);
+  const speak = async (text) => {
+    if (window.currentAudio) {
+      window.currentAudio.pause();
+      window.currentAudio = null;
+    }
+    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText, agentId: 'candy' })
+      });
+      if (!res.ok) throw new Error('Error al generar la voz');
+      
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      window.currentAudio = audio;
+      audio.play();
+    } catch (error) {
+      console.error('Error al reproducir audio de VoiceRSS:', error);
+    }
   };
 
   const handleOpenChat = () => {

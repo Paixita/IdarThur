@@ -20,51 +20,40 @@ export default function CandyAIFloating() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Asegurar que las voces carguen
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
+  // Ya no usamos speechSynthesis, usamos la API externa
+
+  const speak = async (text) => {
+    if (window.currentAudio) {
+      window.currentAudio.pause();
+      window.currentAudio = null;
+      setIsSpeaking(false);
     }
-  }, []);
+    
+    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
 
-  const speak = (text) => {
-    if (!('speechSynthesis' in window)) return;
-    
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    if (text.match(/[а-яА-Я]/)) utterance.lang = 'ru-RU';
-    else if (text.match(/[\u0600-\u06FF]/)) utterance.lang = 'ar-SA';
-    else if (text.match(/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/)) utterance.lang = 'ja-JP';
-    else if (text.match(/[a-zA-Z]/) && !text.match(/[áéíóúñ¿¡]/i) && text.includes("speak")) utterance.lang = 'en-US';
-    else utterance.lang = 'es-CO'; // Cambiado a Colombia por defecto
-
-    const voices = window.speechSynthesis.getVoices();
-    
-    // 1. Buscar voz femenina natural de Colombia (Edge/Chrome)
-    let selectedVoice = voices.find(v => v.lang === 'es-CO' && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Salome')));
-    
-    // 2. Si no hay natural de Colombia, cualquier voz de Colombia
-    if (!selectedVoice) selectedVoice = voices.find(v => v.lang === 'es-CO');
-
-    // 3. Si no hay Colombia, buscar voz latina natural (México o US Spanish)
-    if (!selectedVoice) selectedVoice = voices.find(v => (v.lang === 'es-MX' || v.lang === 'es-US') && (v.name.includes('Natural') || v.name.includes('Google')));
-    
-    // 4. Último recurso: la primera voz en español que no sea de España
-    if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith('es') && !v.lang.includes('ES'));
-
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText, agentId: 'candy' })
+      });
+      
+      if (!res.ok) throw new Error('Error al generar la voz');
+      
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      window.currentAudio = audio;
+      
+      audio.onplay = () => setIsSpeaking(true);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      
+      audio.play();
+    } catch (error) {
+      console.error('Error al reproducir audio de VoiceRSS:', error);
+      setIsSpeaking(false);
     }
-
-    utterance.rate = 1.0;
-    utterance.pitch = 1.15; // Un poco más agudo para que suene más a "Candy"
-    
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(utterance);
   };
 
   // Reacción de voz a cambios de ruta
@@ -80,10 +69,12 @@ export default function CandyAIFloating() {
   const toggleAudio = () => {
     const newState = !audioEnabled;
     setAudioEnabled(newState);
-    if (newState) {
-      speak("Audio activado. Te acompañaré con mi voz en cada sección que visites.");
-    } else {
-      window.speechSynthesis.cancel();
+    if (!newState) {
+      if (window.currentAudio) {
+        window.currentAudio.pause();
+        window.currentAudio = null;
+        setIsSpeaking(false);
+      }
     }
   };
 
