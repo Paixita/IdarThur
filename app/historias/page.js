@@ -1,21 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
+import { stories } from '../../data/historias';
 
 export default function HistoriasPage() {
-  const dataDir = path.join(process.cwd(), 'data', 'historias');
-  let stories = [];
-  
-  if (fs.existsSync(dataDir)) {
-    const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
-    for (const file of files) {
-      const filePath = path.join(dataDir, file);
-      const content = fs.readFileSync(filePath, 'utf8');
-      try {
-        stories.push(JSON.parse(content));
-      } catch(e) {}
-    }
-  }
 
   return (
     <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>

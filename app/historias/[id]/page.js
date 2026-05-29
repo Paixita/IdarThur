@@ -1,27 +1,17 @@
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
+import { stories } from '../../data/historias';
 
 export async function generateStaticParams() {
-  const dataDir = path.join(process.cwd(), 'data', 'historias');
-  if (!fs.existsSync(dataDir)) return [];
-  
-  const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
-  return files.map(file => ({
-    id: file.replace('.json', '')
+  return stories.map(story => ({
+    id: story.id
   }));
 }
 
 export default async function HistoriaDetalle({ params }) {
   const resolvedParams = await params;
   const { id } = resolvedParams;
-  const filePath = path.join(process.cwd(), 'data', 'historias', `${id}.json`);
   
-  let story = null;
-  if (fs.existsSync(filePath)) {
-    const content = fs.readFileSync(filePath, 'utf8');
-    story = JSON.parse(content);
-  }
+  const story = stories.find(s => s.id === id);
 
   if (!story) {
     return (
