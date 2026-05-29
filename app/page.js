@@ -24,34 +24,34 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px', textAlign: 'left' }}>
             
-            {/* Tarjeta 1 - Mascotas */}
+            {/* Tarjeta 1 - Chaqueta Hombre */}
             <div className="glass showcase-card" style={{ padding: '25px', borderRadius: '25px', position: 'relative', overflow: 'hidden' }}>
-              <img src="/tienda/mascotas_amigos.jpg" alt="Viajar con mascotas" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
-              <div style={{ position: 'absolute', top: '35px', right: '35px', background: '#ff0055', color: 'white', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>🔥 Top Ventas</div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Kit de Viaje para Mascotas</h3>
-              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Viaja seguro y cómodo con tu perro o gato. Incluye dispensadores portátiles y cinturones de seguridad.</p>
+              <img src="/tienda/chaqueta_hombre.jpg" alt="Chaqueta Cotrasen Hombre" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
+              <div style={{ position: 'absolute', top: '35px', right: '35px', background: '#ff9900', color: '#0b1120', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>🔥 Top Ventas</div>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Chaqueta Cotrasen Térmica</h3>
+              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Diseño impermeable de lona de pato con forro sherpa. La protección definitiva para aventuras bajo cero.</p>
               <Link href="/tienda" className="btn-primary" style={{ display: 'block', textAlign: 'center', padding: '12px', borderRadius: '15px', fontWeight: 'bold' }}>
                 Ver en la Tienda →
               </Link>
             </div>
 
-            {/* Tarjeta 2 - Equipaje */}
+            {/* Tarjeta 2 - Chaqueta Mujer */}
             <div className="glass showcase-card" style={{ padding: '25px', borderRadius: '25px', position: 'relative', overflow: 'hidden' }}>
-              <img src="/tienda/equipaje_premium.jpg" alt="Equipaje Premium" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
+              <img src="/tienda/chaqueta_mujer.jpg" alt="Abrigo MAGCOMSEN Mujer" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
               <div style={{ position: 'absolute', top: '35px', right: '35px', background: '#00d4ff', color: '#0b1120', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>⭐ Premium</div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Equipaje TSA Ultraligero</h3>
-              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Maleta rígida de policarbonato con candado inteligente y ruedas 360°. Irrompible y elegante.</p>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Abrigo MAGCOMSEN 3 en 1</h3>
+              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Chaqueta de esquí impermeable y cortavientos. Elegancia y calor extremo garantizado en un solo diseño.</p>
               <Link href="/tienda" className="btn-primary" style={{ display: 'block', textAlign: 'center', padding: '12px', borderRadius: '15px', fontWeight: 'bold' }}>
                 Ver en la Tienda →
               </Link>
             </div>
 
-            {/* Tarjeta 3 - Ropa */}
+            {/* Tarjeta 3 - Camara Blink */}
             <div className="glass showcase-card" style={{ padding: '25px', borderRadius: '25px', position: 'relative', overflow: 'hidden' }}>
-              <img src="/tienda/chaqueta_viaje.jpg" alt="Chaqueta de Viaje" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
-              <div style={{ position: 'absolute', top: '35px', right: '35px', background: '#ff9900', color: '#0b1120', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>🚀 Esencial</div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Chaqueta Táctica Térmica</h3>
-              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Bolsillos ocultos para pasaporte, tecnología impermeable y retención de calor para cualquier clima.</p>
+              <img src="/tienda/camara_seguridad.jpg" alt="Cámara Blink Mini" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '15px', marginBottom: '20px' }} />
+              <div style={{ position: 'absolute', top: '35px', right: '35px', background: '#ff0055', color: 'white', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>🚀 Esencial</div>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '10px' }}>Cámara Blink Mini 2K+</h3>
+              <p style={{ color: '#a0aab5', marginBottom: '20px', fontSize: '0.95rem' }}>Vigila tu hogar y a tus mascotas en resolución 2K desde tu celular mientras disfrutas tu viaje tranquilo.</p>
               <Link href="/tienda" className="btn-primary" style={{ display: 'block', textAlign: 'center', padding: '12px', borderRadius: '15px', fontWeight: 'bold' }}>
                 Ver en la Tienda →
               </Link>
