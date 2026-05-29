@@ -12,8 +12,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function HistoriaDetalle({ params }) {
-  const { id } = params;
+export default async function HistoriaDetalle({ params }) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   const filePath = path.join(process.cwd(), 'data', 'historias', `${id}.json`);
   
   let story = null;
