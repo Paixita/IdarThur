@@ -9,9 +9,14 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "IdarThur | Plataforma de Turismo Premium impulsada por IA",
-  description: "Descubre el mundo con IdarThur. Reserva vuelos baratos con WayAway, hoteles exclusivos con Booking y equípate con Amazon. Tu agente de viajes virtual Candy AI te acompaña.",
-  keywords: "viajes, vuelos baratos, cruceros, hoteles, turismo, IA, wayaway, booking, amazon travel, IdarThur",
+  title: "IdarThur - Inteligencia Artificial para Viajeros",
+  description: "Descubre IdarThur: Tu agencia de viajes potenciada por Inteligencia Artificial. Encuentra los mejores accesorios de viaje en Amazon, historias reales y tips de nómadas digitales.",
+  keywords: "viajes, accesorios de viaje, amazon afiliados, equipaje inteligente, historias de viajes, nómada digital, viajar con mascotas",
+  openGraph: {
+    title: "IdarThur - El futuro de los viajes",
+    description: "La tienda y comunidad de viajeros más avanzada del mundo, impulsada por IA.",
+    type: "website"
+  }
 };
 
 import Footer from "@/components/Footer";
