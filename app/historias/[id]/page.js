@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { stories } from '../../data/historias';
+import { stories } from '../../../data/historias';
 
 export async function generateStaticParams() {
   return stories.map(story => ({
