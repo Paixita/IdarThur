@@ -36,59 +36,46 @@ export default function LoginModal({ isOpen, onClose }) {
 
         <div style={{ textAlign: 'center', marginBottom: '35px' }}>
           <h2 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>
-            Acceso <span className="text-gradient">IdarThur</span>
+            Únete a <span className="text-gradient">IdarThur</span>
           </h2>
-          <p style={{ color: '#a0aab5', fontSize: '0.95rem' }}>Tu cabina de mando te espera.</p>
-        </div>
-
-        <form onSubmit={(e) => { e.preventDefault(); alert("Conexión con Base de Datos en progreso..."); onClose(); }}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: '#d1d5db', fontSize: '0.9rem', fontWeight: '500' }}>Correo Electrónico</label>
-            <input type="email" required placeholder="viajero@ejemplo.com" style={{
-              width: '100%', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(0,0,0,0.4)', color: 'white', outline: 'none', fontSize: '1rem',
-              transition: 'all 0.3s', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
-            }} onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 15px rgba(69,243,255,0.2) inset'; }} onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'inset 0 2px 10px rgba(0,0,0,0.5)'; }} />
-          </div>
-
-          <div style={{ marginBottom: '30px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: '#d1d5db', fontSize: '0.9rem', fontWeight: '500' }}>Contraseña</label>
-            <input type="password" required placeholder="••••••••" style={{
-              width: '100%', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(0,0,0,0.4)', color: 'white', outline: 'none', fontSize: '1rem',
-              transition: 'all 0.3s', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
-            }} onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 15px rgba(69,243,255,0.2) inset'; }} onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'inset 0 2px 10px rgba(0,0,0,0.5)'; }} />
-          </div>
-
-          <button type="submit" className="btn-primary" style={{
-            width: '100%', padding: '15px', borderRadius: '15px', fontSize: '1.1rem', fontWeight: 'bold',
-            marginBottom: '20px', letterSpacing: '1px'
-          }}>
-            Ingresar
-          </button>
-        </form>
-
-        <div style={{ display: 'flex', alignItems: 'center', margin: '25px 0' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
-          <span style={{ margin: '0 15px', color: '#6a7b8c', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>o ingresa con</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <p style={{ color: '#a0aab5', fontSize: '0.95rem' }}>Desbloquea ofertas secretas y el poder de nuestros Agentes IA.</p>
         </div>
 
         <button 
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => alert("Autenticación con Google próximamente")}
+          onClick={() => alert("Autenticación con Google en desarrollo...")}
           style={{
             width: '100%', padding: '15px', borderRadius: '15px', background: isHovered ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.3)',
-            border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '1rem', cursor: 'pointer',
-            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', transition: 'all 0.3s'
+            border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '1.05rem', cursor: 'pointer',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', transition: 'all 0.3s',
+            marginBottom: '20px'
           }}>
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '22px', height: '22px' }} />
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '24px', height: '24px' }} />
           Continuar con Google
         </button>
 
-        <p style={{ textAlign: 'center', marginTop: '30px', color: '#a0aab5', fontSize: '0.9rem' }}>
-          ¿Aún no tienes cuenta? <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold', marginLeft: '5px' }}>Regístrate</a>
+        <div style={{ display: 'flex', alignItems: 'center', margin: '25px 0' }}>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+          <span style={{ margin: '0 15px', color: '#6a7b8c', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>o</span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+        </div>
+
+        <button 
+          onClick={() => alert("Opción de email en desarrollo...")}
+          style={{
+            width: '100%', padding: '15px', borderRadius: '15px', background: 'transparent',
+            border: '1px solid rgba(69, 243, 255, 0.4)', color: 'var(--primary)', fontSize: '1.05rem', cursor: 'pointer',
+            transition: 'all 0.3s', fontWeight: '500'
+          }}
+          onMouseEnter={e => { e.target.style.background = 'rgba(69, 243, 255, 0.1)' }}
+          onMouseLeave={e => { e.target.style.background = 'transparent' }}
+        >
+          Continuar con Email
+        </button>
+
+        <p style={{ textAlign: 'center', marginTop: '30px', color: '#a0aab5', fontSize: '0.8rem', opacity: 0.7 }}>
+          Al continuar, aceptas nuestros términos de servicio y políticas de privacidad para la personalización de tu experiencia.
         </p>
       </div>
 

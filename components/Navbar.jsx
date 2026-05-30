@@ -23,6 +23,7 @@ export default function Navbar() {
           <Link href="/hoteles" style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Hoteles</Link>
           <Link href="/eventos" style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Eventos</Link>
           <Link href="/tienda" style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Tienda</Link>
+          <Link href="/autos" style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Alquiler de Autos</Link>
           <Link href="/historias" style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Historias</Link>
           <Link href="/agentes" style={{ transition: 'color 0.3s', textDecoration: 'none', color: '#45f3ff', fontWeight: 'bold', textShadow: '0 0 10px rgba(69,243,255,0.5)' }}>Escuadrón IA</Link>
         </div>
