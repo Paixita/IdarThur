@@ -1,6 +1,8 @@
 import { groq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
 
+export const runtime = 'edge';
+
 export async function POST(request) {
   try {
     const { message } = await request.json();
