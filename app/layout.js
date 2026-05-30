@@ -21,11 +21,13 @@ export const metadata = {
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className={`${outfit.variable}`} suppressHydrationWarning>
+        <NotificationPrompt />
         <Navbar />
         {children}
         <Footer />
