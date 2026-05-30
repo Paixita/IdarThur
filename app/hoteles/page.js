@@ -157,17 +157,17 @@ export default function HotelesPage() {
           <p style={{ color: '#a0aab5', fontSize: '1.1rem' }}>Disfruta del máximo confort, playas de arena blanca y rascacielos imponentes.</p>
         </div>
 
-        {/* Galería Masonry */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px', height: '500px', marginBottom: '40px' }}>
-          <div style={{ borderRadius: '20px', overflow: 'hidden', height: '100%' }}>
-            <img src="/hoteles/hotel_model_balcony_1780184051146.png" alt="Balcón Resort" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {/* Galería Masonry (Ajustada para no superponerse) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px', marginBottom: '60px' }}>
+          <div style={{ borderRadius: '20px', overflow: 'hidden', aspectRatio: '16/10' }}>
+            <img src="/hoteles/hotel_model_balcony_1780184051146.png" alt="Balcón Resort" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </div>
-          <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '15px', height: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '20px' }}>
             <div style={{ borderRadius: '20px', overflow: 'hidden' }}>
-              <img src="/hoteles/hotel_model_pool_1780184068485.png" alt="Piscina Infinita" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/hoteles/hotel_model_pool_1780184068485.png" alt="Piscina Infinita" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div style={{ borderRadius: '20px', overflow: 'hidden' }}>
-              <img src="/hoteles/hotel_lobby_model_1780184080152.png" alt="Lobby Lujo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/hoteles/hotel_lobby_model_1780184080152.png" alt="Lobby Lujo" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           </div>
         </div>
