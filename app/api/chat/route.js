@@ -8,7 +8,9 @@ export async function POST(request) {
     const { message } = await request.json();
 
     // Verificamos si el usuario ya configuró su llave de Groq
-    if (!process.env.GROQ_API_KEY) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      console.log("No se encontró GROQ_API_KEY en el entorno.");
       return Response.json({ 
         reply: "Hola. El sistema central ha sido actualizado, pero mi cerebro está desconectado. Necesitas agregar tu GROQ_API_KEY en el archivo .env.local para que pueda hablar contigo." 
       });
