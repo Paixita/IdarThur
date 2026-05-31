@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import { playPremiumAudio } from '@/utils/playTts';
 
 export default function AgentesPage() {
   const [activeChat, setActiveChat] = useState(null);
@@ -52,37 +53,45 @@ export default function AgentesPage() {
     }
   ];
 
-  const speak = (text, overrideAgentId = null) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    
+  const speak = async (text, overrideAgentId = null) => {
+    if (typeof window === 'undefined') return;
+    if (window.currentAudio) {
+      window.stopAudioFlag = true;
+      window.currentAudio.pause();
+      window.currentAudio = null;
+    }
     window.speechSynthesis.cancel();
     
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
     const targetAgentId = overrideAgentId || activeChat?.id;
     
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'es-ES';
-    
-    const voices = window.speechSynthesis.getVoices();
-    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-    
-    if (spanishVoices.length > 0) {
-      const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
+    try {
+      await playPremiumAudio(cleanText, targetAgentId);
+    } catch (error) {
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'es-ES';
       
-      if (targetAgentId === 'nicolas') {
-        utterance.pitch = 0.9;
-        utterance.rate = 1.0;
-        const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
-        utterance.voice = maleVoice || spanishVoices[0];
-      } else {
-        utterance.pitch = 1.1;
-        utterance.rate = 1.05;
-        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-        utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
+      const voices = window.speechSynthesis.getVoices();
+      const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+      
+      if (spanishVoices.length > 0) {
+        const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
+        
+        if (targetAgentId === 'nicolas') {
+          utterance.pitch = 0.9;
+          utterance.rate = 1.0;
+          const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
+          utterance.voice = maleVoice || spanishVoices[0];
+        } else {
+          utterance.pitch = 1.1;
+          utterance.rate = 1.05;
+          const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
+          utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
+        }
       }
-    }
 
-    window.speechSynthesis.speak(utterance);
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const handleConnect = (agent) => {
@@ -95,6 +104,12 @@ export default function AgentesPage() {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!inputMsg.trim()) return;
+
+    if (typeof window !== 'undefined') {
+      window.stopAudioFlag = false;
+      const dummy = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
+      dummy.play().catch(()=>{});
+    }
 
     // Add user message
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
