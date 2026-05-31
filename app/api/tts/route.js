@@ -1,49 +1,48 @@
-import { NextResponse } from 'next/server';
-import { Communicate } from 'edge-tts-universal';
+export const runtime = 'edge';
 
-export const runtime = 'edge'; // Obliga a Next.js a compilar para Cloudflare
-
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const { text, agentId } = await req.json();
+    const { text, voiceId } = await request.json();
+    const apiKey = process.env.ELEVENLABS_API_KEY;
+
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "No API key" }), { status: 401 });
+    }
+
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'audio/mpeg',
+        'Content-Type': 'application/json',
+        'xi-api-key': apiKey
+      },
+      body: JSON.stringify({
+        text: text,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.75
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("ElevenLabs Error:", errorData);
+      return new Response(JSON.stringify({ error: "Fallo en ElevenLabs" }), { status: 500 });
+    }
+
+    const audioBuffer = await response.arrayBuffer();
     
-    // Configuración por defecto (Candy)
-    let voiceId = 'es-CO-SalomeNeural'; 
-
-    // Personalidad de voces según el agente
-    if (agentId === 'nicolas') {
-      voiceId = 'es-MX-JorgeNeural'; 
-    } else if (agentId === 'vitalis') {
-      voiceId = 'es-MX-DaliaNeural'; 
-    }
-
-    // Usamos el cliente universal que funciona en memoria sin disco duro
-    const communicate = new Communicate(text, voiceId);
-    let audioChunks = [];
-    
-    for await (const chunk of communicate.stream()) {
-      if (chunk.type === 'audio') {
-        audioChunks.push(chunk.data);
-      }
-    }
-
-    // Juntamos los pedazos de audio en un solo buffer
-    const totalLength = audioChunks.reduce((acc, val) => acc + val.length, 0);
-    const audioBuffer = new Uint8Array(totalLength);
-    let offset = 0;
-    for (let chunk of audioChunks) {
-      audioBuffer.set(chunk, offset);
-      offset += chunk.length;
-    }
-
-    return new NextResponse(audioBuffer, {
+    return new Response(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
-        'Cache-Control': 'no-store'
-      },
+        'Content-Length': audioBuffer.byteLength.toString(),
+      }
     });
+
   } catch (error) {
-    console.error('Error TTS Edge Universal:', error);
-    return NextResponse.json({ error: 'Fallo al generar el audio en memoria' }, { status: 500 });
+    console.error("TTS API Error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
   }
 }

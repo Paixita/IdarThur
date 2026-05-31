@@ -1,40 +1,39 @@
 export async function playPremiumAudio(text, agentId) {
-  // Voces súper realistas de TikTok
-  let voice = 'es_female_f6'; // Candy
-  if (agentId === 'nicolas') voice = 'es_mx_002'; // Nicolas
-  if (agentId === 'sophia') voice = 'es_female_f6';
+  // IDs de voces de ElevenLabs
+  // Candy -> Bella (Voz dulce y amable)
+  // Nicolas -> Adam (Voz masculina profesional)
+  // Vitalis -> Elli (Voz joven y clara)
+  
+  let voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella (Candy) por defecto
+  
+  if (agentId === 'nicolas') voiceId = 'pNInz6obpgDQGcFmaJgB'; // Adam
+  if (agentId === 'vitalis') voiceId = 'MF3mGyEYCl7XYWbV9V6O'; // Elli
+  if (agentId === 'sophia') voiceId = 'EXAVITQu4vr4xnSDxMaL';
 
-  // Dividir el texto por oraciones (límite de TikTok es aprox 300 caracteres)
-  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+  // Dividir el texto en fragmentos si es muy largo, aunque ElevenLabs maneja bien textos largos.
+  // Lo mandaremos entero para que tenga mejor entonación.
+  
+  const res = await fetch('/api/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, voiceId })
+  });
+  
+  if (!res.ok) throw new Error("Fallo la generación de voz ElevenLabs");
 
-  const playSentence = async (sentence) => {
-    if (!sentence.trim()) return;
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+
+  return new Promise((resolve, reject) => {
+    const audio = new Audio(url);
+    if (typeof window !== 'undefined') window.currentAudio = audio;
     
-    const res = await fetch('https://tiktok-tts.weilnet.workers.dev/api/generation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: sentence.trim(), voice })
-    });
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      resolve();
+    };
+    audio.onerror = reject;
     
-    const json = await res.json();
-    if (!json.success || !json.data) throw new Error("Fallo la generación de voz TikTok");
-
-    return new Promise((resolve, reject) => {
-      const audio = new Audio("data:audio/mpeg;base64," + json.data);
-      if (typeof window !== 'undefined') window.currentAudio = audio;
-      
-      audio.onended = resolve;
-      audio.onerror = reject;
-      
-      audio.play().catch(reject);
-    });
-  };
-
-  for (const sentence of sentences) {
-    if (window.stopAudioFlag) {
-      window.stopAudioFlag = false;
-      break;
-    }
-    await playSentence(sentence);
-  }
+    audio.play().catch(reject);
+  });
 }
