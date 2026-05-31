@@ -25,12 +25,21 @@ export async function playPremiumAudio(text, agentId) {
     const firstUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(firstSentence)}`;
     currentAudio = new Audio(firstUrl);
     
+    // Timeout de seguridad: si en 1.5 segundos no ha empezado a sonar, asumimos bloqueo por el navegador
+    const timeoutId = setTimeout(() => {
+      reject(new Error("Timeout: el navegador bloqueó el autoplay"));
+    }, 1500);
+
     currentAudio.onplay = () => {
+      clearTimeout(timeoutId);
       // Si la primera oración empieza a sonar con éxito, resolvemos la promesa para que el UI sepa que sí funcionó
       resolve(resultProxy);
     };
 
-    currentAudio.onerror = (e) => reject(new Error("Error cargando Google TTS"));
+    currentAudio.onerror = (e) => {
+      clearTimeout(timeoutId);
+      reject(new Error("Error cargando Google TTS"));
+    };
     
     currentAudio.onended = async () => {
       // Reproducir el resto de las oraciones
