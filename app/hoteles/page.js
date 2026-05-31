@@ -68,7 +68,13 @@ export default function HotelesPage() {
   };
   return (
     <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
+        {/* Background Image para animar en Luma */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
+          <img src="/hoteles/hotel_lobby_banner.png" alt="Lobby Hotel Lujo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.7) 0%, rgba(10,15,25,0.95) 100%)', zIndex: -1 }}></div>
+
         <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
           Alojamientos <span className="text-gradient">Premium</span>
         </h1>

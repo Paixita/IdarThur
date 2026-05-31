@@ -25,7 +25,7 @@ export default function AgentesPage() {
       name: "Nicolás",
       role: "Asistente de Compras",
       color: "#ff9900",
-      img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      img: "/agentes/nicolas.png",
       skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
       desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino. Garantiza que siempre compres al precio más bajo.",
       isPrivate: false,
@@ -36,7 +36,7 @@ export default function AgentesPage() {
       name: "Capitán Altamar",
       role: "Especialista en Cruceros",
       color: "#ffd700",
-      img: "https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      img: "/agentes/altamar.png",
       skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
       desc: "Tiene acceso a la base de datos maestra de las navieras. Te avisa antes que nadie de nuevas aperturas de cruceros y te consigue mejoras gratuitas de cabina.",
       isPrivate: true
@@ -46,7 +46,7 @@ export default function AgentesPage() {
       name: "CyberGuard",
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
-      img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      img: "/agentes/cyberguard.png",
       skills: ["Anti-Phishing", "Pagos Encriptados", "Auditoría de Enlaces"],
       desc: "Tu guardaespaldas digital. Bloquea fraudes, te alerta si recibes correos falsos a nombre de agencias y garantiza que tus transacciones con tarjeta sean 100% blindadas.",
       isPrivate: true

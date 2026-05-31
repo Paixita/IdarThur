@@ -27,7 +27,7 @@ export const stories = [
     "ano": "Próximamente",
     "categoria": "Romance",
     "narrativa": "<h2 style='text-align: center; margin-top: 40px;'>Nueva Historia en Camino...</h2><p style='text-align: center; color: #a0aab5;'>Nuestros agentes de Inteligencia Artificial están recopilando los datos para la próxima gran historia. Vuelve pronto.</p>",
-    "imagen": "https://images.unsplash.com/photo-1522881113591-b6a8ce4422e5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    "imagen": "/historias/romance_airport.png"
   },
   {
     "id": "gracioso-proximamente",
