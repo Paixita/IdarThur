@@ -20,40 +20,32 @@ export default function CandyAIFloating() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Ya no usamos speechSynthesis, usamos la API externa
-
-  const speak = async (text) => {
-    if (window.currentAudio) {
-      window.currentAudio.pause();
-      window.currentAudio = null;
-      setIsSpeaking(false);
-    }
+  const speak = (text) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel(); // Detener audio previo
+    setIsSpeaking(true);
     
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.05; // Un poco más dinámico
+    utterance.pitch = 1.1; // Tono más amigable/femenino
 
-    try {
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, agentId: 'candy' })
-      });
-      
-      if (!res.ok) throw new Error('Error al generar la voz');
-      
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      window.currentAudio = audio;
-      
-      audio.onplay = () => setIsSpeaking(true);
-      audio.onended = () => setIsSpeaking(false);
-      audio.onerror = () => setIsSpeaking(false);
-      
-      audio.play();
-    } catch (error) {
-      console.error('Error al reproducir audio de VoiceRSS:', error);
-      setIsSpeaking(false);
+    // Intentar buscar una voz en español
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+    if (spanishVoices.length > 0) {
+      // Buscar voz femenina preferiblemente
+      const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina') || v.name.includes('Monica') || v.name.includes('Paulina'));
+      utterance.voice = femaleVoice || spanishVoices[0];
     }
+
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
   };
 
   // Reacción de voz a cambios de ruta
@@ -69,12 +61,9 @@ export default function CandyAIFloating() {
   const toggleAudio = () => {
     const newState = !audioEnabled;
     setAudioEnabled(newState);
-    if (!newState) {
-      if (window.currentAudio) {
-        window.currentAudio.pause();
-        window.currentAudio = null;
-        setIsSpeaking(false);
-      }
+    if (!newState && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
     }
   };
 

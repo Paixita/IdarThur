@@ -9,29 +9,25 @@ export default function HotelesPage() {
   ]);
   const [inputMsg, setInputMsg] = useState('');
 
-  const speak = async (text) => {
-    if (window.currentAudio) {
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
+  const speak = (text) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.05;
+    utterance.pitch = 1.1;
 
-    try {
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, agentId: 'candy' })
-      });
-      if (!res.ok) throw new Error('Error al generar la voz');
-      
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      window.currentAudio = audio;
-      audio.play();
-    } catch (error) {
-      console.error('Error al reproducir audio de VoiceRSS:', error);
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+    if (spanishVoices.length > 0) {
+      const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina') || v.name.includes('Monica') || v.name.includes('Paulina'));
+      utterance.voice = femaleVoice || spanishVoices[0];
     }
+
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleOpenChat = () => {
