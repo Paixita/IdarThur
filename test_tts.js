@@ -1,20 +1,18 @@
 async function test() {
-  try {
-    const res = await fetch('https://idarthur.pages.dev/api/tts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: 'Hola', voiceId: 'EXAVITQu4vr4xnSDxMaL' })
-    });
-    console.log(res.status);
-    if (!res.ok) {
+  while(true) {
+    try {
+      const res = await fetch('https://idarthur.pages.dev/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: 'Hola', voiceId: 'EXAVITQu4vr4xnSDxMaL' })
+      });
       const text = await res.text();
-      console.log('Error text:', text);
-    } else {
-      const buff = await res.arrayBuffer();
-      console.log('Success, audio length:', buff.byteLength);
+      console.log(res.status, text);
+      if (text.includes("details")) break;
+    } catch(e) {
+      console.error(e);
     }
-  } catch(e) {
-    console.error(e);
+    await new Promise(r => setTimeout(r, 5000));
   }
 }
 test();
