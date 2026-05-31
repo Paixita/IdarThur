@@ -30,7 +30,10 @@ export default function HistoriasPage() {
                 </div>
                 
                 <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <span style={{ color: color, fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '10px' }}>Protagonistas: {story.personajes}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                    <span style={{ color: color, fontWeight: 'bold', fontSize: '0.9rem' }}>{story.personajes}</span>
+                    <span style={{ color: 'white', background: 'rgba(255,255,255,0.1)', padding: '2px 10px', borderRadius: '10px', fontSize: '0.8rem' }}>{story.categoria || 'Viajes'}</span>
+                  </div>
                   <h3 style={{ fontSize: '1.6rem', fontWeight: 'bold', marginBottom: '15px', lineHeight: '1.3' }}>{story.titulo}</h3>
                   <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
                     {story.subtitulo}
