@@ -52,38 +52,36 @@ export default function AgentesPage() {
     }
   ];
 
-  const speak = async (text, overrideAgentId = null) => {
-    // Si hay un audio reproduciéndose, lo detenemos
-    if (window.currentAudio) {
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
+  const speak = (text, overrideAgentId = null) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     
-    // Limpiamos emojis del texto para evitar que el TTS haga pausas raras
+    // Detener audio previo
+    window.speechSynthesis.cancel();
+    
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-
-    try {
-      // Llamamos a nuestro puente en el servidor
-      const targetAgentId = overrideAgentId || activeChat?.id;
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, agentId: targetAgentId })
-      });
-      
-      if (!res.ok) throw new Error('Error al generar la voz');
-      
-      // Convertimos la respuesta binaria a un archivo de audio reproducible
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      
-      window.currentAudio = audio; // Lo guardamos globalmente por si queremos detenerlo
-      audio.play();
-      
-    } catch (error) {
-      console.error('Error al reproducir audio de VoiceRSS:', error);
+    const targetAgentId = overrideAgentId || activeChat?.id;
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'es-ES';
+    
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+    
+    if (spanishVoices.length > 0) {
+      if (targetAgentId === 'nicolas') {
+        utterance.pitch = 0.9;
+        utterance.rate = 1.0;
+        const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
+        utterance.voice = maleVoice || spanishVoices[0];
+      } else {
+        utterance.pitch = 1.1;
+        utterance.rate = 1.05;
+        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina') || v.name.includes('Monica') || v.name.includes('Salome'));
+        utterance.voice = femaleVoice || spanishVoices[0];
+      }
     }
+
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleConnect = (agent) => {
