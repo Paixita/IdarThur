@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { playPremiumAudio } from "@/utils/playTts";
 
 export default function CandyAIFloating() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,38 +20,34 @@ export default function CandyAIFloating() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const speak = async (text) => {
-    if (window.currentAudio) {
-      window.currentAudio.pause();
-      window.currentAudio = null;
-      setIsSpeaking(false);
-    }
+  const speak = (text) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     
+    window.speechSynthesis.cancel();
     setIsSpeaking(true);
+    
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
     
-    try {
-      const audio = await playPremiumAudio(cleanText, 'candy');
-      audio.onended = () => setIsSpeaking(false);
-    } catch (err) {
-      console.error("Fallo la voz premium, usando nativa", err);
-      // Fallback a voz nativa si falla
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        utterance.lang = 'es-ES';
-        const voices = window.speechSynthesis.getVoices();
-        const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-        if (spanishVoices.length > 0) {
-          const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-          utterance.voice = femaleVoice || spanishVoices[0];
-        }
-        utterance.onend = () => setIsSpeaking(false);
-        utterance.onerror = () => setIsSpeaking(false);
-        window.speechSynthesis.speak(utterance);
-      } else {
-        setIsSpeaking(false);
-      }
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.05;
+    utterance.pitch = 1.1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+    
+    if (spanishVoices.length > 0) {
+      // Intentar usar Google español que suena mucho mejor que Sabina Desktop
+      const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
+      const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina') || v.name.includes('Monica'));
+      
+      utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
     }
+
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
   };
 
   // Reacción de voz a cambios de ruta

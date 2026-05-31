@@ -1,7 +1,6 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
-import { playPremiumAudio } from '@/utils/playTts';
 
 export default function AgentesPage() {
   const [activeChat, setActiveChat] = useState(null);
@@ -53,39 +52,37 @@ export default function AgentesPage() {
     }
   ];
 
-  const speak = async (text, overrideAgentId = null) => {
-    if (window.currentAudio) {
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
+  const speak = (text, overrideAgentId = null) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel();
     
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
     const targetAgentId = overrideAgentId || activeChat?.id;
     
-    try {
-      await playPremiumAudio(cleanText, targetAgentId);
-    } catch (err) {
-      console.error("Fallo la voz premium, usando nativa", err);
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        utterance.lang = 'es-ES';
-        
-        const voices = window.speechSynthesis.getVoices();
-        const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-        
-        if (spanishVoices.length > 0) {
-          if (targetAgentId === 'nicolas') {
-            const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
-            utterance.voice = maleVoice || spanishVoices[0];
-          } else {
-            const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-            utterance.voice = femaleVoice || spanishVoices[0];
-          }
-        }
-        window.speechSynthesis.speak(utterance);
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'es-ES';
+    
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+    
+    if (spanishVoices.length > 0) {
+      const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
+      
+      if (targetAgentId === 'nicolas') {
+        utterance.pitch = 0.9;
+        utterance.rate = 1.0;
+        const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
+        utterance.voice = maleVoice || spanishVoices[0];
+      } else {
+        utterance.pitch = 1.1;
+        utterance.rate = 1.05;
+        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
+        utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
       }
     }
+
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleConnect = (agent) => {
