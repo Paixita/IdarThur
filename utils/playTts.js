@@ -1,51 +1,58 @@
 export async function playPremiumAudio(text, agentId) {
-  // Para Google TTS, diferenciamos acentos sutilmente.
-  // Google TTS es extremadamente natural, humano y gratuito.
   const lang = agentId === 'nicolas' ? 'es-US' : 'es-MX'; 
-  
-  // Dividir el texto en oraciones pequeñas
   const sentences = text.match(/[^.?!]+[.?!]+[\])'"`’”]*|.+/g) || [text];
   
-  let currentAudio = null;
-  let isCancelled = false;
+  return new Promise((resolve, reject) => {
+    let currentAudio = null;
+    let isCancelled = false;
 
-  const resultProxy = {
-    onended: () => {},
-    pause: () => {
-      isCancelled = true;
-      if (currentAudio) currentAudio.pause();
+    const resultProxy = {
+      onended: () => {},
+      pause: () => {
+        isCancelled = true;
+        if (currentAudio) currentAudio.pause();
+      }
+    };
+
+    window.currentAudio = resultProxy;
+
+    // Reproducir la primera oración inmediatamente para detectar errores (autoplay o red)
+    const firstSentence = sentences[0].trim();
+    if (!firstSentence) {
+      return reject(new Error("Texto vacío"));
     }
-  };
 
-  window.currentAudio = resultProxy;
+    const firstUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(firstSentence)}`;
+    currentAudio = new Audio(firstUrl);
+    
+    currentAudio.onplay = () => {
+      // Si la primera oración empieza a sonar con éxito, resolvemos la promesa para que el UI sepa que sí funcionó
+      resolve(resultProxy);
+    };
 
-  // Ejecutamos la reproducción en segundo plano sin bloquear el hilo principal
-  (async () => {
-    try {
-      for (let i = 0; i < sentences.length; i++) {
+    currentAudio.onerror = (e) => reject(new Error("Error cargando Google TTS"));
+    
+    currentAudio.onended = async () => {
+      // Reproducir el resto de las oraciones
+      for (let i = 1; i < sentences.length; i++) {
         if (isCancelled) break;
-        
         let sentence = sentences[i].trim();
         if (!sentence) continue;
 
         const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(sentence)}`;
-        
         await new Promise((res, rej) => {
           currentAudio = new Audio(url);
           currentAudio.onended = res;
-          currentAudio.onerror = rej; // Si falla un fragmento, aborta
+          currentAudio.onerror = rej;
           currentAudio.play().catch(rej);
         });
       }
-      if (!isCancelled) {
-        resultProxy.onended();
-      }
-    } catch (error) {
-      console.error("Error en Google TTS:", error);
-      if (!isCancelled) resultProxy.onended(); // Finalizar el estado aunque haya error
-    }
-  })();
+      if (!isCancelled) resultProxy.onended();
+    };
 
-  // Resolvemos inmediatamente para que el UI pueda reaccionar
-  return resultProxy;
+    // Iniciar el primer audio. Si falla (ej. por autoplay), lanzará el catch y rechazará la promesa
+    currentAudio.play().catch(err => {
+      reject(err);
+    });
+  });
 }
