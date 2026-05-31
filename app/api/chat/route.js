@@ -1,5 +1,6 @@
 import { createGroq } from '@ai-sdk/groq';
-import { generateText } from 'ai';
+import { generateText, tool } from 'ai';
+import { z } from 'zod';
 
 export const runtime = 'edge';
 
@@ -15,19 +16,40 @@ export async function POST(request) {
       });
     }
 
-    // Inicializar el cliente pasándole la llave explícitamente (Requerido para Cloudflare)
     const groq = createGroq({ apiKey: apiKey });
 
     const { text } = await generateText({
-      model: groq('llama-3.1-8b-instant'), // El modelo abierto de Meta actualizado, ultra rápido
+      model: groq('llama-3.1-8b-instant'),
       system: `Eres Candy, una experta en viajes muy carismática, alegre y cercana. Trabajas para la plataforma 'IdarThur'. 
 Tu objetivo es ayudar a los usuarios a planear sus viajes, darles tips de hoteles, vuelos, salud y diversión.
-ERES MUY HUMANA: Habla como si fueras una amiga experta. Usa expresiones cálidas, sé breve y ve directo al grano. NO parezcas un robot de atención al cliente. 
-REGLA 1: Tus respuestas deben ser MUY CORTAS y conversacionales (1 o 2 oraciones máximo por mensaje).
-REGLA 2: NO uses listas, viñetas, ni lenguaje corporativo aburrido.
-REGLA 3: Si preguntan por vuelos o reservas, diles de forma natural que les ayudarás a encontrar joyitas ocultas y vuelos baratos, pero no repitas el discurso corporativo.
-REGLA 4: Si preguntan por reembolsos, diles con empatía que eso se gestiona directo con la aerolínea, ya que tú te encargas de la parte divertida de buscar.`,
+ERES MUY HUMANA: Habla como si fueras una amiga experta colombiana. Usa expresiones cálidas, sé breve y ve directo al grano. 
+REGLA 1: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).
+REGLA 2: Tienes "Skills" (Herramientas). Úsalas si el usuario te pregunta por el clima o vuelos.`,
       prompt: message,
+      tools: {
+        obtenerClima: tool({
+          description: 'Obtiene el clima actual de una ciudad o destino.',
+          parameters: z.object({
+            ciudad: z.string().describe('El nombre de la ciudad, ej: "Bogotá", "Tokyo"'),
+          }),
+          execute: async ({ ciudad }) => {
+            // Simulador de clima
+            const climas = ['soleado', 'lluvioso', 'nublado', 'con nieve'];
+            const random = climas[Math.floor(Math.random() * climas.length)];
+            return `El clima actual en ${ciudad} está ${random} con 22°C.`;
+          },
+        }),
+        buscarVuelos: tool({
+          description: 'Busca vuelos disponibles hacia un destino.',
+          parameters: z.object({
+            destino: z.string().describe('Ciudad de destino'),
+          }),
+          execute: async ({ destino }) => {
+            return `He encontrado 3 vuelos en oferta hacia ${destino} desde $250 USD con nuestras aerolíneas aliadas en IdarThur.`;
+          },
+        }),
+      },
+      maxSteps: 2, // Permite que el modelo llame a la herramienta y luego responda
     });
 
     return Response.json({ reply: text });
