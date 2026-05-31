@@ -1,4 +1,4 @@
-import { groq } from '@ai-sdk/groq';
+import { createGroq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
 
 export const runtime = 'edge';
@@ -7,7 +7,6 @@ export async function POST(request) {
   try {
     const { message } = await request.json();
 
-    // Verificamos si el usuario ya configuró su llave de Groq
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       console.log("No se encontró GROQ_API_KEY en el entorno.");
@@ -15,6 +14,9 @@ export async function POST(request) {
         reply: "Hola. El sistema central ha sido actualizado, pero mi cerebro está desconectado. Necesitas agregar tu GROQ_API_KEY en el archivo .env.local para que pueda hablar contigo." 
       });
     }
+
+    // Inicializar el cliente pasándole la llave explícitamente (Requerido para Cloudflare)
+    const groq = createGroq({ apiKey: apiKey });
 
     const { text } = await generateText({
       model: groq('llama-3.1-8b-instant'), // El modelo abierto de Meta actualizado, ultra rápido
