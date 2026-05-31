@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { playPremiumAudio } from "@/utils/playTts";
 
 export default function CandyAIFloating() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,32 +21,38 @@ export default function CandyAIFloating() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const speak = (text) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  const speak = async (text) => {
+    if (window.currentAudio) {
+      window.currentAudio.pause();
+      window.currentAudio = null;
+      setIsSpeaking(false);
+    }
     
-    window.speechSynthesis.cancel(); // Detener audio previo
     setIsSpeaking(true);
-    
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
     
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'es-ES';
-    utterance.rate = 1.05; // Un poco más dinámico
-    utterance.pitch = 1.1; // Tono más amigable/femenino
-
-    // Intentar buscar una voz en español
-    const voices = window.speechSynthesis.getVoices();
-    const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-    if (spanishVoices.length > 0) {
-      // Buscar voz femenina preferiblemente
-      const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina') || v.name.includes('Monica') || v.name.includes('Paulina'));
-      utterance.voice = femaleVoice || spanishVoices[0];
+    try {
+      const audio = await playPremiumAudio(cleanText, 'candy');
+      audio.onended = () => setIsSpeaking(false);
+    } catch (err) {
+      console.error("Fallo la voz premium, usando nativa", err);
+      // Fallback a voz nativa si falla
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'es-ES';
+        const voices = window.speechSynthesis.getVoices();
+        const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+        if (spanishVoices.length > 0) {
+          const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
+          utterance.voice = femaleVoice || spanishVoices[0];
+        }
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+        window.speechSynthesis.speak(utterance);
+      } else {
+        setIsSpeaking(false);
+      }
     }
-
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(utterance);
   };
 
   // Reacción de voz a cambios de ruta
