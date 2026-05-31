@@ -120,7 +120,7 @@ export default function AgentesPage() {
     setTimeout(() => {
       let reply = "Dame un segundito que lo reviso...";
       if (activeChat.id === 'vitalis') {
-        reply = "¡Perfecto! Ya revisé los datos más recientes. Para esa zona, lo mejor es llevar repelente fuerte y estar al día con la vacuna de la Fiebre Amarilla. También te sugiero un buen seguro médico por si acaso. ¿Quieres que te pase unos links recomendados?";
+        reply = "¡Hola corazón! Aquí estoy para cuidarte. Para ese viaje te recomiendo llevar un repelente fuerte y tu vacuna al día. Y por favor, si tienes alguna pregunta más íntima o personal sobre tu salud en el viaje, siéntete con total confianza de preguntarme. Estamos en privado, ¿sí?";
       } else if (activeChat.id === 'nicolas') {
         reply = "¡Excelente elección! Acabo de hacer una búsqueda rápida y hay unas mochilas antirrobo súper en tendencia hoy con buen descuento. ¿Te paso el link para que las veas?";
       }

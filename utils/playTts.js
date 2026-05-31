@@ -1,7 +1,7 @@
 export async function playPremiumAudio(text, agentId) {
   let voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella (Candy) por defecto
   if (agentId === 'nicolas') voiceId = 'pNInz6obpgDQGcFmaJgB'; // Adam
-  if (agentId === 'vitalis') voiceId = 'MF3mGyEYCl7XYWbV9V6O'; // Elli
+  if (agentId === 'vitalis') voiceId = 'XB0fDUnXU5ywgMepMw1c'; // Charlotte (Voz madura, cálida, amigable y sensual)
   if (agentId === 'sophia') voiceId = 'EXAVITQu4vr4xnSDxMaL';
 
   // Obtenemos la llave directamente para evitar el proxy de Cloudflare que bloquea ElevenLabs Free Tier
