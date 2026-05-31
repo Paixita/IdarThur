@@ -29,7 +29,7 @@ export async function POST(request) {
     if (!response.ok) {
       const errorData = await response.text();
       console.error("ElevenLabs Error:", errorData);
-      return new Response(JSON.stringify({ error: "Fallo en ElevenLabs" }), { status: 500 });
+      return new Response(JSON.stringify({ error: "Fallo en ElevenLabs", details: errorData }), { status: 500 });
     }
 
     const audioBuffer = await response.arrayBuffer();

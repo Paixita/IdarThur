@@ -1,19 +1,20 @@
-const { Communicate } = require('edge-tts-universal');
-
 async function test() {
   try {
-    const communicate = new Communicate('Hola, esto es una prueba', 'es-CO-SalomeNeural');
-    let chunks = [];
-    for await (const chunk of communicate.stream()) {
-      if (chunk.type === 'audio') {
-        chunks.push(chunk.data);
-      }
+    const res = await fetch('https://idarthur.pages.dev/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'Hola', voiceId: 'EXAVITQu4vr4xnSDxMaL' })
+    });
+    console.log(res.status);
+    if (!res.ok) {
+      const text = await res.text();
+      console.log('Error text:', text);
+    } else {
+      const buff = await res.arrayBuffer();
+      console.log('Success, audio length:', buff.byteLength);
     }
-    console.log('Audio chunks received:', chunks.length);
-    console.log('Total bytes:', chunks.reduce((acc, c) => acc + c.length, 0));
-  } catch (err) {
-    console.error('Error:', err);
+  } catch(e) {
+    console.error(e);
   }
 }
-
 test();
