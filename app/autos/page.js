@@ -136,6 +136,56 @@ export default function AutosPage() {
           </div>
         </div>
 
+        {/* Galería de Clases de Vehículos */}
+        <div style={{ marginBottom: '80px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '15px' }}>Nuestras Clases de Vehículos</h2>
+            <p style={{ color: '#a0aab5', fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto' }}>
+              Trabajamos con Códigos ACRISS universales. Selecciona tu clase ideal y nuestras agencias asociadas te garantizarán el vehículo que necesitas.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+            {[
+              { id: 'economy', name: 'Clase Económica / Compacta', desc: 'Ideal para la ciudad y fácil de estacionar.', img: '/autos/class_economy.png', color: '#ff0055' },
+              { id: 'suv', name: 'Clase Familiar / SUV', desc: 'Espacio y comodidad para toda la familia.', img: '/autos/class_suv.png', color: '#ff9900' },
+              { id: 'sedan', name: 'Clase Estándar / Sedán', desc: 'Confort y buen rendimiento para viajes largos.', img: '/autos/class_sedan.png', color: '#00d4ff' },
+              { id: 'premium', name: 'Clase Premium / Lujo', desc: 'Para viajes de negocios o experiencias exclusivas.', img: '/autos/class_premium.png', color: '#ffd700' }
+            ].map(cat => (
+              <div key={cat.id} className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid rgba(255,255,255,0.05)', transition: 'transform 0.3s, box-shadow 0.3s' }}
+                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = `0 15px 40px ${cat.color}30`; }}
+                   onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                
+                <div style={{ height: '220px', position: 'relative' }}>
+                  <img src={cat.img} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '60%', background: 'linear-gradient(to top, rgba(10,15,25,1), transparent)' }}></div>
+                  <h3 style={{ position: 'absolute', bottom: '15px', left: '20px', fontSize: '1.4rem', fontWeight: 'bold', color: 'white' }}>
+                    {cat.name}
+                  </h3>
+                </div>
+                
+                <div style={{ padding: '25px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '20px' }}>
+                    {cat.desc}
+                  </p>
+                  
+                  <div style={{ marginTop: 'auto' }}>
+                    <p style={{ color: '#a0aab5', fontSize: '0.8rem', fontStyle: 'italic', marginBottom: '15px', textAlign: 'center' }}>
+                      *Modelos sujetos a disponibilidad en destino
+                    </p>
+                    <button onClick={() => window.open('https://www.discovercars.com/?a_aid=IdarThur', '_blank')} 
+                            style={{ width: '100%', padding: '12px', borderRadius: '15px', background: `${cat.color}20`, border: `1px solid ${cat.color}`, color: '#fff', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }}
+                            onMouseEnter={e => e.currentTarget.style.background = cat.color}
+                            onMouseLeave={e => e.currentTarget.style.background = `${cat.color}20`}>
+                      Ver Opciones
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Chat Modal Simulator para Candy */}
         {isChatOpen && (
           <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
