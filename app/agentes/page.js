@@ -129,15 +129,103 @@ export default function AgentesPage() {
     }, 1500);
   };
 
+  const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
+  const [candyMessages, setCandyMessages] = useState([
+    { text: "¡Hola! Estás en el centro de mando. Soy Candy, la líder de atención, pero aquí puedes conocer a todo mi equipo especializado. Desde Nicolás para tus compras hasta el Capitán Altamar para tus cruceros. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto.", sender: "ai" }
+  ]);
+  const [candyInputMsg, setCandyInputMsg] = useState('');
+
+  const speakCandy = async (text) => {
+    if (typeof window === 'undefined') return;
+    if (window.currentAudio) {
+      window.stopAudioFlag = true;
+      window.currentAudio.pause();
+      window.currentAudio = null;
+    }
+    window.speechSynthesis.cancel();
+    
+    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+    
+    try {
+      await playPremiumAudio(cleanText, 'candy');
+    } catch (error) {
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'es-ES';
+      utterance.rate = 1.05;
+      utterance.pitch = 1.1;
+
+      const voices = window.speechSynthesis.getVoices();
+      const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+      if (spanishVoices.length > 0) {
+        const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
+        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
+        utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleOpenCandyChat = () => {
+    setIsCandyChatOpen(true);
+    setTimeout(() => speakCandy(candyMessages[0].text), 300);
+  };
+
+  const handleSendCandyMessage = (e) => {
+    e.preventDefault();
+    if (!candyInputMsg.trim()) return;
+
+    if (typeof window !== 'undefined') {
+      window.stopAudioFlag = false;
+      const dummy = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
+      dummy.play().catch(()=>{});
+    }
+
+    const newMessages = [...candyMessages, { text: candyInputMsg, sender: 'user' }];
+    setCandyMessages(newMessages);
+    setCandyInputMsg('');
+
+    setTimeout(() => {
+      const reply = "¡Claro que sí! Cada uno de nuestros agentes está entrenado en una rama distinta para ofrecerte el mejor servicio. ¿Quieres que te conecte con alguno en especial?";
+      setCandyMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      speakCandy(reply);
+    }, 1500);
+  };
+
   return (
     <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px', position: 'relative' }} className="container">
       <div style={{ textAlign: 'center', marginBottom: '70px' }}>
         <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
           El Escuadrón <span className="text-gradient">IdarThur IA</span>
         </h1>
-        <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
+        <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6', marginBottom: '40px' }}>
           No estás solo. Detrás de cada reserva, un equipo de especialistas de Inteligencia Artificial audita, protege y optimiza cada detalle de tu viaje. Conoce a tu equipo de élite.
         </p>
+
+        {/* Candy AI Recomendación */}
+        <div 
+          className="glass" 
+          style={{ padding: '30px', borderRadius: '25px', maxWidth: '900px', margin: '0 auto 60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s', textAlign: 'left' }}
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = 'translateY(-5px)';
+            e.currentTarget.style.boxShadow = '0 10px 30px rgba(69, 243, 255, 0.2)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+          onClick={handleOpenCandyChat}
+        >
+          <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 0, 128, 0.4))' }}>
+             <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Candy AI (Directora de Operaciones)</h3>
+            <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
+              "¡Hola! Estás en el centro de mando. Soy Candy, la líder de atención. Conoce a todo mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
+            </p>
+          </div>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
@@ -246,6 +334,55 @@ export default function AgentesPage() {
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: activeChat.color, border: 'none', borderRadius: '15px', padding: '0 20px', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}>
+                Enviar
+              </button>
+            </form>
+
+          </div>
+        </div>
+      )}
+
+      {/* Candy Chat Modal Simulator */}
+      {isCandyChatOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
+          <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
+            
+            <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
+              <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <div style={{ flexGrow: 1 }}>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Candy AI</h3>
+                <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Directora de Operaciones</span>
+              </div>
+              <button onClick={() => setIsCandyChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                ×
+              </button>
+            </div>
+
+            <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {candyMessages.map((msg, i) => (
+                <div key={i} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%' }}>
+                  <div style={{ 
+                    background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', 
+                    color: 'white', padding: '12px 18px', borderRadius: '20px', 
+                    borderBottomRightRadius: msg.sender === 'user' ? '5px' : '20px',
+                    borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
+                    lineHeight: '1.5', fontSize: '0.95rem'
+                  }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleSendCandyMessage} style={{ padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '10px' }}>
+              <input 
+                type="text" 
+                value={candyInputMsg}
+                onChange={e => setCandyInputMsg(e.target.value)}
+                placeholder={`Pregúntale a Candy...`} 
+                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
+              />
+              <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
                 Enviar
               </button>
             </form>
