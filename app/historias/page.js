@@ -105,6 +105,38 @@ export default function HistoriasPage() {
         </div>
       </div>
 
+      {/* Formulario Comparte tu Historia */}
+      <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '80px', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px', textAlign: 'center' }}>¿Tienes una historia que contar?</h2>
+        <p style={{ color: '#a0aab5', textAlign: 'center', marginBottom: '30px', fontSize: '1.1rem' }}>
+          Cuéntanos tu mejor o peor anécdota de viaje. Nuestro equipo la adaptará con un toque cinematográfico y la ilustrará para nuestra galería. ¡Podrías ser el próximo protagonista!
+        </p>
+        <form onSubmit={(e) => { e.preventDefault(); alert('¡Gracias por compartir! Nuestro Escuadrón IA revisará tu historia pronto.'); }} style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '800px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+            <input type="text" placeholder="Tu Nombre o Apodo (Ej: El Mochilero Anónimo)" required style={{
+              padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem', transition: 'border-color 0.3s'
+            }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}/>
+            
+            <input type="text" placeholder="Título de tu anécdota" required style={{
+              padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem', transition: 'border-color 0.3s'
+            }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}/>
+          </div>
+          
+          <textarea placeholder="Escribe aquí tu historia completa. Dale todos los detalles divertidos, dramáticos o increíbles..." required rows="6" style={{
+            padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem', transition: 'border-color 0.3s', resize: 'vertical'
+          }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}></textarea>
+          
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#a0aab5', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <input type="checkbox" required style={{ accentColor: 'var(--primary)', width: '18px', height: '18px' }} />
+            Autorizo a IdarThur y su Inteligencia Artificial a adaptar y publicar mi historia (mantendremos tu identidad real en secreto si usas un apodo).
+          </label>
+
+          <button type="submit" className="btn-primary" style={{ padding: '15px 40px', borderRadius: '15px', fontSize: '1.2rem', fontWeight: 'bold', alignSelf: 'center', marginTop: '10px' }}>
+            Enviar al Escuadrón IA
+          </button>
+        </form>
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
         {stories.map((story, idx) => {
           const color = ['#ff0055', '#ff9900', '#00d4ff', '#00ffaa'][idx % 4];
