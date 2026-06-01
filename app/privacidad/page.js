@@ -8,9 +8,9 @@ export default function Privacidad() {
           Última actualización: {new Date().toLocaleDateString('es-ES')}
         </p>
 
-        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Información que recopilamos</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Información que recopilamos y Rol de Terceros</h2>
         <p style={{ marginBottom: '20px' }}>
-          IdarThur actúa como una plataforma de redirección para socios afiliados (Booking.com, WayAway, Amazon). No almacenamos información financiera ni tarjetas de crédito. Toda transacción se realiza en los portales seguros de nuestros socios.
+          IdarThur actúa como una plataforma de redirección para socios afiliados (Booking.com, DiscoverCars, WayAway, Amazon, etc.). No almacenamos información financiera ni tarjetas de crédito. Toda transacción, reserva de hotel o alquiler de vehículos se realiza en los portales seguros de nuestros socios. Para más detalles sobre nuestra exención de responsabilidad sobre el servicio de estos terceros, consulte nuestros <a href="/terminos" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Términos y Condiciones</a>.
         </p>
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>2. Descargo de Responsabilidad de Inteligencia Artificial (Candy AI)</h2>

@@ -8,19 +8,24 @@ export default function Terminos() {
           Última actualización: {new Date().toLocaleDateString('es-ES')}
         </p>
 
-        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Naturaleza del Servicio</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Naturaleza del Servicio y Rol de Vocero</h2>
         <p style={{ marginBottom: '20px' }}>
-          IdarThur Global opera como un portal de descubrimiento y redirección de viajes. No somos una agencia de viajes directa ni una aerolínea. Proveemos enlaces de afiliación hacia proveedores terceros (Booking.com, WayAway, Amazon, etc.).
+          IdarThur Global opera única y exclusivamente como un <strong>portal de descubrimiento, vocero y redirección de viajes (afiliación)</strong>. No somos una agencia de viajes directa, no poseemos aerolíneas, cadenas hoteleras ni flotas de vehículos. Proveemos enlaces hacia proveedores terceros (Booking.com, DiscoverCars, Amazon, etc.).
         </p>
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>2. Exención de Responsabilidad de Terceros</h2>
         <p style={{ marginBottom: '20px' }}>
-          Cualquier reserva, compra o contrato de servicio realizado tras hacer clic en los enlaces de IdarThur se celebra exclusivamente entre usted y el proveedor final (ej. Booking.com o la aerolínea correspondiente). IdarThur no asume responsabilidad alguna por cancelaciones de vuelos, problemas en hoteles, calidad de los productos de Amazon, o cualquier disputa financiera o de servicio al cliente.
+          Cualquier reserva o compra realizada tras hacer clic en nuestros enlaces se celebra <strong>exclusivamente entre usted y el proveedor final</strong>. IdarThur no asume responsabilidad alguna por cancelaciones, sobreventas (overbooking), problemas en hoteles, o cualquier disputa. La resolución de conflictos, quejas o solicitudes de reembolso corresponde única y exclusivamente al proveedor del servicio (ej. la agencia de alquiler o el hotel), ya que IdarThur no tiene acceso a sus sistemas de reserva ni control sobre sus políticas.
         </p>
 
-        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>3. Precios y Disponibilidad</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>3. Política Específica sobre Alquiler de Vehículos</h2>
         <p style={{ marginBottom: '20px' }}>
-          Los precios mostrados o sugeridos en IdarThur (incluyendo sugerencias generadas por Inteligencia Artificial) son puramente informativos. El precio final y la disponibilidad siempre serán los mostrados en la página oficial del proveedor al momento del pago.
+          En nuestra sección de Alquiler de Vehículos, las imágenes mostradas son ilustrativas y representan <strong>Categorías Universales (Códigos ACRISS)</strong>, no modelos específicos. La falta de disponibilidad de un vehículo, el cambio de modelo en el mostrador, o la no complacencia de la agencia de alquiler local son responsabilidad exclusiva de dicha agencia de alquiler y de la plataforma de reserva conectada (ej. DiscoverCars). IdarThur se exime de toda responsabilidad por cambios de flota en el destino.
+        </p>
+
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>4. Precios y Disponibilidad</h2>
+        <p style={{ marginBottom: '20px' }}>
+          Los precios mostrados en IdarThur son puramente informativos. El precio final y la disponibilidad siempre serán los mostrados en la página oficial del proveedor al momento del pago.
         </p>
       </div>
     </div>
