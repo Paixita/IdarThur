@@ -68,6 +68,9 @@ export default function CandyAIFloating() {
       else if (pathname === '/tienda') speak("Bienvenido a la tienda IdarThur. Descubre artículos premium para tu viaje.");
       else if (pathname === '/') speak("Has vuelto a la pantalla principal. ¿A dónde viajamos hoy?");
       else if (pathname === '/eventos') speak("Bienvenido a la sección de Eventos Globales. Encuentra las mejores fiestas del mundo y reserva de inmediato.");
+      else if (pathname === '/autos') speak("Bienvenido a Alquiler de Vehículos. Encuentra el auto perfecto para tu aventura con los mejores precios en más de ciento cincuenta países.");
+      else if (pathname === '/historias') speak("Bienvenido a Historias. Inspírate con las aventuras reales de nuestra comunidad de viajeros y nómadas digitales alrededor del mundo.");
+      else if (pathname === '/agentes') speak("Bienvenido al Cuartel General del Escuadrón I A. Conoce a nuestro equipo de inteligencia artificial, listo para protegerte y optimizar tu viaje.");
     }
   }, [pathname, audioEnabled]);
 
