@@ -77,13 +77,13 @@ export default function AutosPage() {
         <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
             <video autoPlay loop muted playsInline poster="/autos/banner.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
-              <source src="/autos/hero_autos.mp4" type="video/mp4" />
+              <source src="/autos/bg_autos_v4.mp4" type="video/mp4" />
             </video>
           </div>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.2) 0%, rgba(10,15,25,0.6) 100%)', zIndex: -1 }}></div>
 
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
-            Alquiler de <span className="text-gradient">Vehículos v3</span>
+            Alquiler de <span className="text-gradient">Vehículos</span>
           </h1>
           <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
             Muévete con total libertad. Recibe las llaves de tu vehículo ideal con los mejores precios garantizados en más de 150 países.
