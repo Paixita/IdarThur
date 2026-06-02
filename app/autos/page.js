@@ -80,7 +80,7 @@ export default function AutosPage() {
               <source src="/autos/video_autos.mp4" type="video/mp4" />
             </video>
           </div>
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.6) 0%, rgba(10,15,25,0.95) 100%)', zIndex: -1 }}></div>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.2) 0%, rgba(10,15,25,0.6) 100%)', zIndex: -1 }}></div>
 
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
             Alquiler de <span className="text-gradient">Vehículos</span>
