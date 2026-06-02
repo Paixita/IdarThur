@@ -60,9 +60,9 @@ export default function Home() {
           </div>
 
           <div style={{ marginTop: '50px' }}>
-            <Link href="/tienda" style={{ color: '#00d4ff', fontSize: '1.2rem', fontWeight: 'bold', textDecoration: 'none', borderBottom: '2px solid #00d4ff', paddingBottom: '5px' }}>
+            <a href="https://amzn.to/4376cfJ" target="_blank" rel="noopener noreferrer" style={{ color: '#00d4ff', fontSize: '1.2rem', fontWeight: 'bold', textDecoration: 'none', borderBottom: '2px solid #00d4ff', paddingBottom: '5px' }}>
               Explorar el catálogo completo de Amazon 🛒
-            </Link>
+            </a>
           </div>
         </div>
       </section>
