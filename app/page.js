@@ -19,9 +19,14 @@ export default function Home() {
           <p style={{ fontSize: '1.1rem', marginBottom: '20px', maxWidth: '600px', margin: '0 auto 20px auto' }}>
             Descubre los mejores accesorios, equipaje y tecnología de Amazon seleccionados por nuestra IA.
           </p>
-          <a href="https://amzn.to/4376cfJ" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#0b1120', color: 'white', padding: '15px 30px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', transition: 'transform 0.3s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+          <a href="https://amzn.to/4376cfJ" target="_blank" rel="noopener noreferrer" className="btn-amazon-banner" style={{ display: 'inline-block', background: '#0b1120', color: 'white', padding: '15px 30px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', transition: 'transform 0.3s' }}>
             Explorar Tienda del Viajero 🛒
           </a>
+          <style>{`
+            .btn-amazon-banner:hover {
+              transform: scale(1.05) !important;
+            }
+          `}</style>
         </div>
       </section>
 
