@@ -71,7 +71,7 @@ export default function HotelesPage() {
       <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
         {/* Background Video para animar */}
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
-          <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
+          <video autoPlay loop muted playsInline poster="/hoteles/hotel_lobby_banner.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
             <source src="/hoteles/video_hoteles.mp4?v=2" type="video/mp4" />
           </video>
         </div>
