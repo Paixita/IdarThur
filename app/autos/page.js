@@ -77,7 +77,7 @@ export default function AutosPage() {
         <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
             <video autoPlay loop muted playsInline poster="/autos/banner.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
-              <source src="/autos/video_autos.mp4?v=2" type="video/mp4" />
+              <source src="/autos/hero_autos.mp4" type="video/mp4" />
             </video>
           </div>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.2) 0%, rgba(10,15,25,0.6) 100%)', zIndex: -1 }}></div>
