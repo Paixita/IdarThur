@@ -197,7 +197,9 @@ export default function AgentesPage() {
       
       {/* Banner del Equipo */}
       <div style={{ marginBottom: '50px', borderRadius: '30px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', position: 'relative' }}>
-        <img src="/agentes/banner.png" alt="Equipo IdarThur IA" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        <video autoPlay loop muted playsInline poster="/agentes/banner.png" style={{ width: '100%', height: 'auto', display: 'block' }}>
+          <source src="/agentes/video_agentes.mp4?v=1" type="video/mp4" />
+        </video>
         {/* Gradiente sutil para integrar con el fondo */}
         <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '30%', background: 'linear-gradient(to top, rgba(10,15,26,1), transparent)' }}></div>
       </div>
