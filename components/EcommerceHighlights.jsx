@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export default function EcommerceHighlights() {
   const products = [
-    { id: 1, name: "Cámara de Seguridad", price: "$44.99", img: "/store_camera.png", category: "Tecnología", affiliateLink: "https://amzn.to/4ulMw3w" },
-    { id: 2, name: "Chaqueta para Hombre", price: "$119.99", img: "/store_jacket.png", category: "Ropa", affiliateLink: "https://amzn.to/42MlRJi" },
-    { id: 3, name: "Chaqueta para Mujer", price: "$62.03", img: "/store_jacket_woman.png", category: "Ropa", affiliateLink: "https://amzn.to/3RkMt9l" },
-    { id: 4, name: "Botiquín de Viaje", price: "$29.99", img: "/store_firstaid.png", category: "Salud", affiliateLink: "https://amzn.to/4nDwNu2" },
-    { id: 5, name: "Mochila Antirrobo Unisex", price: "$51.98", img: "/store_backpack.png", category: "Accesorios", affiliateLink: "https://amzn.to/4uSoHA8" }
+    { id: 1, name: "Cámara Blink Mini 2K+", price: "$44.99", img: "/tienda/camara_seguridad.jpg", category: "Seguridad", affiliateLink: "https://amzn.to/4ulMw3w?tag=idarthur-20" },
+    { id: 2, name: "Chaqueta Cotrasen", price: "$119.99", img: "/tienda/chaqueta_hombre.jpg", category: "Ropa Invierno", affiliateLink: "https://www.amazon.com/s?k=Winter+Jacket+Men+Cotrasen&tag=idarthur-20" },
+    { id: 3, name: "Botella y Dispensador Portátil", price: "$22.50", img: "/tienda/botella_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Dog+Water+Bottle+Portable+Dispenser&tag=idarthur-20" },
+    { id: 4, name: "Collar Rastreador GPS Smart", price: "$89.99", img: "/tienda/gps_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Pet+GPS+Tracker+Smart+Collar&tag=idarthur-20" },
+    { id: 5, name: "Set de Maletas Rígidas", price: "$159.00", img: "/tienda/maletas_set.jpg", category: "Equipaje", affiliateLink: "https://www.amazon.com/s?k=Hard+Shell+Luggage+Set&tag=idarthur-20" }
   ];
 
   return (

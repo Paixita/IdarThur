@@ -25,10 +25,10 @@ export default function Benefits() {
   ];
 
   const features = [
-    { icon: '🛡️', title: 'Pagos 100% Seguros', desc: 'Transacciones protegidas por Booking.com y plataformas globales.', link: '/terminos' },
-    { icon: '💵', title: 'Cashback Directo', desc: 'Gana dinero de vuelta en tus reservas de vuelos con WayAway.', link: '/hoteles' },
-    { icon: '🌎', title: 'Soporte Mundial', desc: 'Red de asistencia internacional estés donde estés.', link: '/agentes' },
-    { icon: '⚡', title: 'Reservas Rápidas', desc: 'Confirmación instantánea de hoteles y cruceros.', link: '/' }
+    { iconImg: '/icon_shield.png', title: 'Pagos 100% Seguros', desc: 'Transacciones protegidas por Booking.com y plataformas globales.', link: '/terminos' },
+    { iconImg: '/icon_cashback.png', title: 'Cashback Directo', desc: 'Gana dinero de vuelta en tus reservas de vuelos con WayAway.', link: '/hoteles' },
+    { iconImg: '/icon_globe.png', title: 'Soporte Mundial', desc: 'Red de asistencia internacional estés donde estés.', link: '/agentes' },
+    { iconImg: '/icon_lightning.png', title: 'Reservas Rápidas', desc: 'Confirmación instantánea de hoteles y cruceros.', link: '/' }
   ];
 
   return (
@@ -86,7 +86,9 @@ export default function Benefits() {
                        e.currentTarget.style.background = 'transparent';
                        e.currentTarget.style.transform = 'translateX(0)';
                      }}>
-                  <div style={{ fontSize: '2rem', background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '15px', color: 'var(--primary)' }}>{feat.icon}</div>
+                  <div style={{ padding: '5px', borderRadius: '15px', background: 'rgba(255,255,255,0.02)', boxShadow: '0 4px 15px rgba(0,212,255,0.1)' }}>
+                    <img src={feat.iconImg} alt={feat.title} style={{ width: '60px', height: '60px', objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(69,243,255,0.5))' }} />
+                  </div>
                   <div>
                     <h4 style={{ color: 'white', fontSize: '1.2rem', marginBottom: '8px', transition: 'color 0.3s' }}
                         onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
