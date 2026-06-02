@@ -69,7 +69,7 @@ export default function AutosPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0a0f1a', color: 'white' }}>
+    <div style={{ minHeight: '100vh', color: 'white' }}>
       <Navbar />
       <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>
         
