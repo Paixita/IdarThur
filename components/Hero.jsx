@@ -90,10 +90,13 @@ export default function Hero() {
         </p>
         
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '15px 40px', fontSize: '1.1rem', borderRadius: '30px', fontWeight: 'bold' }}>
+          <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '15px 30px', fontSize: '1.1rem', borderRadius: '30px', fontWeight: 'bold' }}>
             ✈️ Vuelos con Cashback
           </button>
-          <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} className="btn-secondary glass" style={{ padding: '15px 40px', fontSize: '1.1rem', borderRadius: '30px', fontWeight: 'bold', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}>
+          <button onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')} className="btn-secondary glass" style={{ padding: '15px 30px', fontSize: '1.1rem', borderRadius: '30px', fontWeight: 'bold', background: 'rgba(0,212,255,0.2)', border: '1px solid #00d4ff', color: 'white' }}>
+            🛳️ Cruceros de Lujo
+          </button>
+          <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} className="btn-secondary glass" style={{ padding: '15px 30px', fontSize: '1.1rem', borderRadius: '30px', fontWeight: 'bold', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}>
             🏨 Ofertas Booking
           </button>
         </div>
