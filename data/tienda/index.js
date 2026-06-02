@@ -79,6 +79,36 @@ export const products = [
   },
   {
     id: 8,
+    categoryId: "mascotas",
+    name: "Mochila Cápsula Astronauta",
+    price: "$55.99",
+    img: "/tienda/mochila_mascota.png",
+    affiliateLink: "https://www.amazon.com/s?k=Cat+Backpack+Carrier+Bubble&tag=idarthur-20",
+    copy: "Mochila transportadora transparente panorámica. Tu gato o perro pequeño viajará súper cómodo y disfrutará del paisaje en cabina o de paseo contigo.",
+    bestseller: true
+  },
+  {
+    id: 9,
+    categoryId: "mascotas",
+    name: "Botella y Dispensador Portátil",
+    price: "$22.50",
+    img: "/tienda/botella_mascota.png",
+    affiliateLink: "https://www.amazon.com/s?k=Dog+Water+Bottle+Portable+Dispenser&tag=idarthur-20",
+    copy: "Botella 2 en 1 con dispensador de agua y compartimento para snacks. Mantén a tu peludo hidratado en el aeropuerto o en la carretera sin derrames.",
+    bestseller: false
+  },
+  {
+    id: 10,
+    categoryId: "mascotas",
+    name: "Collar Rastreador GPS Smart",
+    price: "$89.99",
+    img: "/tienda/gps_mascota.png",
+    affiliateLink: "https://www.amazon.com/s?k=Pet+GPS+Tracker+Smart+Collar&tag=idarthur-20",
+    copy: "Viaja con absoluta tranquilidad. Collar inteligente con rastreo GPS global en tiempo real y luz LED nocturna. Nunca pierdas de vista a tu mejor amigo.",
+    bestseller: true
+  },
+  {
+    id: 11,
     categoryId: "entretenimiento",
     name: "Consola Portátil Híbrida",
     price: "$299.00",
