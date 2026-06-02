@@ -69,9 +69,11 @@ export default function HotelesPage() {
   return (
     <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>
       <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
-        {/* Background Image para animar en Luma */}
+        {/* Background Video para animar */}
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
-          <img src="/hoteles/hotel_lobby_banner.png" alt="Lobby Hotel Lujo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
+            <source src="/hoteles/video_hoteles.mp4" type="video/mp4" />
+          </video>
         </div>
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(10,15,25,0.7) 0%, rgba(10,15,25,0.95) 100%)', zIndex: -1 }}></div>
 

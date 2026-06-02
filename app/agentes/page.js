@@ -194,6 +194,14 @@ export default function AgentesPage() {
 
   return (
     <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px', position: 'relative' }} className="container">
+      
+      {/* Banner del Equipo */}
+      <div style={{ marginBottom: '50px', borderRadius: '30px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', position: 'relative' }}>
+        <img src="/agentes/banner.png" alt="Equipo IdarThur IA" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        {/* Gradiente sutil para integrar con el fondo */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '30%', background: 'linear-gradient(to top, rgba(10,15,26,1), transparent)' }}></div>
+      </div>
+
       <div style={{ textAlign: 'center', marginBottom: '70px' }}>
         <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
           El Escuadrón <span className="text-gradient">IdarThur IA</span>
