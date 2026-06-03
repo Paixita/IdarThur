@@ -9,13 +9,24 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "IdarThur - Inteligencia Artificial para Viajeros",
-  description: "Descubre IdarThur: Tu agencia de viajes potenciada por Inteligencia Artificial. Encuentra los mejores accesorios de viaje en Amazon, historias reales y tips de nómadas digitales.",
-  keywords: "viajes, accesorios de viaje, amazon afiliados, equipaje inteligente, historias de viajes, nómada digital, viajar con mascotas",
+  title: "IdarThur - Agencia de Viajes Inteligente",
+  description: "Descubre IdarThur: Tu agencia de viajes impulsada por Inteligencia Artificial. Encuentra los mejores vuelos con cashback, cruceros de lujo, noticias globales y la mejor tienda de viaje.",
+  keywords: "agencia de viajes, vuelos baratos, cruceros de lujo, inteligencia artificial, noticias de viajes, nómada digital, viajar con mascotas",
   openGraph: {
-    title: "IdarThur - El futuro de los viajes",
-    description: "La tienda y comunidad de viajeros más avanzada del mundo, impulsada por IA.",
-    type: "website"
+    title: "IdarThur - El futuro de los viajes está aquí",
+    description: "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
+    url: "https://idarthur.pages.dev",
+    siteName: "IdarThur",
+    images: [
+      {
+        url: "https://idarthur.pages.dev/IdarThur.png",
+        width: 1200,
+        height: 630,
+        alt: "IdarThur Agencia de Viajes Inteligente"
+      }
+    ],
+    locale: "es_CO",
+    type: "website",
   }
 };
 

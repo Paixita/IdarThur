@@ -38,6 +38,7 @@ export default function Navbar() {
         <div className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <Link href="/" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Vuelos</Link>
           <Link href="/hoteles" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Hoteles</Link>
+          <Link href="/noticias" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold' }}>Noticias 🌍</Link>
           <Link href="/eventos" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Eventos</Link>
           <Link href="/tienda" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Tienda</Link>
           <Link href="/autos" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Autos</Link>
