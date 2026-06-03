@@ -14,7 +14,7 @@ export default function Benefits() {
       img: '/candy_avatar.png',
       title: 'Asesoría con IA',
       desc: 'Candy AI te acompaña en cada paso, recomendándote destinos, analizando precios y ayudándote a planificar el viaje perfecto.',
-      link: '/agentes'
+      link: '#chat'
     },
     {
       img: 'https://images.unsplash.com/photo-1553531384-cc64ac80f931?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
@@ -43,8 +43,8 @@ export default function Benefits() {
           </p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '40px' }}>
-            {steps.map((step, i) => (
-              <Link key={i} href={step.link} style={{ textDecoration: 'none' }}>
+            {steps.map((step, i) => {
+              const CardContent = (
                 <div className="glass step-card" style={{ padding: '40px 20px', borderRadius: '20px', textAlign: 'center', transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s' }} 
                      onMouseEnter={e => {
                        e.currentTarget.style.transform = 'translateY(-15px) scale(1.02)';
@@ -64,8 +64,16 @@ export default function Benefits() {
                   <h3 style={{ fontSize: '1.6rem', marginBottom: '15px', color: 'white', transition: 'color 0.3s' }}>{step.title}</h3>
                   <p style={{ color: '#a0aab5', lineHeight: '1.6' }}>{step.desc}</p>
                 </div>
-              </Link>
-            ))}
+              );
+
+              if (step.link.startsWith('http')) {
+                return <a key={i} href={step.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{CardContent}</a>;
+              } else if (step.link === '#chat') {
+                return <div key={i} onClick={() => window.dispatchEvent(new Event('openCandyChat'))} style={{ cursor: 'pointer', textDecoration: 'none' }}>{CardContent}</div>;
+              } else {
+                return <Link key={i} href={step.link} style={{ textDecoration: 'none' }}>{CardContent}</Link>;
+              }
+            })}
           </div>
         </div>
 
