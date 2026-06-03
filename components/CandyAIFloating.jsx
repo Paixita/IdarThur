@@ -77,9 +77,12 @@ export default function CandyAIFloating() {
     }
   };
 
+  const prevPathname = useRef(pathname);
+  
   // Reacción de voz a cambios de ruta
   useEffect(() => {
-    if (audioEnabled) {
+    if (audioEnabled && pathname !== prevPathname.current) {
+      prevPathname.current = pathname;
       if (pathname === '/hoteles') speak("Bienvenido a la sección de Hoteles. Te mostraré alojamientos increíbles con protección legal garantizada.");
       else if (pathname === '/tienda') speak("Bienvenido a la tienda IdarThur. Descubre artículos premium para tu viaje.");
       else if (pathname === '/') speak("Has vuelto a la pantalla principal. ¿A dónde viajamos hoy?");
@@ -88,6 +91,9 @@ export default function CandyAIFloating() {
       else if (pathname === '/historias') speak("Bienvenido a Historias. Inspírate con las aventuras reales de nuestra comunidad de viajeros y nómadas digitales alrededor del mundo.");
       else if (pathname === '/agentes') speak("Bienvenido al Cuartel General del Escuadrón I A. Conoce a nuestro equipo de inteligencia artificial, listo para protegerte y optimizar tu viaje.");
       else if (pathname === '/noticias') speak("Centro de mando activado. Soy Candy. Aquí tienes el reporte global de clima, eventos y fronteras de mis subagentes Alpha y Beta.");
+    } else if (pathname !== prevPathname.current) {
+      // Keep track of pathname even if audio is disabled
+      prevPathname.current = pathname;
     }
   }, [pathname, audioEnabled]);
 
