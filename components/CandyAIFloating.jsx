@@ -71,6 +71,7 @@ export default function CandyAIFloating() {
       else if (pathname === '/autos') speak("Bienvenido a Alquiler de Vehículos. Encuentra el auto perfecto para tu aventura con los mejores precios en más de ciento cincuenta países.");
       else if (pathname === '/historias') speak("Bienvenido a Historias. Inspírate con las aventuras reales de nuestra comunidad de viajeros y nómadas digitales alrededor del mundo.");
       else if (pathname === '/agentes') speak("Bienvenido al Cuartel General del Escuadrón I A. Conoce a nuestro equipo de inteligencia artificial, listo para protegerte y optimizar tu viaje.");
+      else if (pathname === '/noticias') speak("Centro de mando activado. Soy Candy. Aquí tienes el reporte global de clima, eventos y fronteras de mis subagentes Alpha y Beta.");
     }
   }, [pathname, audioEnabled]);
 
