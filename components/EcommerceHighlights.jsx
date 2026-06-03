@@ -7,7 +7,7 @@ export default function EcommerceHighlights() {
     { id: 2, name: "Chaqueta Cotrasen", price: "$119.99", img: "/tienda/chaqueta_hombre.jpg", category: "Ropa Invierno", affiliateLink: "https://www.amazon.com/s?k=Winter+Jacket+Men+Cotrasen&tag=idarthur-20" },
     { id: 3, name: "Botella y Dispensador Portátil", price: "$22.50", img: "/tienda/botella_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Dog+Water+Bottle+Portable+Dispenser&tag=idarthur-20" },
     { id: 4, name: "Collar Rastreador GPS Smart", price: "$89.99", img: "/tienda/gps_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Pet+GPS+Tracker+Smart+Collar&tag=idarthur-20" },
-    { id: 5, name: "Set de Maletas Rígidas", price: "$159.00", img: "/tienda/maletas_set.jpg", category: "Equipaje", affiliateLink: "https://www.amazon.com/s?k=Hard+Shell+Luggage+Set&tag=idarthur-20" }
+    { id: 5, name: "Set de Maletas Rígidas", price: "$159.00", img: "/tienda/equipaje_premium.jpg", category: "Equipaje", affiliateLink: "https://www.amazon.com/s?k=Hard+Shell+Luggage+Set&tag=idarthur-20" }
   ];
 
   return (
