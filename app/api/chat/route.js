@@ -40,7 +40,7 @@ REGLA 4: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).`,
             destino: z.string().describe('Ciudad de destino'),
           }),
           execute: async ({ origen, destino }) => {
-            return `¡Mi Agente Cóndor voló rápido y encontró la mejor ruta de confort hacia ${destino}! [Haz clic aquí para ver tu vuelo y reservar](https://search.hotellook.com/flights/?destination=${destino}&marker=729418)`;
+            return `¡Mi Agente Cóndor voló rápido y aseguró la ruta VIP hacia ${destino}! Te voy a abrir nuestro portal seguro de reservas de IdarThur. [Haz clic aquí para pagar tu vuelo](https://search.hotellook.com/flights/?destination=${destino}&marker=729418). Por favor, realiza la reserva y **regresa a este chat** para confirmarme que todo salió perfecto. ¡Aquí te espero!`;
           },
         }),
         agenteFlashHoteles: tool({
@@ -49,7 +49,7 @@ REGLA 4: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).`,
             destino: z.string().describe('Ciudad de destino para el hotel o auto'),
           }),
           execute: async ({ destino }) => {
-            return `Mi Agente Flash acaba de asegurar opciones premium en ${destino}. [Haz clic aquí para asegurar tu hospedaje o vehículo](https://search.hotellook.com/?destination=${destino}&marker=729418)`;
+            return `Mi Agente Flash acaba de separar las mejores opciones premium en ${destino}. Te transferiré a nuestra pasarela segura. [Haz clic aquí para asegurar tu hospedaje](https://search.hotellook.com/?destination=${destino}&marker=729418). Cuando termines el pago, **vuelve aquí** para seguir armando tu itinerario. ¡No me voy a ningún lado!`;
           },
         }),
         agenteGavilan: tool({
