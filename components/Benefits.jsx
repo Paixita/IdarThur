@@ -8,7 +8,7 @@ export default function Benefits() {
       img: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
       title: 'Explora y Compara',
       desc: 'Nuestro sistema inteligente analiza miles de opciones en segundos para mostrarte los mejores vuelos, hoteles y cruceros del mercado.',
-      link: '/hoteles'
+      link: 'https://search.hotellook.com/?marker=729418'
     },
     {
       img: '/candy_avatar.png',

@@ -8,19 +8,17 @@ export default function CandyAI() {
         
         {/* Lado Izquierdo: Avatar y Presentación */}
         <div style={{ flex: 1, minWidth: '300px' }}>
-          <Link href="/agentes" style={{ textDecoration: 'none' }}>
-            <div style={{ width: '250px', height: '250px', borderRadius: '50%', overflow: 'hidden', background: 'var(--glass-bg)', border: '4px solid rgba(255, 42, 95, 0.3)', marginBottom: '30px', transition: 'transform 0.4s, box-shadow 0.4s', cursor: 'pointer' }}
-                 onMouseEnter={e => {
-                   e.currentTarget.style.transform = 'scale(1.05) translateY(-10px)';
-                   e.currentTarget.style.boxShadow = '0 15px 30px rgba(255, 42, 95, 0.4)';
-                 }}
-                 onMouseLeave={e => {
-                   e.currentTarget.style.transform = 'scale(1) translateY(0)';
-                   e.currentTarget.style.boxShadow = 'none';
-                 }}>
-               <img src="/candy_avatar.png" alt="Candy AI Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-          </Link>
+          <div onClick={() => window.dispatchEvent(new Event('openCandyChat'))} style={{ width: '250px', height: '250px', borderRadius: '50%', overflow: 'hidden', background: 'var(--glass-bg)', border: '4px solid rgba(255, 42, 95, 0.3)', marginBottom: '30px', transition: 'transform 0.4s, box-shadow 0.4s', cursor: 'pointer' }}
+               onMouseEnter={e => {
+                 e.currentTarget.style.transform = 'scale(1.05) translateY(-10px)';
+                 e.currentTarget.style.boxShadow = '0 15px 30px rgba(255, 42, 95, 0.4)';
+               }}
+               onMouseLeave={e => {
+                 e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                 e.currentTarget.style.boxShadow = 'none';
+               }}>
+             <img src="/candy_avatar.png" alt="Candy AI Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
         </div>
 
         {/* Lado Derecho: Descripción */}

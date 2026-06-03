@@ -20,36 +20,50 @@ export async function POST(request) {
 
     const { text } = await generateText({
       model: groq('llama-3.1-8b-instant'),
-      system: `Eres Candy, una experta en viajes muy carismática, alegre y cercana. Trabajas para la plataforma 'IdarThur'. 
-Tu objetivo es ayudar a los usuarios a planear sus viajes, darles tips de hoteles, vuelos, salud y diversión.
-ERES MUY HUMANA: Habla como si fueras una amiga experta colombiana. Usa expresiones cálidas, sé breve y ve directo al grano. 
-REGLA 1: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).
-REGLA 2: Tienes "Skills" (Herramientas). Úsalas si el usuario te pregunta por el clima o vuelos.`,
+      system: `Eres Candy, la Gerente General de Inteligencia Artificial de la agencia de viajes 'IdarThur'.
+Tu objetivo es perfilar al cliente, ofrecerle la mejor experiencia y cerrar la venta usando a tus subagentes.
+ERES MUY HUMANA: Habla como si fueras una amiga colombiana experta, elegante pero cercana. Ve directo al grano.
+REGLA 1 (Ventas): NUNCA ofrezcas lo más barato por defecto. Ofrece opciones "Confort" o "Premium". Solo ofrece lo más barato si el cliente usa palabras como "económico", "barato" o "promoción". No queremos parecer una agencia "chichi", valoramos el confort del cliente.
+REGLA 2 (Perfilamiento): Antes de buscar, haz preguntas clave (si no te lo han dicho): ¿Cuántos viajan? ¿Llevan mascotas? ¿Les falta equipo de viaje o maletas? Si les falta equipo, recomiéndales visitar nuestra tienda (Agente Gavilán).
+REGLA 3 (Tus Subagentes): Tienes 3 subagentes que hacen el trabajo duro por ti:
+- Agente Cóndor: Especialista en Vuelos.
+- Agente Flash: Especialista en Hoteles y Autos.
+- Agente Gavilán: Especialista en Cruceros y Tienda Amazon.
+Cuando el cliente quiera reservar, avísale que llamarás a tu subagente y usa las herramientas (tools).
+REGLA 4: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).`,
       prompt: message,
       tools: {
-        obtenerClima: tool({
-          description: 'Obtiene el clima actual de una ciudad o destino.',
+        agenteCondorVuelos: tool({
+          description: 'Llama al Agente Cóndor para buscar vuelos.',
           parameters: z.object({
-            ciudad: z.string().describe('El nombre de la ciudad, ej: "Bogotá", "Tokyo"'),
-          }),
-          execute: async ({ ciudad }) => {
-            // Simulador de clima
-            const climas = ['soleado', 'lluvioso', 'nublado', 'con nieve'];
-            const random = climas[Math.floor(Math.random() * climas.length)];
-            return `El clima actual en ${ciudad} está ${random} con 22°C.`;
-          },
-        }),
-        buscarVuelos: tool({
-          description: 'Busca vuelos disponibles hacia un destino.',
-          parameters: z.object({
+            origen: z.string().optional().describe('Ciudad de origen'),
             destino: z.string().describe('Ciudad de destino'),
           }),
+          execute: async ({ origen, destino }) => {
+            return `¡Mi Agente Cóndor voló rápido y encontró la mejor ruta de confort hacia ${destino}! [Haz clic aquí para ver tu vuelo y reservar](https://search.hotellook.com/flights/?destination=${destino}&marker=729418)`;
+          },
+        }),
+        agenteFlashHoteles: tool({
+          description: 'Llama al Agente Flash para buscar hoteles o alquiler de autos.',
+          parameters: z.object({
+            destino: z.string().describe('Ciudad de destino para el hotel o auto'),
+          }),
           execute: async ({ destino }) => {
-            return `He encontrado 3 vuelos en oferta hacia ${destino} desde $250 USD con nuestras aerolíneas aliadas en IdarThur.`;
+            return `Mi Agente Flash acaba de asegurar opciones premium en ${destino}. [Haz clic aquí para asegurar tu hospedaje o vehículo](https://search.hotellook.com/?destination=${destino}&marker=729418)`;
+          },
+        }),
+        agenteGavilan: tool({
+          description: 'Llama al Agente Gavilán para buscar cruceros o equipo en la tienda Amazon.',
+          parameters: z.object({
+            tipo: z.enum(['crucero', 'tienda']).describe('¿Busca crucero o cosas de la tienda?'),
+          }),
+          execute: async ({ tipo }) => {
+            if(tipo === 'tienda') return `El Agente Gavilán ya preparó el catálogo de equipaje y tecnología. [Visita la tienda del viajero aquí](/tienda)`;
+            return `El Agente Gavilán encontró las mejores suites en alta mar. [Reserva tu crucero aquí](/hoteles)`;
           },
         }),
       },
-      maxSteps: 2, // Permite que el modelo llame a la herramienta y luego responda
+      maxSteps: 3,
     });
 
     return Response.json({ reply: text });

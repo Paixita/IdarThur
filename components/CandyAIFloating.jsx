@@ -21,6 +21,22 @@ export default function CandyAIFloating() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Evento para abrir el chat desde botones externos
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      if (!audioEnabled) setAudioEnabled(true);
+      setTimeout(() => speak("Hola, estoy aquí lista para ayudarte. Dime a dónde te gustaría viajar o usa tu micrófono."), 500);
+    };
+    window.addEventListener('openCandyChat', handleOpenChat);
+    return () => window.removeEventListener('openCandyChat', handleOpenChat);
+  }, [audioEnabled]);
+
+  const formatMessage = (text) => {
+    const formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #45f3ff; text-decoration: underline; font-weight: bold; background: rgba(69,243,255,0.1); padding: 5px 10px; border-radius: 10px; display: inline-block; margin-top: 5px;">$1</a>');
+    return { __html: formatted };
+  };
+
   const speak = async (text) => {
     if (typeof window === 'undefined') return;
     
@@ -244,9 +260,7 @@ export default function CandyAIFloating() {
                 fontSize: '0.95rem', lineHeight: '1.4',
                 borderBottomRightRadius: msg.role === 'user' ? '5px' : '20px',
                 borderTopLeftRadius: msg.role === 'assistant' ? '5px' : '20px',
-              }}>
-                {msg.content}
-              </div>
+              }} dangerouslySetInnerHTML={formatMessage(msg.content)} />
             ))}
             {isLoading && (
               <div style={{ alignSelf: 'flex-start', color: '#45f3ff', fontStyle: 'italic', fontSize: '0.9rem' }}>Candy está procesando...</div>
