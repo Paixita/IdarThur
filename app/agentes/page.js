@@ -39,7 +39,8 @@ export default function AgentesPage() {
       img: "/agentes/altamar.png",
       skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
       desc: "Tiene acceso a la base de datos maestra de las navieras. Te avisa antes que nadie de nuevas aperturas de cruceros y te consigue mejoras gratuitas de cabina.",
-      isPrivate: true
+      isPrivate: false,
+      greeting: "¡Ahoy, marinero! Soy el Capitán Altamar. ¿Listo para surcar los siete mares? Dime en qué aguas te gustaría navegar y yo me encargaré de conseguirte el mejor camarote y los beneficios más exclusivos a bordo."
     },
     {
       id: "cyberguard",
@@ -123,6 +124,8 @@ export default function AgentesPage() {
         reply = "¡Hola corazón! Aquí estoy para cuidarte. Para ese viaje te recomiendo llevar un repelente fuerte y tu vacuna al día. Y por favor, si tienes alguna pregunta más íntima o personal sobre tu salud en el viaje, siéntete con total confianza de preguntarme. Estamos en privado, ¿sí?";
       } else if (activeChat.id === 'nicolas') {
         reply = "¡Excelente elección! Acabo de hacer una búsqueda rápida y hay unas mochilas antirrobo súper en tendencia hoy con buen descuento. ¿Te paso el link para que las veas?";
+      } else if (activeChat.id === 'altamar') {
+        reply = "¡Por las barbas de Neptuno! Esa es una excelente ruta. Acabo de revisar mis radares y hay un crucero zarpando pronto con cabinas con balcón disponibles al precio de cabina interior. ¿Quieres que te asegure un espacio?";
       }
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
       speak(reply);
