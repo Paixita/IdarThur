@@ -12,7 +12,7 @@ export async function POST(req) {
     if (agentId === 'nicolas') voice = 'es-ES-AlvaroNeural'; // Joven, dinámico
     if (agentId === 'vitalis') voice = 'es-MX-DaliaNeural'; // Doctora, profesional, madura
     if (agentId === 'altamar') voice = 'es-ES-EmilioNeural'; // Capitán, maduro
-    if (agentId === 'cyberguard') voice = 'es-MX-JorgeNeural'; // Fuerte, seguro
+    if (agentId === 'cyberguard') voice = 'es-ES-ElviraNeural'; // Fuerte, segura, protectora (Femenina)
 
     const lang = voice.split('-').slice(0, 2).join('-');
 
