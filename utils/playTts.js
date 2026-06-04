@@ -1,29 +1,16 @@
 export async function playPremiumAudio(text, agentId) {
-  let voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella (Candy) por defecto
-  if (agentId === 'nicolas') voiceId = 'pNInz6obpgDQGcFmaJgB'; // Adam
-  if (agentId === 'vitalis') voiceId = 'XrExE9yKIg1WjnnlVkGX'; // Matilda (Cálida, profesional, madura, 100% gratuita probada)
-  if (agentId === 'sophia') voiceId = 'EXAVITQu4vr4xnSDxMaL';
-
-  // Obtenemos la llave directamente para evitar el proxy de Cloudflare que bloquea ElevenLabs Free Tier
-  const keyRes = await fetch('/api/tts');
-  const { apiKey } = await keyRes.json();
-  if (!apiKey) throw new Error("No hay API Key de ElevenLabs");
-
-  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
+  const res = await fetch(`/api/edge-tts`, {
     method: 'POST',
     headers: {
-      'Accept': 'audio/mpeg',
-      'Content-Type': 'application/json',
-      'xi-api-key': apiKey
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       text: text,
-      model_id: 'eleven_multilingual_v2',
-      voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+      agentId: agentId || 'candy'
     })
   });
   
-  if (!res.ok) throw new Error("Fallo la generación de voz ElevenLabs");
+  if (!res.ok) throw new Error("Fallo la generación de voz Edge TTS");
 
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
@@ -36,7 +23,10 @@ export async function playPremiumAudio(text, agentId) {
       URL.revokeObjectURL(url);
       resolve();
     };
-    audio.onerror = reject;
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Error al reproducir el audio"));
+    };
     
     audio.play().catch(reject);
   });
