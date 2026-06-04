@@ -1,34 +1,32 @@
 export async function playPremiumAudio(text, agentId) {
-  let voice = 'es_mx_001'; // Femenina natural (Candy, Vitalis, CyberGuard)
-  if (agentId === 'nicolas' || agentId === 'altamar') {
-    voice = 'es_mx_002'; // Masculina natural
-  }
+  let voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella (Candy) por defecto
+  if (agentId === 'nicolas') voiceId = 'pNInz6obpgDQGcFmaJgB'; // Adam
+  if (agentId === 'vitalis') voiceId = 'XrExE9yKIg1WjnnlVkGX'; // Matilda (Cálida, profesional)
+  if (agentId === 'altamar') voiceId = 'cjVigY5qzO86Huf0OWal'; // Eric (Voz madura)
+  if (agentId === 'cyberguard') voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella
 
-  // Petición directa desde el navegador (evita restricciones de Cloudflare/Vercel)
-  const res = await fetch("https://tiktok-tts.weilnet.workers.dev/api/generation", {
+  // Obtenemos la llave directamente de la API route
+  const keyRes = await fetch('/api/tts');
+  const { apiKey } = await keyRes.json();
+  if (!apiKey) throw new Error("No hay API Key de ElevenLabs");
+
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Accept': 'audio/mpeg',
+      'Content-Type': 'application/json',
+      'xi-api-key': apiKey
     },
     body: JSON.stringify({
       text: text,
-      voice: voice
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.5, similarity_boost: 0.75 }
     })
   });
   
-  if (!res.ok) throw new Error("Fallo la red de TikTok TTS");
+  if (!res.ok) throw new Error("Fallo la generación de voz ElevenLabs");
 
-  const data = await res.json();
-  if (data.error || !data.data) throw new Error(data.error || "Fallo la generación de voz TikTok");
-
-  // Decodificar Base64 a Blob en el cliente
-  const binaryString = window.atob(data.data);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-  }
-  const blob = new Blob([bytes], { type: 'audio/mpeg' });
+  const blob = await res.blob();
   const url = URL.createObjectURL(blob);
 
   return new Promise((resolve, reject) => {
@@ -39,10 +37,7 @@ export async function playPremiumAudio(text, agentId) {
       URL.revokeObjectURL(url);
       resolve();
     };
-    audio.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Error al reproducir el audio"));
-    };
+    audio.onerror = reject;
     
     audio.play().catch(reject);
   });
