@@ -1,11 +1,15 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import PremiumAudioModal from '@/components/PremiumAudioModal';
+import { playAlvaroAudio } from '@/utils/playAlvaro';
 
 export default function AgentesPage() {
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMsg, setInputMsg] = useState('');
+  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const agents = [
     {
@@ -63,6 +67,13 @@ export default function AgentesPage() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
+    if (inputMsg.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setInputMsg('');
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      return;
+    }
+
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
@@ -76,6 +87,7 @@ export default function AgentesPage() {
         reply = "¡Por las barbas de Neptuno, hay una cabina con balcón en promoción secreta! Pásame tu **WhatsApp** o **Email** y te envío el acceso directo para que la reserves antes de que se agote.";
       }
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      if (isAudioPremium) playAlvaroAudio(reply);
     }, 1500);
   };
 
@@ -93,6 +105,13 @@ export default function AgentesPage() {
     e.preventDefault();
     if (!candyInputMsg.trim()) return;
 
+    if (candyInputMsg.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setCandyInputMsg('');
+      setCandyMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      return;
+    }
+
     const newMessages = [...candyMessages, { text: candyInputMsg, sender: 'user' }];
     setCandyMessages(newMessages);
     setCandyInputMsg('');
@@ -100,6 +119,7 @@ export default function AgentesPage() {
     setTimeout(() => {
       const reply = "Me encanta ese plan. Tengo acceso a unas tarifas preferenciales que no están publicadas en internet. Para enviarte la información confidencial, regálame tu **WhatsApp** o **Correo Electrónico** y te contacto enseguida.";
       setCandyMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      if (isAudioPremium) playAlvaroAudio(reply);
     }, 1500);
   };
 
@@ -223,9 +243,21 @@ export default function AgentesPage() {
                 <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>{activeChat.name}</h3>
                 <span style={{ color: activeChat.color, fontSize: '0.85rem' }}>{activeChat.role}</span>
               </div>
-              <button onClick={() => setActiveChat(null)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
-                ×
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (isAudioPremium) playAlvaroAudio(`Hola, mi voz VIP está activada como ${activeChat.name}. Dime en qué te ayudo.`);
+                    else setIsAudioModalOpen(true);
+                  }} 
+                  style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? activeChat.color : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? activeChat.color : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isAudioPremium ? '🔊' : '🔈'}
+                </button>
+                <button onClick={() => setActiveChat(null)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                  ×
+                </button>
+              </div>
             </div>
 
             {/* Chat Body */}
@@ -274,9 +306,21 @@ export default function AgentesPage() {
                 <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Directora de Operaciones</span>
               </div>
-              <button onClick={() => setIsCandyChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
-                ×
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (isAudioPremium) playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
+                    else setIsAudioModalOpen(true);
+                  }} 
+                  style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isAudioPremium ? '🔊' : '🔈'}
+                </button>
+                <button onClick={() => setIsCandyChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                  ×
+                </button>
+              </div>
             </div>
 
             <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -312,6 +356,7 @@ export default function AgentesPage() {
         </div>
       )}
 
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
     </main>
   );
 }

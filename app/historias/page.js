@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { stories } from '../../data/historias';
+import PremiumAudioModal from '@/components/PremiumAudioModal';
+import { playAlvaroAudio } from '@/utils/playAlvaro';
 
 export default function HistoriasPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -9,6 +11,8 @@ export default function HistoriasPage() {
     { text: "¡Bienvenido al rincón de las historias! Soy Yessel. Aquí encontrarás relatos fascinantes de otros viajeros y anécdotas de nuestro equipo. Si tienes una historia increíble que contar, ¡compártela con nosotros!", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
+  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {
     setIsChatOpen(true);
@@ -18,6 +22,13 @@ export default function HistoriasPage() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
+    if (inputMsg.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setInputMsg('');
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      return;
+    }
+
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
@@ -25,6 +36,7 @@ export default function HistoriasPage() {
     setTimeout(() => {
       const reply = "¡Qué interesante! Nos encantaría conocer más de tu historia y de paso darte beneficios VIP. Regálame tu **WhatsApp** o **Correo Electrónico** para contactarte y darte acceso a tarifas ocultas exclusivas.";
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      if (isAudioPremium) playAlvaroAudio(reply);
     }, 1500);
   };
 
@@ -142,9 +154,21 @@ export default function HistoriasPage() {
                 <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Historias</span>
               </div>
-              <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
-                ×
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (isAudioPremium) playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
+                    else setIsAudioModalOpen(true);
+                  }} 
+                  style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isAudioPremium ? '🔊' : '🔈'}
+                </button>
+                <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                  ×
+                </button>
+              </div>
             </div>
 
             <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -180,6 +204,7 @@ export default function HistoriasPage() {
         </div>
       )}
 
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
       <style>{`
         .story-card {
           transition: transform 0.3s, box-shadow 0.3s;

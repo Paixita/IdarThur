@@ -1,6 +1,8 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import PremiumAudioModal from '@/components/PremiumAudioModal';
+import { playAlvaroAudio } from '@/utils/playAlvaro';
 import Navbar from '@/components/Navbar';
 
 export default function AutosPage() {
@@ -9,6 +11,8 @@ export default function AutosPage() {
     { text: "¡Hola viajero! Soy Yessel. ¿Necesitas moverte con libertad? Tengo acceso a tarifas preferenciales de alquiler que incluyen seguro a todo riesgo. ¿A qué ciudad viajas?", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
+  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {
     setIsChatOpen(true);
@@ -18,6 +22,13 @@ export default function AutosPage() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
+    if (inputMsg.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setInputMsg('');
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      return;
+    }
+
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
@@ -25,6 +36,7 @@ export default function AutosPage() {
     setTimeout(() => {
       const reply = "¡Excelente destino! Encontré una promoción con cancelación gratuita, pero es confidencial. Regálame tu **WhatsApp** o tu **Correo Electrónico** y te envío el enlace seguro para que lo reserves de inmediato.";
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      if (isAudioPremium) playAlvaroAudio(reply);
     }, 1500);
   };
 
@@ -159,9 +171,21 @@ export default function AutosPage() {
                   <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                   <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Transporte</span>
                 </div>
-                <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
-                  ×
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      if (isAudioPremium) playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
+                      else setIsAudioModalOpen(true);
+                    }} 
+                    style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    {isAudioPremium ? '🔊' : '🔈'}
+                  </button>
+                  <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                    ×
+                  </button>
+                </div>
               </div>
 
               <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -197,6 +221,7 @@ export default function AutosPage() {
           </div>
         )}
 
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
       </main>
     </div>
   );

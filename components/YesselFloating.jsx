@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import PremiumAudioModal from './PremiumAudioModal';
+import { playAlvaroAudio } from '@/utils/playAlvaro';
 
 export default function YesselFloating() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +13,9 @@ export default function YesselFloating() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   // Auto-scroll al fondo
   useEffect(() => {
@@ -34,7 +39,16 @@ export default function YesselFloating() {
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
+    
     const text = input;
+    
+    if (text.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setInput('');
+      setMessages(prev => [...prev, { role: 'assistant', content: '✅ ¡Voz VIP de Yessel desbloqueada con éxito! Ahora te hablaré de forma natural.' }]);
+      return;
+    }
+
     setInput("");
     await processMessage(text);
   };
@@ -53,6 +67,9 @@ export default function YesselFloating() {
       const data = await res.json();
       
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      if (isAudioPremium) {
+        playAlvaroAudio(data.reply);
+      }
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: "Error de conexión." }]);
     } finally {
@@ -108,7 +125,23 @@ export default function YesselFloating() {
                 <span style={{ fontSize: '0.8rem', color: '#45f3ff' }}>● Conserje VIP Online</span>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer', lineHeight: '1' }}>&times;</button>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <button 
+                onClick={() => {
+                  if (isAudioPremium) {
+                    playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
+                  } else {
+                    setIsAudioModalOpen(true);
+                  }
+                }} 
+                style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
+                title="Voz de Yessel"
+              >
+                {isAudioPremium ? '🔊' : '🔈'}
+              </button>
+              <button onClick={() => setIsOpen(false)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer', lineHeight: '1' }}>&times;</button>
+            </div>
           </div>
 
           <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -145,6 +178,8 @@ export default function YesselFloating() {
           </div>
         </div>
       )}
+      
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
     </>
   )
 }

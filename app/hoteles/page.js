@@ -1,6 +1,8 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import PremiumAudioModal from '@/components/PremiumAudioModal';
+import { playAlvaroAudio } from '@/utils/playAlvaro';
 
 export default function HotelesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -8,6 +10,8 @@ export default function HotelesPage() {
     { text: "¡Hola de nuevo! Soy Yessel. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame tu destino y te ayudaré a encontrarlo con tarifas preferenciales.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
+  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {
     setIsChatOpen(true);
@@ -17,6 +21,13 @@ export default function HotelesPage() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
+    if (inputMsg.trim() === '/yessel-audio') {
+      setIsAudioPremium(true);
+      setInputMsg('');
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      return;
+    }
+
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
@@ -24,6 +35,7 @@ export default function HotelesPage() {
     setTimeout(() => {
       const reply = "¡Entendido! Acabo de filtrar las mejores opciones, y encontré una tarifa confidencial muy por debajo del precio en internet. Por políticas de privacidad, regálame tu **WhatsApp** o **Correo Electrónico** y te enviaré el enlace VIP directo.";
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
+      if (isAudioPremium) playAlvaroAudio(reply);
     }, 1500);
   };
   return (
@@ -213,9 +225,21 @@ export default function HotelesPage() {
                 <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Alojamientos</span>
               </div>
-              <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
-                ×
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    if (isAudioPremium) playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
+                    else setIsAudioModalOpen(true);
+                  }} 
+                  style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {isAudioPremium ? '🔊' : '🔈'}
+                </button>
+                <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                  ×
+                </button>
+              </div>
             </div>
 
             {/* Chat Body */}
@@ -253,6 +277,7 @@ export default function HotelesPage() {
         </div>
       )}
 
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
     </main>
   );
 }
