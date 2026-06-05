@@ -204,7 +204,7 @@ export default function HistoriasPage() {
         </div>
       )}
 
-      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} onSuccess={() => setIsAudioPremium(true)} />
       <style>{`
         .story-card {
           transition: transform 0.3s, box-shadow 0.3s;

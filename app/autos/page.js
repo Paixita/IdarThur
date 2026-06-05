@@ -221,7 +221,7 @@ export default function AutosPage() {
           </div>
         )}
 
-      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} />
+      <PremiumAudioModal isOpen={isAudioModalOpen} onClose={() => setIsAudioModalOpen(false)} onSuccess={() => setIsAudioPremium(true)} />
       </main>
     </div>
   );

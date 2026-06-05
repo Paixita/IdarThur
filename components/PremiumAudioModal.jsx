@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function PremiumAudioModal({ isOpen, onClose }) {
+export default function PremiumAudioModal({ isOpen, onClose, onSuccess }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
+
   if (!isOpen) return null;
+
+  const handleActivate = () => {
+    if (code.trim().toUpperCase() === 'VIP-YESS-2026') {
+      setError('');
+      setCode('');
+      if (onSuccess) onSuccess();
+      onClose();
+    } else {
+      setError('Código inválido. Verifica tu comprobante.');
+    }
+  };
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}>
@@ -35,7 +49,25 @@ export default function PremiumAudioModal({ isOpen, onClose }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
 
-        <p style={{ color: '#a0aab5', fontSize: '0.8rem' }}>Una vez realizado el pago, envíanos el comprobante por correo para recibir tu código de activación inmediato.</p>
+        <p style={{ color: '#a0aab5', fontSize: '0.8rem', marginBottom: '20px' }}>Una vez realizado el pago, envíanos el comprobante por correo para recibir tu código de activación.</p>
+
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', marginTop: '10px' }}>
+          <p style={{ color: 'white', fontSize: '0.9rem', marginBottom: '10px' }}>¿Ya tienes tu código de activación?</p>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <input 
+              type="text" 
+              value={code} 
+              onChange={e => setCode(e.target.value)}
+              placeholder="Ingresa tu código VIP" 
+              style={{ flex: 1, padding: '10px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', outline: 'none' }}
+            />
+            <button onClick={handleActivate} style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0 15px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>
+              Activar
+            </button>
+          </div>
+          {error && <p style={{ color: 'var(--accent)', fontSize: '0.8rem', marginTop: '10px', margin: 0 }}>{error}</p>}
+        </div>
+
       </div>
     </div>
   );
