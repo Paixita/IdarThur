@@ -50,13 +50,13 @@ export default function Noticias() {
     <main style={{ minHeight: '100vh', padding: '120px 20px 50px', background: 'var(--background)', color: 'white' }}>
       <div className="container">
         
-        {/* Candy AI Manager Header */}
+        {/* Yessel Manager Header */}
         <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '50px', display: 'flex', gap: '30px', alignItems: 'center', flexWrap: 'wrap', border: '1px solid rgba(69, 243, 255, 0.2)' }}>
-          <img src="/candy_avatar.png" alt="Candy AI Manager" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)', filter: 'drop-shadow(0 0 15px rgba(69,243,255,0.4))' }} />
+          <img src="/yessel_avatar.png" alt="Yessel Manager" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)', filter: 'drop-shadow(0 0 15px rgba(69,243,255,0.4))' }} />
           <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Centro de Mando: <span className="text-gradient">Noticias Globales</span></h1>
             <p style={{ color: '#a0aab5', fontSize: '1.2rem' }}>
-              "Hola, soy Candy. Mis subagentes Alpha y Beta están monitoreando constantemente el clima, eventos y restricciones fronterizas para que planifiques tu viaje de forma segura. Aquí está su reporte en vivo."
+              "Hola, soy Yessel. Mis subagentes Alpha y Beta están monitoreando constantemente el clima, eventos y restricciones fronterizas para que planifiques tu viaje de forma segura. Aquí está su reporte en vivo."
             </p>
           </div>
         </div>

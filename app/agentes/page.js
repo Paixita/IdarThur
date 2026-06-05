@@ -1,7 +1,6 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
-import { playPremiumAudio } from '@/utils/playTts';
 
 export default function AgentesPage() {
   const [activeChat, setActiveChat] = useState(null);
@@ -11,187 +10,96 @@ export default function AgentesPage() {
   const agents = [
     {
       id: "vitalis",
-      name: "Dra. Vitalis",
+      name: "Dr. Yessel (Salud)",
       role: "Agente Médico de Viajes",
       color: "#00d4ff",
-      img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      img: "/agentes/yessel_medico.png",
       skills: ["Vacunación Global", "Emergencias", "Seguros Médicos"],
-      desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones de salud locales y los mejores hospitales cercanos a tu hotel.",
+      desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones locales y hospitales cercanos.",
       isPrivate: false,
-      greeting: "¡Hola! Qué gusto saludarte. Soy la Dra. Vitalis. ¿Ya tienes pensado a dónde vas a viajar? Cuéntame y te ayudo a revisar qué vacunas o precauciones médicas necesitas para que viajes con total tranquilidad."
+      greeting: "¡Hola! Soy el Dr. Yessel. ¿A dónde planeas viajar? Cuéntame y te ayudo a revisar qué precauciones médicas necesitas."
     },
     {
       id: "nicolas",
-      name: "Nicolás",
+      name: "Yessel Ventas",
       role: "Asistente de Compras",
       color: "#ff9900",
-      img: "/agentes/nicolas.png",
+      img: "/agentes/yessel_ventas.png",
       skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
-      desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino. Garantiza que siempre compres al precio más bajo.",
+      desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino.",
       isPrivate: false,
-      greeting: "¡Hola, hola! Soy Nicolás. ¿Qué andamos buscando hoy? ¿Una buena maleta que aguante todo, un adaptador o ropita térmica? Dime a dónde vas y te busco las mejores opciones y precios."
+      greeting: "¡Hola! Soy Yessel. ¿Buscando maletas o ropa para tu viaje? Dime a dónde vas y te busco las mejores opciones."
     },
     {
       id: "altamar",
-      name: "Capitán Altamar",
+      name: "Capitán Yessel",
       role: "Especialista en Cruceros",
       color: "#ffd700",
-      img: "/agentes/altamar.png",
+      img: "/agentes/yessel_capitan.png",
       skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
-      desc: "Tiene acceso a la base de datos maestra de las navieras. Te avisa antes que nadie de nuevas aperturas de cruceros y te consigue mejoras gratuitas de cabina.",
+      desc: "Tiene acceso a la base de datos maestra de las navieras. Te consigue mejoras gratuitas de cabina y ofertas exclusivas.",
       isPrivate: false,
-      greeting: "¡Ahoy, marinero! Soy el Capitán Altamar. ¿Listo para surcar los siete mares? Dime en qué aguas te gustaría navegar y yo me encargaré de conseguirte el mejor camarote y los beneficios más exclusivos a bordo."
+      greeting: "¡Ahoy, marinero! Soy el Capitán Yessel. ¿Listo para surcar los mares? Dime qué ruta te interesa."
     },
     {
       id: "cyberguard",
-      name: "CyberGuard",
+      name: "Yessel CyberGuard",
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
-      img: "/agentes/cyberguard.png",
+      img: "/agentes/yessel_cyberguard.png",
       skills: ["Anti-Phishing", "Pagos Encriptados", "Auditoría de Enlaces"],
-      desc: "Tu guardaespaldas digital. Bloquea fraudes, te alerta si recibes correos falsos a nombre de agencias y garantiza que tus transacciones con tarjeta sean 100% blindadas.",
+      desc: "Tu guardaespaldas digital. Bloquea fraudes y garantiza que tus transacciones sean 100% blindadas.",
       isPrivate: true
     }
   ];
-
-  const speak = async (text, overrideAgentId = null) => {
-    if (typeof window === 'undefined') return;
-    if (window.currentAudio) {
-      window.stopAudioFlag = true;
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
-    window.speechSynthesis.cancel();
-    
-    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-    const targetAgentId = overrideAgentId || activeChat?.id;
-    
-    try {
-      await playPremiumAudio(cleanText, targetAgentId);
-    } catch (error) {
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'es-ES';
-      
-      const voices = window.speechSynthesis.getVoices();
-      const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-      
-      if (spanishVoices.length > 0) {
-        const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
-        
-        if (targetAgentId === 'nicolas') {
-          utterance.pitch = 0.9;
-          utterance.rate = 1.0;
-          const maleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('hombre') || v.name.includes('Jorge') || v.name.includes('Pablo'));
-          utterance.voice = maleVoice || spanishVoices[0];
-        } else {
-          utterance.pitch = 1.1;
-          utterance.rate = 1.05;
-          const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-          utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
-        }
-      }
-
-      window.speechSynthesis.speak(utterance);
-    }
-  };
 
   const handleConnect = (agent) => {
     if (agent.isPrivate) return;
     setActiveChat(agent);
     setMessages([{ text: agent.greeting, sender: 'ai' }]);
-    setTimeout(() => speak(agent.greeting, agent.id), 300);
   };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    if (typeof window !== 'undefined') {
-      window.stopAudioFlag = false;
-      const dummy = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
-      dummy.play().catch(()=>{});
-    }
-
-    // Add user message
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
 
-    // Simulate AI response based on agent
+    // Lead Generation Logic
     setTimeout(() => {
-      let reply = "Dame un segundito que lo reviso...";
+      let reply = "¡Tengo una oferta increíble y súper exclusiva para ti! Para asegurarte este precio y darte asistencia VIP, por favor déjame tu **número de WhatsApp** o tu **Correo Electrónico** aquí mismo y te enviaré el enlace seguro inmediatamente.";
       if (activeChat.id === 'vitalis') {
-        reply = "¡Hola corazón! Aquí estoy para cuidarte. Para ese viaje te recomiendo llevar un repelente fuerte y tu vacuna al día. Y por favor, si tienes alguna pregunta más íntima o personal sobre tu salud en el viaje, siéntete con total confianza de preguntarme. Estamos en privado, ¿sí?";
-      } else if (activeChat.id === 'nicolas') {
-        reply = "¡Excelente elección! Acabo de hacer una búsqueda rápida y hay unas mochilas antirrobo súper en tendencia hoy con buen descuento. ¿Te paso el link para que las veas?";
+        reply = "¡Excelente! Para enviarte el informe médico completo de tu destino y los links del seguro con descuento, déjame tu **WhatsApp** o **Correo** y te lo mando ya mismo.";
       } else if (activeChat.id === 'altamar') {
-        reply = "¡Por las barbas de Neptuno! Esa es una excelente ruta. Acabo de revisar mis radares y hay un crucero zarpando pronto con cabinas con balcón disponibles al precio de cabina interior. ¿Quieres que te asegure un espacio?";
+        reply = "¡Por las barbas de Neptuno, hay una cabina con balcón en promoción secreta! Pásame tu **WhatsApp** o **Email** y te envío el acceso directo para que la reserves antes de que se agote.";
       }
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
-      speak(reply);
     }, 1500);
   };
 
   const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
   const [candyMessages, setCandyMessages] = useState([
-    { text: "¡Hola! Estás en el centro de mando. Soy Candy, la líder de atención, pero aquí puedes conocer a todo mi equipo especializado. Desde Nicolás para tus compras hasta el Capitán Altamar para tus cruceros. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto.", sender: "ai" }
+    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
   ]);
   const [candyInputMsg, setCandyInputMsg] = useState('');
 
-  const speakCandy = async (text) => {
-    if (typeof window === 'undefined') return;
-    if (window.currentAudio) {
-      window.stopAudioFlag = true;
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
-    window.speechSynthesis.cancel();
-    
-    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-    
-    try {
-      await playPremiumAudio(cleanText, 'candy');
-    } catch (error) {
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'es-ES';
-      utterance.rate = 1.05;
-      utterance.pitch = 1.1;
-
-      const voices = window.speechSynthesis.getVoices();
-      const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-      if (spanishVoices.length > 0) {
-        const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
-        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-        utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
-      }
-
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
-    setTimeout(() => speakCandy(candyMessages[0].text), 300);
   };
 
   const handleSendCandyMessage = (e) => {
     e.preventDefault();
     if (!candyInputMsg.trim()) return;
 
-    if (typeof window !== 'undefined') {
-      window.stopAudioFlag = false;
-      const dummy = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
-      dummy.play().catch(()=>{});
-    }
-
     const newMessages = [...candyMessages, { text: candyInputMsg, sender: 'user' }];
     setCandyMessages(newMessages);
     setCandyInputMsg('');
 
     setTimeout(() => {
-      const reply = "¡Claro que sí! Cada uno de nuestros agentes está entrenado en una rama distinta para ofrecerte el mejor servicio. ¿Quieres que te conecte con alguno en especial?";
+      const reply = "Me encanta ese plan. Tengo acceso a unas tarifas preferenciales que no están publicadas en internet. Para enviarte la información confidencial, regálame tu **WhatsApp** o **Correo Electrónico** y te contacto enseguida.";
       setCandyMessages([...newMessages, { text: reply, sender: 'ai' }]);
-      speakCandy(reply);
     }, 1500);
   };
 
@@ -215,7 +123,7 @@ export default function AgentesPage() {
           No estás solo. Detrás de cada reserva, un equipo de especialistas de Inteligencia Artificial audita, protege y optimiza cada detalle de tu viaje. Conoce a tu equipo de élite.
         </p>
 
-        {/* Candy AI Recomendación */}
+        {/* Yessel Recomendación */}
         <div 
           className="glass" 
           style={{ padding: '30px', borderRadius: '25px', maxWidth: '900px', margin: '0 auto 60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s', textAlign: 'left' }}
@@ -230,12 +138,12 @@ export default function AgentesPage() {
           onClick={handleOpenCandyChat}
         >
           <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 0, 128, 0.4))' }}>
-             <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
+             <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
           </div>
           <div>
-            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Candy AI (Directora de Operaciones)</h3>
+            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel (Director de Operaciones)</h3>
             <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-              "¡Hola! Estás en el centro de mando. Soy Candy, la líder de atención. Conoce a todo mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
+              "¡Hola! Estás en el centro de mando. Soy Yessel, el conserje principal. Conoce a las diferentes facetas de mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
             </p>
           </div>
         </div>
@@ -361,9 +269,9 @@ export default function AgentesPage() {
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
             
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
-              <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div style={{ flexGrow: 1 }}>
-                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Candy AI</h3>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Directora de Operaciones</span>
               </div>
               <button onClick={() => setIsCandyChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
@@ -392,7 +300,7 @@ export default function AgentesPage() {
                 type="text" 
                 value={candyInputMsg}
                 onChange={e => setCandyInputMsg(e.target.value)}
-                placeholder={`Pregúntale a Candy...`} 
+                placeholder={`Escribe a Yessel...`} 
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>

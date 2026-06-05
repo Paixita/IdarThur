@@ -1,6 +1,6 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import CandyAIFloating from "@/components/CandyAIFloating";
+import YesselFloating from "@/components/YesselFloating";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <Footer />
-        <CandyAIFloating />
+        <YesselFloating />
       </body>
     </html>
   );

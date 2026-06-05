@@ -11,9 +11,9 @@ export default function Benefits() {
       link: 'https://search.hotellook.com/?marker=729418'
     },
     {
-      img: '/candy_avatar.png',
+      img: '/yessel_avatar.png',
       title: 'Asesoría con IA',
-      desc: 'Candy AI te acompaña en cada paso, recomendándote destinos, analizando precios y ayudándote a planificar el viaje perfecto.',
+      desc: 'Yessel te acompaña en cada paso, recomendándote destinos, analizando precios y ayudándote a planificar el viaje perfecto.',
       link: '#chat'
     },
     {

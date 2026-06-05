@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
-import CandyAI from "@/components/CandyAI";
+import YesselHero from "@/components/YesselHero";
 import EcommerceHighlights from "@/components/EcommerceHighlights";
 import DestinationsSlider from "@/components/DestinationsSlider";
 import Link from 'next/link';
@@ -41,7 +41,7 @@ export default function Home() {
       `}</style>
 
       <Benefits />
-      <CandyAI />
+      <YesselHero />
       <EcommerceHighlights />
     </main>
   );

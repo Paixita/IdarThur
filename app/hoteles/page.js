@@ -6,64 +6,25 @@ import { playPremiumAudio } from '@/utils/playTts';
 export default function HotelesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "¡Hola de nuevo! Soy Candy. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame y te paso los mejores alojamientos con Booking Genius.", sender: "ai" }
+    { text: "¡Hola de nuevo! Soy Yessel. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame tu destino y te ayudaré a encontrarlo con tarifas preferenciales.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
 
-  const speak = async (text) => {
-    if (typeof window === 'undefined') return;
-    if (window.currentAudio) {
-      window.stopAudioFlag = true;
-      window.currentAudio.pause();
-      window.currentAudio = null;
-    }
-    window.speechSynthesis.cancel();
-    
-    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-    
-    try {
-      await playPremiumAudio(cleanText, 'candy');
-    } catch (error) {
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'es-ES';
-      utterance.rate = 1.05;
-      utterance.pitch = 1.1;
-
-      const voices = window.speechSynthesis.getVoices();
-      const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
-      if (spanishVoices.length > 0) {
-        const googleVoice = spanishVoices.find(v => v.name.includes('Google') && v.name.includes('español'));
-        const femaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mujer') || v.name.includes('Sabina'));
-        utterance.voice = googleVoice || femaleVoice || spanishVoices[0];
-      }
-
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
   const handleOpenChat = () => {
     setIsChatOpen(true);
-    setTimeout(() => speak(messages[0].text), 300);
   };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    if (typeof window !== 'undefined') {
-      window.stopAudioFlag = false;
-      const dummy = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
-      dummy.play().catch(()=>{});
-    }
-
     const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
 
     setTimeout(() => {
-      const reply = "¡Entendido! Acabo de filtrar las mejores opciones con Booking. Te sugiero mirar los hoteles de 4 y 5 estrellas porque esta semana tienen descuentos por temporada. ¿Te abro la búsqueda oficial?";
+      const reply = "¡Entendido! Acabo de filtrar las mejores opciones, y encontré una tarifa confidencial muy por debajo del precio en internet. Por políticas de privacidad, regálame tu **WhatsApp** o **Correo Electrónico** y te enviaré el enlace VIP directo.";
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
-      speak(reply);
     }, 1500);
   };
   return (
@@ -113,7 +74,7 @@ export default function HotelesPage() {
         </button>
       </div>
 
-      {/* Candy AI Recomendación */}
+      {/* Yessel Recomendación */}
       <div 
         className="glass" 
         style={{ padding: '30px', borderRadius: '25px', marginBottom: '60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }}
@@ -128,12 +89,12 @@ export default function HotelesPage() {
         onClick={handleOpenChat}
       >
         <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 0, 128, 0.4))' }}>
-           <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
+           <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
         </div>
         <div>
-          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Consejo de Candy AI (¡Tócame para hablar!)</h3>
+          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Consejo de Yessel</h3>
           <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-            "Siempre te recomendaré hoteles cerca del transporte público principal o aeropuertos. Es más seguro para ti, te ahorra dinero en taxis y optimiza tu tiempo. Además, recuerda que gestionamos las reservas a través de nuestros aliados para garantizar tu tranquilidad financiera. ¡Tú solo relájate y disfruta la cama!"
+            "Siempre te recomendaré hoteles cerca del transporte público principal o aeropuertos. Haz clic aquí y dime a dónde vas para enviarte mis sugerencias confidenciales."
           </p>
         </div>
       </div>
@@ -241,16 +202,16 @@ export default function HotelesPage() {
 
         </div>
       </div>
-      {/* Chat Modal Simulator para Candy */}
+      {/* Chat Modal Simulator para Yessel */}
       {isChatOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
             
             {/* Chat Header */}
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
-              <img src="/candy_avatar.png" alt="Candy AI" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div style={{ flexGrow: 1 }}>
-                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Candy AI</h3>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Alojamientos</span>
               </div>
               <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
@@ -281,7 +242,7 @@ export default function HotelesPage() {
                 type="text" 
                 value={inputMsg}
                 onChange={e => setInputMsg(e.target.value)}
-                placeholder={`Pregúntale a Candy...`} 
+                placeholder={`Escribe a Yessel...`} 
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
