@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { stories } from '../../data/historias';
-import { playPremiumAudio } from '@/utils/playTts';
 
 export default function HistoriasPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);

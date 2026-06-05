@@ -1,7 +1,6 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
-import { playPremiumAudio } from '@/utils/playTts';
 
 export default function HotelesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);

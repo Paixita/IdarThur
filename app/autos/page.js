@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import { playPremiumAudio } from '@/utils/playTts';
 
 export default function AutosPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
