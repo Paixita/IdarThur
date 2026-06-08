@@ -1,24 +1,43 @@
 import { NextResponse } from 'next/server';
-import Parser from 'rss-parser';
 
-const parser = new Parser();
+export const runtime = 'edge';
+
+async function fetchRSS(url) {
+  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const xml = await res.text();
+  
+  const items = [];
+  const regex = /<item>([\s\S]*?)<\/item>/g;
+  let match;
+  
+  while ((match = regex.exec(xml)) !== null && items.length < 4) {
+    const itemXml = match[1];
+    const getTag = (tag) => {
+      const tagRegex = new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?<\\/${tag}>`);
+      const m = itemXml.match(tagRegex);
+      return m ? m[1] : '';
+    };
+    items.push({
+      title: getTag('title'),
+      link: getTag('link'),
+      pubDate: getTag('pubDate'),
+      description: getTag('description')
+    });
+  }
+  return items;
+}
 
 export async function GET() {
   try {
-    // Agente Alpha: Clima y Vuelos
-    const alphaFeed = await parser.parseURL('https://news.google.com/rss/search?q=clima+aeropuerto+vuelos&hl=es-419&gl=US&ceid=US:es-419');
+    const alphaItems = await fetchRSS('https://news.google.com/rss/search?q=clima+aeropuerto+vuelos&hl=es-419&gl=US&ceid=US:es-419');
+    const betaItems = await fetchRSS('https://news.google.com/rss/search?q=turismo+cruceros+eventos&hl=es-419&gl=US&ceid=US:es-419');
     
-    // Agente Beta: Turismo, Cruceros, Eventos
-    const betaFeed = await parser.parseURL('https://news.google.com/rss/search?q=turismo+cruceros+eventos&hl=es-419&gl=US&ceid=US:es-419');
-    
-    // Función para limpiar la descripción HTML que trae Google News
     const cleanDesc = (htmlStr) => {
       if (!htmlStr) return "Lee el artículo completo para más detalles.";
-      const text = htmlStr.replace(/<[^>]*>?/gm, ''); // Quita tags HTML
+      const text = htmlStr.replace(/<[^>]*>?/gm, ''); 
       return text.length > 150 ? text.substring(0, 150) + "..." : text;
     };
 
-    // Función para calcular la severidad
     const getSeverity = (title) => {
       const t = title.toLowerCase();
       if (t.includes('alerta') || t.includes('huracán') || t.includes('cancelado') || t.includes('emergencia') || t.includes('cierre')) return 'alta';
@@ -29,35 +48,32 @@ export async function GET() {
     let newsData = [];
     let idCounter = 1;
 
-    // Procesar Alpha
-    alphaFeed.items.slice(0, 4).forEach(item => {
+    alphaItems.forEach(item => {
       newsData.push({
         id: idCounter++,
-        category: 'clima', // Simplificamos usando clima y geopolitica para Alpha
+        category: 'clima',
         agent: 'Agente Alpha 🌤️',
-        title: item.title.split(' - ')[0], // Quitar el nombre del periódico al final
-        desc: cleanDesc(item.content || item.contentSnippet),
+        title: item.title.split(' - ')[0],
+        desc: cleanDesc(item.description),
         date: new Date(item.pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
         severity: getSeverity(item.title),
         link: item.link
       });
     });
 
-    // Procesar Beta
-    betaFeed.items.slice(0, 4).forEach(item => {
+    betaItems.forEach(item => {
       newsData.push({
         id: idCounter++,
-        category: 'eventos', // Beta maneja eventos y turismo
+        category: 'eventos',
         agent: 'Agente Beta 🎉',
         title: item.title.split(' - ')[0],
-        desc: cleanDesc(item.content || item.contentSnippet),
+        desc: cleanDesc(item.description),
         date: new Date(item.pubDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
         severity: getSeverity(item.title),
         link: item.link
       });
     });
 
-    // Mezclar las noticias un poco para que no salgan todas las de Alpha primero
     newsData = newsData.sort(() => Math.random() - 0.5);
 
     return NextResponse.json({ success: true, data: newsData });
