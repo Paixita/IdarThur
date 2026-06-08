@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #ff5500;
+  --color-primary-hover: #ff7733;
+  --color-secondary: #0a0a0e;
+  --color-surface: #13131a;
+  --color-surface-hover: #1c1c26;
+  --color-neon-orange: #ff3300;
+  --color-neon-glow: rgba(255, 51, 0, 0.5);
+  
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+/* Custom glow utility */
+.glow-text {
+  text-shadow: 0 0 10px var(--color-neon-glow), 0 0 20px var(--color-neon-glow);
+}
+
+.glow-box {
+  box-shadow: 0 0 15px -3px var(--color-neon-glow), 0 0 6px -2px var(--color-neon-glow);
+}
