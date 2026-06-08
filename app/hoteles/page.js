@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function HotelesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -10,7 +11,7 @@ export default function HotelesPage() {
     { text: "¡Hola de nuevo! Soy Yessel. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame tu destino y te ayudaré a encontrarlo con tarifas preferenciales.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
-  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {

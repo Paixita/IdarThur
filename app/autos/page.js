@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { useVipAudio } from '@/hooks/useVipAudio';
 import Navbar from '@/components/Navbar';
 
 export default function AutosPage() {
@@ -11,7 +12,7 @@ export default function AutosPage() {
     { text: "¡Hola viajero! Soy Yessel. ¿Necesitas moverte con libertad? Tengo acceso a tarifas preferenciales de alquiler que incluyen seguro a todo riesgo. ¿A qué ciudad viajas?", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
-  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {

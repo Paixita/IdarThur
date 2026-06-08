@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import PremiumAudioModal from './PremiumAudioModal';
 import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function YesselFloating() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function YesselFloating() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   
-  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   // Auto-scroll al fondo

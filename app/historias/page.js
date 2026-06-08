@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { stories } from '../../data/historias';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function HistoriasPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -11,7 +12,7 @@ export default function HistoriasPage() {
     { text: "¡Bienvenido al rincón de las historias! Soy Yessel. Aquí encontrarás relatos fascinantes de otros viajeros y anécdotas de nuestro equipo. Si tienes una historia increíble que contar, ¡compártela con nosotros!", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
-  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const handleOpenChat = () => {

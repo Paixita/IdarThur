@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { stories } from '../../../data/historias';
+import StoryAudioPlayer from '@/components/StoryAudioPlayer';
 
 export async function generateStaticParams() {
   return stories.map(story => ({
@@ -52,6 +53,8 @@ export default async function HistoriaDetalle({ params }) {
             <strong style={{ fontSize: '1.1rem' }}>{story.ano}</strong>
           </div>
         </div>
+
+        <StoryAudioPlayer htmlText={story.narrativa} />
 
         <div className="glass" style={{ padding: '40px', borderRadius: '25px', fontSize: '1.15rem', lineHeight: '1.8', color: '#d1d5db' }}
              dangerouslySetInnerHTML={{ __html: story.narrativa }}>

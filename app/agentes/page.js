@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { useState } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function AgentesPage() {
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputMsg, setInputMsg] = useState('');
-  const [isAudioPremium, setIsAudioPremium] = useState(false);
+  const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
   const agents = [
