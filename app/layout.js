@@ -27,6 +27,11 @@ export const metadata = {
     ],
     locale: "es_CO",
     type: "website",
+  },
+  icons: {
+    icon: '/favicon.ico?v=5',
+    apple: '/apple-icon.png?v=5',
+    shortcut: '/favicon.ico?v=5',
   }
 };
 
