@@ -5,6 +5,6 @@ export default function robots() {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://idarthur.pages.dev/sitemap.xml',
+    sitemap: 'https://idarthur.com/sitemap.xml',
   }
 }

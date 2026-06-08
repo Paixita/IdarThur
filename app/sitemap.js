@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = "https://idarthur.pages.dev";
+  const baseUrl = "https://idarthur.com";
 
   // Rutas principales
   const routes = [

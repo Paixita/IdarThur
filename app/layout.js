@@ -15,11 +15,11 @@ export const metadata = {
   openGraph: {
     title: "IdarThur - El futuro de los viajes está aquí",
     description: "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
-    url: "https://idarthur.pages.dev",
+    url: "https://idarthur.com",
     siteName: "IdarThur",
     images: [
       {
-        url: "https://idarthur.pages.dev/IdarThur.png",
+        url: "https://idarthur.com/IdarThur.png",
         width: 1200,
         height: 630,
         alt: "IdarThur Agencia de Viajes Inteligente"
