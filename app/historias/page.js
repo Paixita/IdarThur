@@ -72,8 +72,8 @@ export default function HistoriasPage() {
         </div>
         <div>
           <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Saludo de Yessel</h3>
-          <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-            "¡Bienvenido al rincón de las historias! Soy Yessel. Haz clic aquí y cuéntame si tienes una anécdota increíble de viaje que quieras compartir."
+          <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.1rem', fontStyle: 'italic' }}>
+            "¡Bienvenido al rincón de las historias! Soy Yessel. Además de leer estas increíbles aventuras, te invito a <strong>vivirlas</strong>. Ya está disponible la opción para que escuches mi voz narrativa VIP en cada relato. Haz clic aquí si tú también tienes una anécdota digna de ser contada."
           </p>
         </div>
       </div>
