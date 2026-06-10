@@ -19,7 +19,7 @@ export const metadata = {
     siteName: "IdarThur",
     images: [
       {
-        url: "https://idarthur.com/IdarThur.png",
+        url: "https://idarthur.com/logo_blue.png",
         width: 1200,
         height: 630,
         alt: "IdarThur Agencia de Viajes Inteligente"
@@ -29,9 +29,9 @@ export const metadata = {
     type: "website",
   },
   icons: {
-    icon: '/favicon.ico?v=5',
-    apple: '/apple-icon.png?v=5',
-    shortcut: '/favicon.ico?v=5',
+    icon: '/favicon.png?v=6',
+    apple: '/favicon.png?v=6',
+    shortcut: '/favicon.png?v=6',
   }
 };
 

@@ -20,8 +20,8 @@ export default function Navbar() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} onClick={closeMenu}>
-          <div className="icon-glow nav-logo-container" style={{ overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', filter: 'drop-shadow(0 0 15px rgba(69, 243, 255, 0.5))' }}>
-             <img src="/IdarThur.png" alt="IdarThur Logo Neon" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <div className="nav-logo-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+             <img src="/logo_blue.png" alt="IdarThur Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
         </Link>
 
