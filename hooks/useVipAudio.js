@@ -7,7 +7,9 @@ export function useVipAudio() {
     if (typeof window !== 'undefined') {
       const stored = sessionStorage.getItem('yesselVipAudio');
       if (stored === 'true') {
-        setIsAudioPremiumState(true);
+        setTimeout(() => {
+          setIsAudioPremiumState(true);
+        }, 0);
       }
     }
   }, []);
