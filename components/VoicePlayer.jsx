@@ -1,15 +1,27 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useVipAudio } from '@/hooks/useVipAudio';
-import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking } from '@/utils/playAlvaro';
 
 export default function VoicePlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [text, setText] = useState('');
   const [isPremium] = useVipAudio(); // returns [isAudioPremium, setIsAudioPremium]
 
-  // Render nothing for non‑premium users
-  if (!isPremium) return null;
+  useEffect(() => {
+    const handleStart = () => setIsPlaying(true);
+    const handleEnd = () => setIsPlaying(false);
+
+    window.addEventListener('alvaro-tts-start', handleStart);
+    window.addEventListener('alvaro-tts-end', handleEnd);
+
+    setIsPlaying(isAlvaroSpeaking());
+
+    return () => {
+      window.removeEventListener('alvaro-tts-start', handleStart);
+      window.removeEventListener('alvaro-tts-end', handleEnd);
+    };
+  }, []);
 
   // Gather visible textual content from the page
   const collectText = () => {
@@ -33,21 +45,14 @@ export default function VoicePlayer() {
 
   const togglePlay = () => {
     if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
+      stopAlvaroAudio();
       return;
     }
     if (!text) return;
-    setIsPlaying(true);
     playAlvaroAudio(text);
-    // Reset state when speech ends
-    const check = setInterval(() => {
-      if (!window.speechSynthesis.speaking) {
-        setIsPlaying(false);
-        clearInterval(check);
-      }
-    }, 500);
   };
+
+  if (!isPremium) return null;
 
   return (
     <div

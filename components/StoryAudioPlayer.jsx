@@ -1,13 +1,29 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useVipAudio } from '@/hooks/useVipAudio';
-import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking } from '@/utils/playAlvaro';
 import PremiumAudioModal from './PremiumAudioModal';
 
 export default function StoryAudioPlayer({ htmlText }) {
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const handleStart = () => setIsPlaying(true);
+    const handleEnd = () => setIsPlaying(false);
+
+    window.addEventListener('alvaro-tts-start', handleStart);
+    window.addEventListener('alvaro-tts-end', handleEnd);
+
+    // Sincronizar estado inicial
+    setIsPlaying(isAlvaroSpeaking());
+
+    return () => {
+      window.removeEventListener('alvaro-tts-start', handleStart);
+      window.removeEventListener('alvaro-tts-end', handleEnd);
+    };
+  }, []);
 
   const handlePlay = () => {
     if (!isAudioPremium) {
@@ -16,24 +32,13 @@ export default function StoryAudioPlayer({ htmlText }) {
     }
 
     if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
+      stopAlvaroAudio();
       return;
     }
 
-    setIsPlaying(true);
     // Limpiar etiquetas HTML para que el motor lea solo texto
     const plainText = htmlText.replace(/<[^>]+>/g, ' ');
     playAlvaroAudio(plainText);
-    
-    // Simular que deja de reproducir cuando termine (muy básico porque la API real es asíncrona por fragmentos)
-    // Para simplificar la UI, dejamos el estado en play hasta que el usuario lo detenga manualmente, o hacemos un chequeo:
-    const checkInterval = setInterval(() => {
-      if (!window.speechSynthesis.speaking) {
-        setIsPlaying(false);
-        clearInterval(checkInterval);
-      }
-    }, 1000);
   };
 
   return (
