@@ -5,9 +5,9 @@
   - Booking.com (Hoteles con label `affnetTP_399989189573503`).
   - WayAway (Vuelos con marker `729418`).
 
-## 2. Interactividad de Voz (Candy AI)
-- [x] Implementar la API nativa de `SpeechSynthesis` para Candy.
-- [x] Configurar un botón para activar audio y darle voz de asistente turística.
+## 2. Interactividad de Voz (Yessel AI)
+- [x] Implementar la API de Edge Neural TTS para una voz súper realista.
+- [x] Configurar eventos de audio y modulación por sentimientos en el servidor.
 
 ## 3. Página de Eventos Globales
 - [x] Crear la página `/eventos` con diseño Glassmorphism.
