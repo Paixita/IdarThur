@@ -8,12 +8,21 @@ export const playAlvaroAudio = (text) => {
   // Separar el texto en frases para aplicar la Red Neuronal a cada frase individual
   const sentences = cleanText.match(/[^.!?]+[.!?]+/g) || [cleanText];
 
+  // Detectar el idioma del navegador (ej. 'es-CO', 'es-ES', etc.)
+  const userLang = typeof navigator !== 'undefined' ? navigator.language : 'es-ES';
+
   const getVoice = () => {
     const voices = window.speechSynthesis.getVoices();
+    // Coincidencia exacta con el locale del usuario
+    const localeVoices = voices.filter(v => v.lang.toLowerCase() === userLang.toLowerCase());
+    if (localeVoices.length > 0) {
+      return localeVoices[0];
+    }
+    // Si no hay coincidencia exacta, buscar cualquier voz española
     const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
     if (spanishVoices.length > 0) {
       const alvaroVoice = spanishVoices.find(v => v.name.toLowerCase().includes('alvaro'));
-      const msMaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('microsoft') && (v.name.toLowerCase().includes('pablo') || v.name.toLowerCase().includes('raul') || !v.name.toLowerCase().includes('elena') && !v.name.toLowerCase().includes('laura')));
+      const msMaleVoice = spanishVoices.find(v => v.name.toLowerCase().includes('microsoft') && (v.name.toLowerCase().includes('pablo') || v.name.toLowerCase().includes('raul')));
       return alvaroVoice || msMaleVoice || spanishVoices[0];
     }
     return null;
@@ -23,7 +32,7 @@ export const playAlvaroAudio = (text) => {
 
   sentences.forEach((sentence) => {
     const utterance = new SpeechSynthesisUtterance(sentence.trim());
-    utterance.lang = 'es-ES';
+    utterance.lang = userLang;
     
     // Motor Neuronal de Sentimiento
     const lowerSentence = sentence.toLowerCase();

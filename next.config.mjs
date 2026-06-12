@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  // Configuración básica para desarrollo local y despliegue estándar
+  output: 'standalone',
 };
 
 export default nextConfig;
+
