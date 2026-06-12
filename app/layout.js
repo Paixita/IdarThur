@@ -30,9 +30,9 @@ export const metadata = {
     type: "website",
   },
   icons: {
-    icon: '/favicon.png?v=6',
-    apple: '/favicon.png?v=6',
-    shortcut: '/favicon.png?v=6',
+    icon: '/favicon.png?v=7',
+    apple: '/favicon.png?v=7',
+    shortcut: '/favicon.png?v=7',
   }
 };
 
