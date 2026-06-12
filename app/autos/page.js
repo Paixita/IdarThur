@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
-import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
 import Navbar from '@/components/Navbar';
 
@@ -17,6 +17,9 @@ export default function AutosPage() {
 
   const handleOpenChat = () => {
     setIsChatOpen(true);
+    if (isAudioPremium) {
+      playAlvaroAudio(messages[0].text);
+    }
   };
 
   const handleSendMessage = (e) => {
@@ -183,7 +186,7 @@ export default function AutosPage() {
                   >
                     {isAudioPremium ? '🔊' : '🔈'}
                   </button>
-                  <button onClick={() => setIsChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                  <button onClick={() => { setIsChatOpen(false); stopAlvaroAudio(); }} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
                     ×
                   </button>
                 </div>

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
-import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function AgentesPage() {
@@ -62,6 +62,9 @@ export default function AgentesPage() {
     if (agent.isPrivate) return;
     setActiveChat(agent);
     setMessages([{ text: agent.greeting, sender: 'ai' }]);
+    if (isAudioPremium) {
+      playAlvaroAudio(agent.greeting);
+    }
   };
 
   const handleSendMessage = (e) => {
@@ -100,6 +103,9 @@ export default function AgentesPage() {
 
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
+    if (isAudioPremium) {
+      playAlvaroAudio("¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
+    }
   };
 
   const handleSendCandyMessage = (e) => {
@@ -255,7 +261,7 @@ export default function AgentesPage() {
                 >
                   {isAudioPremium ? '🔊' : '🔈'}
                 </button>
-                <button onClick={() => setActiveChat(null)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                <button onClick={() => { setActiveChat(null); stopAlvaroAudio(); }} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
                   ×
                 </button>
               </div>
@@ -318,7 +324,7 @@ export default function AgentesPage() {
                 >
                   {isAudioPremium ? '🔊' : '🔈'}
                 </button>
-                <button onClick={() => setIsCandyChatOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
+                <button onClick={() => { setIsCandyChatOpen(false); stopAlvaroAudio(); }} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.5rem', cursor: 'pointer', opacity: 0.7 }} onMouseEnter={e => e.currentTarget.style.opacity = 1} onMouseLeave={e => e.currentTarget.style.opacity = 0.7}>
                   ×
                 </button>
               </div>

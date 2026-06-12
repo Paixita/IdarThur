@@ -1,4 +1,6 @@
-import { UniversalEdgeTTS } from 'edge-tts-universal';
+import { Communicate } from 'edge-tts-universal';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   try {
@@ -10,28 +12,58 @@ export async function GET(request) {
       return new Response('Falta el parámetro text', { status: 400 });
     }
 
-    // Limpiar el texto de caracteres o emojis extraños para mejorar la narración
+    // Limpiar texto de caracteres y emojis extraños
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
 
-    console.log(`[TTS] Generando audio con voz ${voice} para el texto: "${cleanText.substring(0, 50)}..."`);
+    // Analizar el texto para modular velocidad (rate) y tono (pitch) según el sentimiento
+    const lowerText = cleanText.toLowerCase();
+    let rate = '+0%';
+    let pitch = '+0Hz';
 
-    const tts = new UniversalEdgeTTS(cleanText, voice);
-    const result = await tts.synthesize();
-
-    if (!result || !result.audio) {
-      throw new Error('El motor TTS no devolvió datos de audio.');
+    if (lowerText.match(/(misterio|secreto|suspenso|oculto|noche|oscuro|miedo|tensión|desconocido|silencio)/)) {
+      rate = '-10%';
+      pitch = '-5Hz';
+    } else if (lowerText.match(/(rápido|correr|acción|increíble|explosión|emoción|corazón|adrenalina|peligro|urgente)/)) {
+      rate = '+12%';
+      pitch = '+3Hz';
+    } else if (lowerText.match(/(amor|romance|paz|calma|suave|tranquilo|relajante|brisa|luna|hermoso)/)) {
+      rate = '-5%';
+      pitch = '+2Hz';
     }
 
-    const arrayBuffer = await result.audio.arrayBuffer();
+    console.log(`[TTS Stream] Voz: ${voice}, Rate: ${rate}, Pitch: ${pitch}. Texto: "${cleanText.substring(0, 50)}..."`);
 
-    return new Response(arrayBuffer, {
+    const communicate = new Communicate(cleanText, {
+      voice,
+      rate,
+      pitch
+    });
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of communicate.stream()) {
+            if (chunk.type === 'audio' && chunk.data) {
+              controller.enqueue(chunk.data);
+            }
+          }
+          controller.close();
+        } catch (error) {
+          console.error('[TTS ReadableStream Error]', error);
+          controller.error(error);
+        }
+      }
+    });
+
+    return new Response(stream, {
       headers: {
         'Content-Type': 'audio/mpeg',
-        'Cache-Control': 'public, max-age=86400, s-maxage=86400', // Cachear por 1 día si es el mismo texto
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache, no-store, must-revalidate', // No cachear para forzar respuesta inmediata en tiempo real
       },
     });
   } catch (error) {
-    console.error('[TTS Error]', error);
-    return new Response(`Error al generar la voz neural: ${error.message}`, { status: 500 });
+    console.error('[TTS Endpoint Error]', error);
+    return new Response(`Error al generar voz neural: ${error.message}`, { status: 500 });
   }
 }

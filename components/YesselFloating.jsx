@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import PremiumAudioModal from './PremiumAudioModal';
-import { playAlvaroAudio } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
 
 export default function YesselFloating() {
@@ -27,10 +27,13 @@ export default function YesselFloating() {
   useEffect(() => {
     const handleOpenChat = () => {
       setIsOpen(true);
+      if (isAudioPremium) {
+        playAlvaroAudio(messages[0].content);
+      }
     };
     window.addEventListener('openCandyChat', handleOpenChat); // Mantenemos el nombre del evento para no romper dependencias
     return () => window.removeEventListener('openCandyChat', handleOpenChat);
-  }, []);
+  }, [isAudioPremium, messages]);
 
   const formatMessage = (text) => {
     const formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #45f3ff; text-decoration: underline; font-weight: bold; background: rgba(69,243,255,0.1); padding: 5px 10px; border-radius: 10px; display: inline-block; margin-top: 5px;">$1</a>');
@@ -93,7 +96,12 @@ export default function YesselFloating() {
 
       {!isOpen && (
         <div 
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            if (isAudioPremium) {
+              playAlvaroAudio(messages[0].content);
+            }
+          }}
           className={`candy-avatar-base`}
           style={{
             position: 'fixed', bottom: '30px', right: '30px', width: '70px', height: '70px',
@@ -141,7 +149,7 @@ export default function YesselFloating() {
               >
                 {isAudioPremium ? '🔊' : '🔈'}
               </button>
-              <button onClick={() => setIsOpen(false)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer', lineHeight: '1' }}>&times;</button>
+              <button onClick={() => { setIsOpen(false); stopAlvaroAudio(); }} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer', lineHeight: '1' }}>&times;</button>
             </div>
           </div>
 
