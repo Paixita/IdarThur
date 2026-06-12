@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Términos y Condiciones del Servicio | IdarThur",
+  description: "Revisa los términos y condiciones de uso de IdarThur Global, descargo de responsabilidad sobre servicios de terceros, navieras y alquiler de vehículos.",
+  robots: { index: false }
+};
+
 export default function Terminos() {
   return (
     <div className="container" style={{ paddingTop: '120px', paddingBottom: '80px', maxWidth: '800px' }}>

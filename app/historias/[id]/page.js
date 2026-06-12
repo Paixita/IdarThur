@@ -8,6 +8,32 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+  const story = stories.find(s => s.id === id);
+  if (!story) {
+    return {
+      title: "Historia no encontrada | IdarThur",
+      description: "El relato de viaje solicitado no está disponible actualmente."
+    };
+  }
+  return {
+    title: `${story.titulo} - Relato de Viaje | IdarThur`,
+    description: `${story.subtitulo}. Una fascinante aventura narrada e ilustrada por la IA de IdarThur.`,
+    openGraph: {
+      title: `${story.titulo} | IdarThur`,
+      description: story.subtitulo,
+      images: [
+        {
+          url: story.imagen.startsWith('http') ? story.imagen : `https://idarthur.com${story.imagen}`,
+          alt: story.titulo
+        }
+      ]
+    }
+  };
+}
+
 export default async function HistoriaDetalle({ params }) {
   const resolvedParams = await params;
   const { id } = resolvedParams;

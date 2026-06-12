@@ -103,3 +103,36 @@ a {
   transform: scale(1.25) translateY(-5px) rotate(5deg);
   filter: drop-shadow(0 15px 30px rgba(69, 243, 255, 0.7)) !important;
 }
+
+/* Custom Scrollbar Premium (Glassmorphism & Neon Glow) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(11, 12, 16, 0.8);
+  border-left: 1px solid var(--glass-border);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+  border-radius: 5px;
+  border: 2px solid #0b0c10;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--secondary), var(--accent));
+}
+
+/* Glow effects */
+.text-glow {
+  text-shadow: 0 0 10px rgba(69, 243, 255, 0.6), 0 0 20px rgba(69, 243, 255, 0.3);
+}
+
+.glow-border:focus, .glow-border:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 15px rgba(69, 243, 255, 0.45) !important;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}

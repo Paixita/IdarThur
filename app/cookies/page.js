@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Política de Cookies | IdarThur",
+  description: "Conoce el uso de cookies y seguimiento de enlaces de afiliados en nuestra plataforma IdarThur. Transparencia total en tus búsquedas de viajes.",
+  robots: { index: false }
+};
+
 export default function Cookies() {
   return (
     <div className="container" style={{ paddingTop: '120px', paddingBottom: '80px', maxWidth: '800px' }}>

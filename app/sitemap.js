@@ -1,3 +1,5 @@
+import { stories } from '../data/historias';
+
 export default function sitemap() {
   const baseUrl = "https://idarthur.com";
 
@@ -18,5 +20,13 @@ export default function sitemap() {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  return [...routes];
+  // Rutas de historias dinámicas
+  const storyRoutes = stories.map((story) => ({
+    url: `${baseUrl}/historias/${story.id}`,
+    lastModified: new Date().toISOString().split('T')[0],
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...routes, ...storyRoutes];
 }

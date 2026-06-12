@@ -41,14 +41,46 @@ import Navbar from "@/components/Navbar";
 import NotificationPrompt from "@/components/NotificationPrompt";
 
 export default function RootLayout({ children }) {
+  const jsonLdOrg = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "IdarThur",
+    "url": "https://idarthur.com",
+    "logo": "https://idarthur.com/logo_blue.png",
+    "description": "Tu agencia de viajes inteligente impulsada por Inteligencia Artificial. Encuentra los mejores vuelos con cashback, cruceros de lujo y noticias globales.",
+    "sameAs": []
+  };
+
+  const jsonLdSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "IdarThur",
+    "url": "https://idarthur.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://idarthur.com/noticias?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <html lang="es">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSite) }}
+        />
+      </head>
       <body className={`${outfit.variable}`} suppressHydrationWarning>
         <NotificationPrompt />
         <Navbar />
         {children}
         <Footer />
-<YesselFloating />
+        <YesselFloating />
         <VoicePlayer />
       </body>
     </html>

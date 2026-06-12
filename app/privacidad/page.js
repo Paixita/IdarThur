@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Política de Privacidad y Descargo IA | IdarThur",
+  description: "Consulta las políticas de privacidad y protección de datos de IdarThur Global, incluyendo descargo de responsabilidad por el uso de Inteligencia Artificial.",
+  robots: { index: false }
+};
+
 export default function Privacidad() {
   return (
     <div className="container" style={{ paddingTop: '120px', paddingBottom: '80px', maxWidth: '800px' }}>
