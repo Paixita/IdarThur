@@ -7,7 +7,7 @@ export default function TiendaPage() {
   const [activeCategory, setActiveCategory] = useState("todos");
   
   // Configuración del Slider de Productos Destacados
-  const featuredIds = [5, 1, 10, 11];
+  const featuredIds = [5, 1, 10, 8, 11];
   const featuredProducts = products.filter(p => featuredIds.includes(p.id));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
