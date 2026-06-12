@@ -5,7 +5,16 @@ export function useVipAudio() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const stored = sessionStorage.getItem('yesselVipAudio');
+      // 1. Detectar si viene la palabra secreta en la URL para activar
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('vip') === 'true' || params.get('yessel') === 'vip') {
+        localStorage.setItem('yesselVipAudio', 'true');
+        setIsAudioPremiumState(true);
+        return;
+      }
+
+      // 2. Leer de localStorage (permanente) en lugar de sessionStorage
+      const stored = localStorage.getItem('yesselVipAudio');
       if (stored === 'true') {
         setTimeout(() => {
           setIsAudioPremiumState(true);
@@ -18,9 +27,9 @@ export function useVipAudio() {
     setIsAudioPremiumState(value);
     if (typeof window !== 'undefined') {
       if (value) {
-        sessionStorage.setItem('yesselVipAudio', 'true');
+        localStorage.setItem('yesselVipAudio', 'true');
       } else {
-        sessionStorage.removeItem('yesselVipAudio');
+        localStorage.removeItem('yesselVipAudio');
       }
     }
   };
