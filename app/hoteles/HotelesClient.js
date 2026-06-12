@@ -118,16 +118,16 @@ export default function HotelesClient() {
       <h2 style={{ fontSize: '2.5rem', marginBottom: '30px' }}>Favoritos de la <span style={{ color: 'var(--primary)' }}>Comunidad</span></h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
         {[
-          { id: 1, city: "París, Francia", img: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "1,240 Ofertas Disponibles" },
-          { id: 2, city: "Tokio, Japón", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "850 Ofertas Premium" },
-          { id: 3, city: "Kioto, Japón", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "340 Ryokans Exclusivos" },
-          { id: 4, city: "Shanghái, China", img: "https://images.unsplash.com/photo-1545459720-aac8509eb02c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "590 Hoteles con Vista" },
-          { id: 5, city: "Bali, Indonesia", img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "890 Villas con Piscina" },
-          { id: 6, city: "Hong Kong", img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "410 Ofertas Premium" },
-          { id: 7, city: "Dubái, EAU", img: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "530 Resorts 5 Estrellas" },
-          { id: 8, city: "Londres, Reino Unido", img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "670 Ofertas Disponibles" },
-          { id: 9, city: "Nueva York, EE. UU.", img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "920 Ofertas Premium" },
-          { id: 10, city: "Cancún, México", img: "https://images.unsplash.com/photo-1552074284-5e88ef1aef18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", deals: "430 Resorts Todo Incluido" }
+          { id: 1, city: "París, Francia", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80", deals: "1,240 Ofertas Disponibles" },
+          { id: 2, city: "Tokio, Japón", img: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80", deals: "850 Ofertas Premium" },
+          { id: 3, city: "Kioto, Japón", img: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=800&q=80", deals: "340 Ryokans Exclusivos" },
+          { id: 4, city: "Shanghái, China", img: "https://images.unsplash.com/photo-1474181487882-5abf3f016c2d?auto=format&fit=crop&w=800&q=80", deals: "590 Hoteles con Vista" },
+          { id: 5, city: "Bali, Indonesia", img: "https://images.unsplash.com/photo-1501179691627-eeaa65ea017c?auto=format&fit=crop&w=800&q=80", deals: "890 Villas con Piscina" },
+          { id: 6, city: "Hong Kong", img: "https://images.unsplash.com/photo-1506970194791-b397b12650a3?auto=format&fit=crop&w=800&q=80", deals: "410 Ofertas Premium" },
+          { id: 7, city: "Dubái, EAU", img: "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?auto=format&fit=crop&w=800&q=80", deals: "530 Resorts 5 Estrellas" },
+          { id: 8, city: "Londres, Reino Unido", img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80", deals: "670 Ofertas Disponibles" },
+          { id: 9, city: "Nueva York, EE. UU.", img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80", deals: "920 Ofertas Premium" },
+          { id: 10, city: "Cancún, México", img: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80", deals: "430 Resorts Todo Incluido" }
         ].map(dest => (
           <div key={dest.id} className="glass" style={{ borderRadius: '25px', overflow: 'hidden', position: 'relative', height: '350px', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }} 
                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(69,243,255,0.2)'; }}
