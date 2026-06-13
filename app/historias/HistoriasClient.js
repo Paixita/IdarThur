@@ -9,7 +9,7 @@ import { useVipAudio } from '@/hooks/useVipAudio';
 export default function HistoriasClient() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "¡Hola! Soy Yessel Cronista, tu redactor y curador de historias de viaje. Cuéntame una anécdota y te ayudaré a adaptarla de forma cinematográfica para publicarla en nuestro portal.", sender: "ai" }
+    { text: "¡Hola! Soy Natalia Cronista, tu redactora y curadora de historias de viaje. Cuéntame una anécdota y te ayudaré a adaptarla de forma cinematográfica para publicarla en nuestro portal.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
@@ -33,10 +33,10 @@ export default function HistoriasClient() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    if (inputMsg.trim() === '/yessel-audio') {
+    if (inputMsg.trim() === '/natalia-audio' || inputMsg.trim() === '/yessel-audio') {
       setIsAudioPremium(true);
       setInputMsg('');
-      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Natalia desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
@@ -121,7 +121,7 @@ export default function HistoriasClient() {
         </p>
       </div>
 
-      {/* Yessel Cronista Recomendación */}
+      {/* Natalia Cronista Recomendación */}
       <div 
         className="glass" 
         style={{ padding: '30px', borderRadius: '25px', marginBottom: '60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(0,255,170,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(0,255,170,0.2)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }}
@@ -136,23 +136,23 @@ export default function HistoriasClient() {
         onClick={handleOpenChat}
       >
         <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(0, 255, 170, 0.4))' }}>
-           <img src="/agentes/yessel_cronista.png" alt="Yessel Cronista" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #00ffaa' }} />
+           <img src="/agentes/yessel_cronista.png" alt="Natalia Cronista" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #00ffaa' }} />
         </div>
         <div>
-          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#00ffaa', fontWeight: 'bold' }}>Yessel Cronista (Redacción e Ilustración)</h3>
+          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#00ffaa', fontWeight: 'bold' }}>Natalia Cronista (Redacción e Ilustración)</h3>
           <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.1rem', fontStyle: 'italic' }}>
-            "¡Hola! Soy Yessel Cronista, del Escuadrón IA. Estoy aquí para convertir tus anécdotas de viajes en relatos cinematográficos e ilustrados. Haz clic aquí para chatear conmigo o usa el generador interactivo abajo para redactar y publicar historias en la web al instante."
+            "¡Hola! Soy Natalia Cronista, del Escuadrón IA. Estoy aquí para convertir tus anécdotas de viajes en relatos cinematográficos e ilustrados. Haz clic aquí para chatear conmigo o usa el generador interactivo abajo para redactar y publicar historias en la web al instante."
           </p>
         </div>
       </div>
 
-      {/* Redactor Asistido por IA */}
+      {/* Redactora Asistida por IA */}
       <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '80px', border: '1px solid rgba(0, 255, 170, 0.3)', background: 'linear-gradient(180deg, rgba(10,15,25,0.8), rgba(0,255,170,0.03))' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px', textAlign: 'center', color: '#00ffaa' }}>
-          🪄 Redactor e Ilustrador de Historias IA
+          🪄 Redactora e Ilustradora de Historias IA
         </h2>
         <p style={{ color: '#a0aab5', textAlign: 'center', marginBottom: '30px', fontSize: '1.1rem' }}>
-          Ingresa una idea de viaje o anécdota. Yessel Cronista redactará la crónica y seleccionará la ilustración perfecta. Luego podrás publicarla en producción a través de GitHub Commit.
+          Ingresa una idea de viaje o anécdota. Natalia Cronista redactará la crónica y seleccionará la ilustración perfecta. Luego podrás publicarla en producción a través de GitHub Commit.
         </p>
 
         <form onSubmit={handleGenerateStory} style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto 30px' }}>
@@ -254,15 +254,15 @@ export default function HistoriasClient() {
         })}
       </div>
 
-      {/* Chat Modal Simulator para Yessel Cronista */}
+      {/* Chat Modal Simulator para Natalia Cronista */}
       {isChatOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid #00ffaa`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(0, 255, 170, 0.3)` }}>
             
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
-              <img src="/agentes/yessel_cronista.png" alt="Yessel Cronista" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid #00ffaa` }} />
+              <img src="/agentes/yessel_cronista.png" alt="Natalia Cronista" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid #00ffaa` }} />
               <div style={{ flexGrow: 1 }}>
-                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel Cronista</h3>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Natalia Cronista</h3>
                 <span style={{ color: '#00ffaa', fontSize: '0.85rem' }}>Especialista en Historias</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -303,7 +303,7 @@ export default function HistoriasClient() {
                 type="text" 
                 value={inputMsg}
                 onChange={e => setInputMsg(e.target.value)}
-                placeholder={`Escribe a Yessel Cronista...`} 
+                placeholder={`Escribe a Natalia Cronista...`} 
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>

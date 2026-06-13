@@ -8,7 +8,7 @@ import { useVipAudio } from '@/hooks/useVipAudio';
 export default function HotelesClient() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "¡Hola de nuevo! Soy Yessel. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame tu destino y te ayudaré a encontrarlo con tarifas preferenciales.", sender: "ai" }
+    { text: "¡Hola de nuevo! Soy Natalia. ¿Buscas un hotel económico, un resort todo incluido o una villa frente al mar? Cuéntame tu destino y te ayudaré a encontrarlo con tarifas preferenciales.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
@@ -25,10 +25,10 @@ export default function HotelesClient() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    if (inputMsg.trim() === '/yessel-audio') {
+    if (inputMsg.trim() === '/natalia-audio' || inputMsg.trim() === '/yessel-audio') {
       setIsAudioPremium(true);
       setInputMsg('');
-      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Natalia desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
@@ -89,7 +89,7 @@ export default function HotelesClient() {
         </button>
       </div>
 
-      {/* Yessel Recomendación */}
+      {/* Natalia Recomendación */}
       <div 
         className="glass" 
         style={{ padding: '30px', borderRadius: '25px', marginBottom: '60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }}
@@ -104,10 +104,10 @@ export default function HotelesClient() {
         onClick={handleOpenChat}
       >
         <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 0, 128, 0.4))' }}>
-           <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
+           <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
         </div>
         <div>
-          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Consejo de Yessel</h3>
+          <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Consejo de Natalia</h3>
           <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
             "Siempre te recomendaré hoteles cerca del transporte público principal o aeropuertos. Haz clic aquí y dime a dónde vas para enviarte mis sugerencias confidenciales."
           </p>
@@ -217,16 +217,16 @@ export default function HotelesClient() {
 
         </div>
       </div>
-      {/* Chat Modal Simulator para Yessel */}
+      {/* Chat Modal Simulator para Natalia */}
       {isChatOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
             
             {/* Chat Header */}
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
-              <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div style={{ flexGrow: 1 }}>
-                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Natalia</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Alojamientos</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -269,7 +269,7 @@ export default function HotelesClient() {
                 type="text" 
                 value={inputMsg}
                 onChange={e => setInputMsg(e.target.value)}
-                placeholder={`Escribe a Yessel...`} 
+                placeholder={`Escribe a Natalia...`} 
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>

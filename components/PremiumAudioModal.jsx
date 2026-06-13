@@ -7,7 +7,8 @@ export default function PremiumAudioModal({ isOpen, onClose, onSuccess }) {
   if (!isOpen) return null;
 
   const handleActivate = () => {
-    if (code.trim().toUpperCase() === 'VIP-YESS-2026') {
+    const upperCode = code.trim().toUpperCase();
+    if (upperCode === 'VIP-YESS-2026' || upperCode === 'VIP-NAT-2026' || upperCode === 'VIP-NATALIA-2026') {
       setError('');
       setCode('');
       if (onSuccess) onSuccess();
@@ -32,7 +33,7 @@ export default function PremiumAudioModal({ isOpen, onClose, onSuccess }) {
         <h2 style={{ fontSize: '1.8rem', color: 'white', fontWeight: 'bold', marginBottom: '15px' }}>Desbloquea la Voz VIP</h2>
         
         <p style={{ color: '#d1d5db', lineHeight: '1.6', fontSize: '1.05rem', marginBottom: '30px' }}>
-          ¿Prefieres escuchar a Yessel? Desbloquea la comunicación por voz y obtén asistencia premium 24/7 con nuestro motor neuronal avanzado por solo:
+          ¿Prefieres escuchar a Natalia? Desbloquea la comunicación por voz y obtén asistencia premium 24/7 con nuestro motor neuronal avanzado por solo:
         </p>
 
         <div style={{ fontSize: '3rem', fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>

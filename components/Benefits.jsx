@@ -13,7 +13,7 @@ export default function Benefits() {
     {
       img: '/yessel_avatar.png',
       title: 'Asesoría con IA',
-      desc: 'Yessel te acompaña en cada paso, recomendándote destinos, analizando precios y ayudándote a planificar el viaje perfecto.',
+      desc: 'Natalia te acompaña en cada paso, recomendándote destinos, analizando precios y ayudándote a planificar el viaje perfecto.',
       link: '#chat'
     },
     {

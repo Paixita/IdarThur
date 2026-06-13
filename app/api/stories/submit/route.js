@@ -76,7 +76,7 @@ export async function POST(request) {
             'User-Agent': 'IdarThur-App'
           },
           body: JSON.stringify({
-            message: `content: Yessel Cronista publica nueva historia: ${story.titulo}`,
+            message: `content: Natalia Cronista publica nueva historia: ${story.titulo}`,
             content: Buffer.from(updatedJSON).toString('base64'),
             sha: sha || undefined,
             branch: branch

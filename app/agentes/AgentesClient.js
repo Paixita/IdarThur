@@ -15,51 +15,51 @@ export default function AgentesClient() {
   const agents = [
     {
       id: "vitalis",
-      name: "Dr. Yessel (Salud)",
-      role: "Agente Médico de Viajes",
+      name: "Dra. Natalia (Salud)",
+      role: "Agente Médica de Viajes",
       color: "#00d4ff",
       img: "/agentes/yessel_medico.png",
       skills: ["Vacunación Global", "Emergencias", "Seguros Médicos"],
       desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones locales y hospitales cercanos.",
       isPrivate: false,
-      greeting: "¡Hola! Soy el Dr. Yessel. ¿A dónde planeas viajar? Cuéntame y te ayudo a revisar qué precauciones médicas necesitas."
+      greeting: "¡Hola! Soy la Dra. Natalia. ¿A dónde planeas viajar? Cuéntame y te ayudo a revisar qué precauciones médicas necesitas."
     },
     {
       id: "nicolas",
-      name: "Yessel Ventas",
+      name: "Natalia Ventas",
       role: "Asistente de Compras",
       color: "#ff9900",
       img: "/agentes/yessel_ventas.png",
       skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
       desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino.",
       isPrivate: false,
-      greeting: "¡Hola! Soy Yessel. ¿Buscando maletas o ropa para tu viaje? Dime a dónde vas y te busco las mejores opciones."
+      greeting: "¡Hola! Soy Natalia. ¿Buscando maletas o ropa para tu viaje? Dime a dónde vas y te busco las mejores opciones."
     },
     {
       id: "altamar",
-      name: "Capitán Yessel",
+      name: "Capitana Natalia",
       role: "Especialista en Cruceros",
       color: "#ffd700",
       img: "/agentes/yessel_capitan.png",
       skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
       desc: "Tiene acceso a la base de datos maestra de las navieras. Te consigue mejoras gratuitas de cabina y ofertas exclusivas.",
       isPrivate: false,
-      greeting: "¡Ahoy, marinero! Soy el Capitán Yessel. ¿Listo para surcar los mares? Dime qué ruta te interesa."
+      greeting: "¡Ahoy, marinero! Soy la Capitana Natalia. ¿Lista para surcar los mares? Dime qué ruta te interesa."
     },
     {
       id: "cronista",
-      name: "Yessel Cronista",
+      name: "Natalia Cronista",
       role: "Cronista y Creadora de Historias",
       color: "#00ffaa",
       img: "/agentes/yessel_cronista.png",
       skills: ["Escritura Creativa", "Ilustración Generativa", "Curación de Relatos"],
       desc: "Especialista en recopilar y redactar las mejores anécdotas de viajes. Diseña ilustraciones hiperrealistas para cada relato y actualiza la bitácora de la comunidad.",
       isPrivate: false,
-      greeting: "¡Hola! Soy Yessel Cronista. ¿Tienes alguna aventura o anécdota increíble que quieras que redacte y publique en nuestra bitácora?"
+      greeting: "¡Hola! Soy Natalia Cronista. ¿Tienes alguna aventura o anécdota increíble que quieras que redacte y publique en nuestra bitácora?"
     },
     {
       id: "cyberguard",
-      name: "Yessel CyberGuard",
+      name: "Natalia CyberGuard",
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
       img: "/agentes/yessel_cyberguard.png",
@@ -82,10 +82,10 @@ export default function AgentesClient() {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    if (inputMsg.trim() === '/yessel-audio') {
+    if (inputMsg.trim() === '/natalia-audio' || inputMsg.trim() === '/yessel-audio') {
       setIsAudioPremium(true);
       setInputMsg('');
-      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Natalia desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
@@ -110,14 +110,14 @@ export default function AgentesClient() {
 
   const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
   const [candyMessages, setCandyMessages] = useState([
-    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
+    { text: "¡Hola! Soy Natalia, la conserje principal y Directora de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
   ]);
   const [candyInputMsg, setCandyInputMsg] = useState('');
 
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
     if (isAudioPremium) {
-      playAlvaroAudio("¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
+      playAlvaroAudio("¡Hola! Soy Natalia, la conserje principal y Directora de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
     }
   };
 
@@ -125,10 +125,10 @@ export default function AgentesClient() {
     e.preventDefault();
     if (!candyInputMsg.trim()) return;
 
-    if (candyInputMsg.trim() === '/yessel-audio') {
+    if (candyInputMsg.trim() === '/natalia-audio' || candyInputMsg.trim() === '/yessel-audio') {
       setIsAudioPremium(true);
       setCandyInputMsg('');
-      setCandyMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
+      setCandyMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Natalia desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
@@ -163,7 +163,7 @@ export default function AgentesClient() {
           No estás solo. Detrás de cada reserva, un equipo de especialistas de Inteligencia Artificial audita, protege y optimiza cada detalle de tu viaje. Conoce a tu equipo de élite.
         </p>
 
-        {/* Yessel Recomendación */}
+        {/* Natalia Recomendación */}
         <div 
           className="glass" 
           style={{ padding: '30px', borderRadius: '25px', maxWidth: '900px', margin: '0 auto 60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s', textAlign: 'left' }}
@@ -178,12 +178,12 @@ export default function AgentesClient() {
           onClick={handleOpenCandyChat}
         >
           <div className="icon-glow" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 0, 128, 0.4))' }}>
-             <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
+             <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
           </div>
           <div>
-            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel (Director de Operaciones)</h3>
+            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Natalia (Directora de Operaciones)</h3>
             <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-              "¡Hola! Estás en el centro de mando. Soy Yessel, el conserje principal. Conoce a las diferentes facetas de mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
+              "¡Hola! Estás en el centro de mando. Soy Natalia, la conserje principal. Conoce a las diferentes facetas de mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
             </p>
           </div>
         </div>
@@ -321,9 +321,9 @@ export default function AgentesClient() {
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
             
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
-              <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div style={{ flexGrow: 1 }}>
-                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
+                <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Natalia</h3>
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Directora de Operaciones</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -364,7 +364,7 @@ export default function AgentesClient() {
                 type="text" 
                 value={candyInputMsg}
                 onChange={e => setCandyInputMsg(e.target.value)}
-                placeholder={`Escribe a Yessel...`} 
+                placeholder={`Escribe a Natalia...`} 
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
