@@ -47,6 +47,17 @@ export default function AgentesClient() {
       greeting: "¡Ahoy, marinero! Soy el Capitán Yessel. ¿Listo para surcar los mares? Dime qué ruta te interesa."
     },
     {
+      id: "cronista",
+      name: "Yessel Cronista",
+      role: "Cronista y Creadora de Historias",
+      color: "#00ffaa",
+      img: "/agentes/yessel_cronista.png",
+      skills: ["Escritura Creativa", "Ilustración Generativa", "Curación de Relatos"],
+      desc: "Especialista en recopilar y redactar las mejores anécdotas de viajes. Diseña ilustraciones hiperrealistas para cada relato y actualiza la bitácora de la comunidad.",
+      isPrivate: false,
+      greeting: "¡Hola! Soy Yessel Cronista. ¿Tienes alguna aventura o anécdota increíble que quieras que redacte y publique en nuestra bitácora?"
+    },
+    {
       id: "cyberguard",
       name: "Yessel CyberGuard",
       role: "Oficial de Ciberseguridad",
@@ -89,6 +100,8 @@ export default function AgentesClient() {
         reply = "¡Excelente! Para enviarte el informe médico completo de tu destino y los links del seguro con descuento, déjame tu **WhatsApp** o **Correo** y te lo mando ya mismo.";
       } else if (activeChat.id === 'altamar') {
         reply = "¡Por las barbas de Neptuno, hay una cabina con balcón en promoción secreta! Pásame tu **WhatsApp** o **Email** y te envío el acceso directo para que la reserves antes de que se agote.";
+      } else if (activeChat.id === 'cronista') {
+        reply = "¡Esa historia suena fantástica! Me encantaría redactarla con un estilo cinematográfico e ilustrarla. Para comenzar a trabajar en ella y coordinar la publicación, regálame tu **WhatsApp** o **Correo Electrónico**.";
       }
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
       if (isAudioPremium) playAlvaroAudio(reply);
