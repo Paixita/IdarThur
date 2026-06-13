@@ -110,14 +110,14 @@ export default function AgentesClient() {
 
   const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
   const [candyMessages, setCandyMessages] = useState([
-    { text: "¡Hola! Soy Yessel, la conserje principal y Directora de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
+    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
   ]);
   const [candyInputMsg, setCandyInputMsg] = useState('');
 
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
     if (isAudioPremium) {
-      playAlvaroAudio("¡Hola! Soy Yessel, la conserje principal y Directora de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
+      playAlvaroAudio("¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
     }
   };
 
@@ -181,9 +181,9 @@ export default function AgentesClient() {
              <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} />
           </div>
           <div>
-            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel (Directora de Operaciones)</h3>
+            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel (Director de Operaciones)</h3>
             <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-              "¡Hola! Estás en el centro de mando. Soy Yessel, la conserje principal. Conoce a las diferentes facetas de mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
+              "¡Hola! Estás en el centro de mando. Soy Yessel, el conserje principal. Conoce a las diferentes facetas de mi equipo especializado aquí abajo. Estamos diseñados para hacer que tu viaje sea absolutamente perfecto."
             </p>
           </div>
         </div>

@@ -15,7 +15,7 @@
     "personajes": "Sofía (Arqueóloga) y Kusi (Guía local)",
     "categoria": "Aventura",
     "narrativa": "<p>La niebla matutina se desvaneció lentamente, revelando la majestuosa ciudad inca de Machu Picchu, una fortaleza en la cima de la montaña que parecía tocar el cielo. Sofía, una arqueóloga apasionada, había pasado años estudiando las antiguas ruinas, pero nunca había experimentado la magia de este lugar como lo hizo en su viaje más reciente.</p><br><p>Con la compañía de Kusi, un guía local que conocía cada rincón de la montaña, Sofía se adentró en el corazón de Machu Picchu, descubriendo rincones escondidos y secretos que pocos conocían. Mientras caminaban, las llamas nativas los acompañaban, como si fueran guardianas de la ciudad, observándolos con curiosidad y aceptación.</p><br><p>Después de horas de caminata, Kusi se detuvo en un punto donde la vegetación parecía más densa, y con un gesto misterioso, señaló hacia una abertura casi invisible en la roca. Sofía se acercó, y al cruzar el umbral, se encontró en un templo oculto, lleno de símbolos y artefactos que contaban la historia de una civilización olvidada. La energía del lugar era palpable, y Sofía sintió una conexión profunda con el pasado, como si las piedras mismas estuvieran compartiendo sus secretos con ella.</p><br><p>En el templo, las llamas se acercaron, como si también ellas hubieran estado esperando este momento. Sofía y Kusi se sentaron en silencio, rodeados por la majestuosidad de la naturaleza y la historia, compartiendo un momento de profunda conexión con el lugar y sus habitantes. Fue un instante de pureza, donde el tiempo se detuvo, y solo quedó la esencia de la aventura, el misterio y la conexión con lo desconocido.</p><br><p>Al salir del templo, la luz del sol ya había comenzado a declinar, pintando el cielo de tonos rosados y naranjas. Sofía miró a Kusi, y sin necesidad de palabras, ambos supieron que su viaje había sido más que un simple recorrido por ruinas antiguas; había sido un viaje al corazón de la historia, de la cultura y de la conexión con la naturaleza y con uno mismo.</p>",
-    "imagen": "https://images.unsplash.com/photo-1587595427660-e79e31d3291e?auto=format&fit=crop&w=800&q=80",
+    "imagen": "/historias/machupicchu_portada.png",
     "id": "el-secreto-de-machu-picchu",
     "ano": "2026"
   },
@@ -37,7 +37,7 @@
     "ano": "Próximamente",
     "categoria": "Misterios",
     "narrativa": "<h2 style='text-align: center; margin-top: 40px;'>Nueva Historia en Camino...</h2><p style='text-align: center; color: #a0aab5;'>Nuestros agentes de Inteligencia Artificial están recopilando los datos para la próxima gran historia. Vuelve pronto.</p>",
-    "imagen": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    "imagen": "/historias/misterio_portada.png"
   },
   {
     "id": "romance-proximamente",
@@ -57,6 +57,6 @@
     "ano": "Próximamente",
     "categoria": "Comedia",
     "narrativa": "<h2 style='text-align: center; margin-top: 40px;'>Nueva Historia en Camino...</h2><p style='text-align: center; color: #a0aab5;'>Nuestros agentes de Inteligencia Artificial están recopilando los datos para la próxima gran historia. Vuelve pronto.</p>",
-    "imagen": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    "imagen": "/historias/comedia_portada.png"
   }
 ]

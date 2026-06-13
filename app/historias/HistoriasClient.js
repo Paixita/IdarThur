@@ -9,7 +9,7 @@ import { useVipAudio } from '@/hooks/useVipAudio';
 export default function HistoriasClient() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "¡Hola! Soy Yessel Cronista, tu redactora y curadora de historias de viaje. Cuéntame una anécdota y te ayudaré a adaptarla de forma cinematográfica para publicarla en nuestro portal.", sender: "ai" }
+    { text: "¡Hola! Soy Yessel Cronista, tu redactor y curador de historias de viaje. Cuéntame una anécdota y te ayudaré a adaptarla de forma cinematográfica para publicarla en nuestro portal.", sender: "ai" }
   ]);
   const [inputMsg, setInputMsg] = useState('');
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
@@ -146,10 +146,10 @@ export default function HistoriasClient() {
         </div>
       </div>
 
-      {/* Redactora Asistida por IA */}
+      {/* Redactor Asistido por IA */}
       <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '80px', border: '1px solid rgba(0, 255, 170, 0.3)', background: 'linear-gradient(180deg, rgba(10,15,25,0.8), rgba(0,255,170,0.03))' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px', textAlign: 'center', color: '#00ffaa' }}>
-          🪄 Redactora e Ilustradora de Historias IA
+          🪄 Redactor e Ilustrador de Historias IA
         </h2>
         <p style={{ color: '#a0aab5', textAlign: 'center', marginBottom: '30px', fontSize: '1.1rem' }}>
           Ingresa una idea de viaje o anécdota. Yessel Cronista redactará la crónica y seleccionará la ilustración perfecta. Luego podrás publicarla en producción a través de GitHub Commit.

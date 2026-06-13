@@ -16,7 +16,7 @@ export async function POST(request) {
 
     const response = await generateText({
       model: groq('llama-3.1-8b-instant'),
-      system: `Eres Yessel Cronista, la agente de Inteligencia Artificial especializada en relatos y crónicas de viaje de 'IdarThur'.
+      system: `Eres Yessel Cronista, el agente de Inteligencia Artificial especializado en relatos y crónicas de viaje de 'IdarThur'.
       Tu misión es recibir una idea o anécdota y redactarla como una historia de viajes altamente cinematográfica, emocionante, inspiradora y profesional en español.
       
       Debes devolver ÚNICAMENTE un objeto JSON válido (sin código markdown extra, sin texto de introducción ni de cierre) con el siguiente formato:
