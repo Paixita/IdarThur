@@ -6,7 +6,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const text = searchParams.get('text');
-    const voice = searchParams.get('voice') || 'es-ES-AlvaroNeural';
+    const voice = searchParams.get('voice') || 'es-CO-SalomeNeural';
 
     if (!text) {
       return new Response('Falta el parámetro text', { status: 400 });

@@ -146,10 +146,10 @@ export default function HistoriasClient() {
         </div>
       </div>
 
-      {/* Redactor Asistido por IA */}
+      {/* Redactora Asistida por IA */}
       <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '80px', border: '1px solid rgba(0, 255, 170, 0.3)', background: 'linear-gradient(180deg, rgba(10,15,25,0.8), rgba(0,255,170,0.03))' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '15px', textAlign: 'center', color: '#00ffaa' }}>
-          🪄 Redactor e Ilustrador de Historias IA
+          🪄 Redactora e Ilustradora de Historias IA
         </h2>
         <p style={{ color: '#a0aab5', textAlign: 'center', marginBottom: '30px', fontSize: '1.1rem' }}>
           Ingresa una idea de viaje o anécdota. Yessel Cronista redactará la crónica y seleccionará la ilustración perfecta. Luego podrás publicarla en producción a través de GitHub Commit.
