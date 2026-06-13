@@ -59,10 +59,10 @@ export default function AgentesClient() {
     },
     {
       id: "cyberguard",
-      name: "Yessel CyberGuard",
+      name: "Natalia CyberGuard",
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
-      img: "/agentes/yessel_cyberguard.png",
+      img: "/agentes/natalia_cyberguard.jpg",
       skills: ["Anti-Phishing", "Pagos Encriptados", "Auditoría de Enlaces"],
       desc: "Tu guardaespaldas digital. Bloquea fraudes y garantiza que tus transacciones sean 100% blindadas.",
       isPrivate: true
