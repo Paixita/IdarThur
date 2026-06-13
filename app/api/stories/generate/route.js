@@ -37,11 +37,19 @@ export async function POST(request) {
 
     const cleanText = response.text.trim();
     
+    // Función para sanitizar saltos de línea crudos dentro de las comillas en JSON
+    const sanitizeJsonString = (str) => {
+      return str.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, p1) => {
+        return '"' + p1.replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ').trim() + '"';
+      });
+    };
+
     let parsedData;
     try {
       // Eliminar posibles envoltorios markdown si la IA no obedeció del todo
       const jsonString = cleanText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
-      parsedData = JSON.parse(jsonString);
+      const sanitized = sanitizeJsonString(jsonString);
+      parsedData = JSON.parse(sanitized);
     } catch (err) {
       console.error("Error al parsear JSON devuelto por Groq:", cleanText);
       return Response.json({ success: false, error: "La IA no devolvió un JSON estructurado válido. Intenta reformular tu idea.", raw: cleanText }, { status: 500 });
