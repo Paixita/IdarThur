@@ -61,7 +61,7 @@ export default function StoryAudioPlayer({ htmlText }) {
         <div className="icon-glow" style={{ position: 'relative' }}>
           <img 
             src="/yessel_avatar.png" 
-            alt="Natalia" 
+            alt="Yessel" 
             style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent)' }} 
           />
           {isPlaying && (
@@ -73,7 +73,7 @@ export default function StoryAudioPlayer({ htmlText }) {
         
         <div style={{ flex: 1 }}>
           <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2rem', color: 'var(--accent)', fontWeight: 'bold' }}>
-            Escuchar con Natalia VIP
+            Escuchar con Yessel VIP
           </h3>
           <p style={{ margin: 0, color: '#a0aab5', fontSize: '0.95rem' }}>
             {isAudioPremium 

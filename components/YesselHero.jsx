@@ -18,17 +18,17 @@ export default function YesselHero() {
                  e.currentTarget.style.boxShadow = 'none';
                }}
           >
-             <img src="/yessel_avatar.png" alt="Natalia VIP Concierge" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+             <img src="/yessel_avatar.png" alt="Yessel VIP Concierge" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
 
         {/* Text Section */}
         <div style={{ flex: '2 1 500px' }}>
           <h2 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '20px', lineHeight: '1.2' }}>
-            Conoce a <span className="text-gradient">Natalia</span>,<br/>Tu Conserje VIP Online.
+            Conoce a <span className="text-gradient">Yessel</span>,<br/>Tu Conserje VIP Online.
           </h2>
           <p style={{ fontSize: '1.2rem', color: '#a0aab5', lineHeight: '1.7', marginBottom: '30px' }}>
-            Natalia no solo organiza tus vuelos y hoteles, sino que también cuida de cada detalle de tu viaje. Con acceso a tarifas no publicadas y conexión directa con navieras y aerolíneas, Natalia garantiza que siempre consigas el trato de un cliente VIP.
+            Yessel no solo organiza tus vuelos y hoteles, sino que también cuida de cada detalle de tu viaje. Con acceso a tarifas no publicadas y conexión directa con navieras y aerolíneas, Yessel garantiza que siempre consigas el trato de un cliente VIP.
           </p>
           
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
@@ -37,7 +37,7 @@ export default function YesselHero() {
               className="btn-primary" 
               style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
             >
-              <span>💬</span> Hablar con Natalia
+              <span>💬</span> Hablar con Yessel
             </button>
             <Link href="/agentes" className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span>🛡️</span> Conocer a todo el equipo

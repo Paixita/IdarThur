@@ -1,4 +1,4 @@
-// playAlvaro.js - Gestor de voz neural premium para Natalia
+// playAlvaro.js - Gestor de voz neural premium para Yessel
 let currentAudio = null;
 
 export const playAlvaroAudio = (text) => {

@@ -30,13 +30,13 @@ export default function NoticiasClient() {
     <main style={{ minHeight: '100vh', padding: '120px 20px 50px', background: 'var(--background)', color: 'white' }}>
       <div className="container">
         
-        {/* Natalia Manager Header */}
+        {/* Yessel Manager Header */}
         <div className="glass" style={{ padding: '40px', borderRadius: '30px', marginBottom: '50px', display: 'flex', gap: '30px', alignItems: 'center', flexWrap: 'wrap', border: '1px solid rgba(69, 243, 255, 0.2)' }}>
-          <img src="/yessel_avatar.png" alt="Natalia Manager" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)', filter: 'drop-shadow(0 0 15px rgba(69,243,255,0.4))' }} />
+          <img src="/yessel_avatar.png" alt="Yessel Manager" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)', filter: 'drop-shadow(0 0 15px rgba(69,243,255,0.4))' }} />
           <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Centro de Mando: <span className="text-gradient">Noticias Globales</span></h1>
             <p style={{ color: '#a0aab5', fontSize: '1.2rem' }}>
-              "Hola, soy Natalia. Mis subagentes Alpha y Beta están monitoreando la red mundial en tiempo real. Extraen reportes sobre clima, vuelos y cruceros para mantenerte seguro e informado."
+              "Hola, soy Yessel. Mis subagentes Alpha y Beta están monitoreando la red mundial en tiempo real. Extraen reportes sobre clima, vuelos y cruceros para mantenerte seguro e informado."
             </p>
           </div>
         </div>

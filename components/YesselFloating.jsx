@@ -9,7 +9,7 @@ export default function YesselFloating() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "¡Hola! Soy Natalia, la conserje principal de IdarThur. Estoy aquí para conseguirte las mejores tarifas no publicadas. ¿A dónde te gustaría viajar hoy?" }
+    { role: 'assistant', content: "¡Hola! Soy Yessel, el conserje principal de IdarThur. Estoy aquí para conseguirte las mejores tarifas no publicadas. ¿A dónde te gustaría viajar hoy?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,10 +46,10 @@ export default function YesselFloating() {
     
     const text = input;
     
-    if (text.trim() === '/yessel-audio' || text.trim() === '/natalia-audio') {
+    if (text.trim() === '/yessel-audio') {
       setIsAudioPremium(true);
       setInput('');
-      setMessages(prev => [...prev, { role: 'assistant', content: '✅ ¡Voz VIP de Natalia desbloqueada con éxito! Ahora te hablaré de forma natural.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: '✅ ¡Voz VIP de Yessel desbloqueada con éxito! Ahora te hablaré de forma natural.' }]);
       return;
     }
 
@@ -113,7 +113,7 @@ export default function YesselFloating() {
           onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
           onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       )}
 
@@ -127,10 +127,10 @@ export default function YesselFloating() {
           <div style={{ padding: '20px', background: 'rgba(255, 42, 95, 0.1)', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
               <div className={`candy-avatar-base`} style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)', transition: 'all 0.3s' }}>
-                <img src="/yessel_avatar.png" alt="Natalia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Natalia</h3>
+                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Yessel</h3>
                 <span style={{ fontSize: '0.8rem', color: '#45f3ff' }}>● Conserje VIP Online</span>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function YesselFloating() {
                   }
                 }} 
                 style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                title="Voz de Natalia"
+                title="Voz de Yessel"
               >
                 {isAudioPremium ? '🔊' : '🔈'}
               </button>
@@ -166,7 +166,7 @@ export default function YesselFloating() {
               }} dangerouslySetInnerHTML={formatMessage(msg.content)} />
             ))}
             {isLoading && (
-              <div style={{ alignSelf: 'flex-start', color: '#45f3ff', fontStyle: 'italic', fontSize: '0.9rem' }}>Natalia está escribiendo...</div>
+              <div style={{ alignSelf: 'flex-start', color: '#45f3ff', fontStyle: 'italic', fontSize: '0.9rem' }}>Yessel está escribiendo...</div>
             )}
             <div ref={messagesEndRef} />
           </div>
@@ -177,7 +177,7 @@ export default function YesselFloating() {
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={"Escribe a Natalia..."} 
+                placeholder={"Escribe a Yessel..."} 
                 style={{ flex: 1, padding: '12px 15px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.5)', color: 'white', outline: 'none', fontSize: '0.95rem' }} 
               />
               <button type="submit" disabled={isLoading || !input.trim()} style={{ background: 'transparent', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: input.trim() ? 'var(--primary)' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>
