@@ -1,0 +1,32 @@
+﻿====================================================
+  IDARTHUR - Instrucciones para reactivar
+====================================================
+
+REQUISITOS PREVIOS (instalar una sola vez en el nuevo PC):
+  1. Node.js 18+  → https://nodejs.org/
+  2. Git           → https://git-scm.com/
+
+PASOS PARA REACTIVAR:
+  1. Copia esta carpeta a donde quieras en el nuevo PC
+  2. Abre una terminal (CMD o PowerShell) dentro de la carpeta
+  3. Instala las dependencias:
+       npm install
+  4. Ejecuta el proyecto en modo desarrollo:
+       npm run dev
+  5. Abre el navegador en: http://localhost:3000
+
+ARCHIVOS IMPORTANTES:
+  - .env.local     → Variables de entorno y claves API (NO borrar)
+  - package.json   → Lista de dependencias
+  - public/        → Imágenes, avatares y assets del sitio
+  - app/           → Páginas y rutas del proyecto Next.js
+  - components/    → Componentes React del sitio
+
+PARA SUBIR A VERCEL (producción):
+  - Instala Vercel CLI: npm install -g vercel
+  - Ejecuta: vercel --prod
+
+NOTAS:
+  - La carpeta node_modules se regenera con: npm install
+  - La carpeta .next se regenera automáticamente al correr npm run dev
+  - NO eliminar el archivo .env.local

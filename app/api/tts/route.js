@@ -1,6 +1,6 @@
 import { Communicate } from 'edge-tts-universal';
 
-export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 export async function GET(request) {
   try {
