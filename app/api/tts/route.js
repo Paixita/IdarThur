@@ -17,18 +17,18 @@ export async function GET(request) {
 
     // Analizar el texto para modular velocidad (rate) y tono (pitch) según el sentimiento
     const lowerText = cleanText.toLowerCase();
-    let rate = '+0%';
+    let rate = '+4%'; // Un poco más rápido para evitar sonar aburrido o lento
     let pitch = '+0Hz';
 
     if (lowerText.match(/(misterio|secreto|suspenso|oculto|noche|oscuro|miedo|tensión|desconocido|silencio)/)) {
-      rate = '-10%';
-      pitch = '-5Hz';
+      rate = '-1%'; // Sutilmente pausado para el misterio pero manteniendo dinamismo
+      pitch = '-3Hz';
     } else if (lowerText.match(/(rápido|correr|acción|increíble|explosión|emoción|corazón|adrenalina|peligro|urgente)/)) {
-      rate = '+12%';
-      pitch = '+3Hz';
-    } else if (lowerText.match(/(amor|romance|paz|calma|suave|tranquilo|relajante|brisa|luna|hermoso)/)) {
-      rate = '-5%';
+      rate = '+9%'; 
       pitch = '+2Hz';
+    } else if (lowerText.match(/(amor|romance|paz|calma|suave|tranquilo|relajante|brisa|luna|hermoso)/)) {
+      rate = '+1%'; 
+      pitch = '+1Hz';
     }
 
     console.log(`[TTS Stream] Voz: ${voice}, Rate: ${rate}, Pitch: ${pitch}. Texto: "${cleanText.substring(0, 50)}..."`);

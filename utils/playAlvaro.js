@@ -1,4 +1,4 @@
-// playAlvaro.js - Gestor de voz neural premium para Yessel con cola de reproducción por frases
+// playAlvaro.js - Gestor de voz neural premium para Yessel con precarga paralela de frases
 let audioQueue = [];
 let currentQueueIndex = 0;
 let currentAudio = null;
@@ -13,13 +13,26 @@ export const playAlvaroAudio = (text) => {
   if (!text || text.trim() === '') return;
 
   // Dividir el texto en frases usando puntos, signos de interrogación y exclamación
-  // Esto evita enviar textos largos que causen timeout en el servidor
-  audioQueue = text
+  const sentences = text
     .split(/(?<=[.!?])\s+/)
     .map(s => s.trim())
     .filter(s => s.length > 0);
 
-  if (audioQueue.length === 0) return;
+  if (sentences.length === 0) return;
+
+  // Crear y precargar todos los audios en paralelo de inmediato
+  // Esto elimina las demoras por latencia de red entre oraciones
+  audioQueue = sentences.map(sentence => {
+    const encodedText = encodeURIComponent(sentence);
+    const audioUrl = `/api/tts?text=${encodedText}`;
+    const audio = new Audio(audioUrl);
+    audio.preload = 'auto';
+    audio.load(); // Iniciar precarga inmediata
+    return {
+      text: sentence,
+      audio: audio
+    };
+  });
 
   currentQueueIndex = 0;
   isPlaying = true;
@@ -39,29 +52,29 @@ const playNextInQueue = () => {
     return;
   }
 
-  const sentence = audioQueue[currentQueueIndex];
-  const encodedText = encodeURIComponent(sentence);
-  const audioUrl = `/api/tts?text=${encodedText}`;
-
-  currentAudio = new Audio(audioUrl);
+  const currentItem = audioQueue[currentQueueIndex];
+  currentAudio = currentItem.audio;
 
   const handleEnd = () => {
+    currentAudio.removeEventListener('ended', handleEnd);
+    currentAudio.removeEventListener('error', handleError);
+    currentQueueIndex++;
+    playNextInQueue();
+  };
+
+  const handleError = (e) => {
+    console.error('[Neural TTS Client Error]', e);
+    currentAudio.removeEventListener('ended', handleEnd);
+    currentAudio.removeEventListener('error', handleError);
     currentQueueIndex++;
     playNextInQueue();
   };
 
   currentAudio.addEventListener('ended', handleEnd);
-
-  currentAudio.addEventListener('error', (e) => {
-    console.error('[Neural TTS Client Error]', e);
-    // Intentar saltar a la siguiente frase si hay un fallo
-    currentQueueIndex++;
-    playNextInQueue();
-  });
+  currentAudio.addEventListener('error', handleError);
 
   currentAudio.play().catch((err) => {
     console.error('[Neural TTS Play Blocked/Failed]', err);
-    // Detener la reproducción si es bloqueado por el navegador
     stopAlvaroAudio();
   });
 };
@@ -69,16 +82,24 @@ const playNextInQueue = () => {
 export const stopAlvaroAudio = () => {
   if (typeof window === 'undefined') return;
   isPlaying = false;
+
+  // Detener y liberar recursos de toda la cola
+  audioQueue.forEach(item => {
+    if (item.audio) {
+      try {
+        item.audio.pause();
+        item.audio.src = '';
+        item.audio.load();
+      } catch (e) {
+        console.error('[Neural TTS Stop Error]', e);
+      }
+    }
+  });
+
   audioQueue = [];
   currentQueueIndex = 0;
-  if (currentAudio) {
-    try {
-      currentAudio.pause();
-    } catch (e) {
-      console.error('[Neural TTS Stop Error]', e);
-    }
-    currentAudio = null;
-  }
+  currentAudio = null;
+
   window.dispatchEvent(new CustomEvent('alvaro-tts-end'));
 };
 
