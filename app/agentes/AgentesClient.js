@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
@@ -11,6 +11,29 @@ export default function AgentesClient() {
   const [inputMsg, setInputMsg] = useState('');
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
+  const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
+  const [candyMessages, setCandyMessages] = useState([
+    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
+  ]);
+  const [candyInputMsg, setCandyInputMsg] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCandyLoading, setIsCandyLoading] = useState(false);
+
+  const chatEndRef = useRef(null);
+  const candyChatEndRef = useRef(null);
+
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading]);
+
+  useEffect(() => {
+    if (candyChatEndRef.current) {
+      candyChatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [candyMessages, isCandyLoading]);
 
   const agents = [
     {
@@ -78,41 +101,54 @@ export default function AgentesClient() {
     }
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!inputMsg.trim()) return;
+    if (!inputMsg.trim() || isLoading) return;
 
-    if (inputMsg.trim() === '/yessel-audio') {
+    const userMessage = inputMsg.trim();
+
+    if (userMessage === '/yessel-audio') {
       setIsAudioPremium(true);
       setInputMsg('');
       setMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
-    const newMessages = [...messages, { text: inputMsg, sender: 'user' }];
+    const newMessages = [...messages, { text: userMessage, sender: 'user' }];
     setMessages(newMessages);
     setInputMsg('');
+    setIsLoading(true);
 
-    // Lead Generation Logic
-    setTimeout(() => {
-      let reply = "¡Tengo una oferta increíble y súper exclusiva para ti! Para asegurarte este precio y darte asistencia VIP, por favor déjame tu **número de WhatsApp** o tu **Correo Electrónico** aquí mismo y te enviaré el enlace seguro inmediatamente.";
-      if (activeChat.id === 'vitalis') {
-        reply = "¡Excelente! Para enviarte el informe médico completo de tu destino y los links del seguro con descuento, déjame tu **WhatsApp** o **Correo** y te lo mando ya mismo.";
-      } else if (activeChat.id === 'altamar') {
-        reply = "¡Por las barbas de Neptuno, hay una cabina con balcón en promoción secreta! Pásame tu **WhatsApp** o **Email** y te envío el acceso directo para que la reserves antes de que se agote.";
-      } else if (activeChat.id === 'cronista') {
-        reply = "¡Esa historia suena fantástica! Me encantaría redactarla con un estilo cinematográfico e ilustrarla. Para comenzar a trabajar en ella y coordinar la publicación, regálame tu **WhatsApp** o **Correo Electrónico**.";
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          agentId: activeChat.id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
+
+      const data = await response.json();
+      const reply = data.reply || "Lo siento, no pude obtener respuesta.";
+
       setMessages([...newMessages, { text: reply, sender: 'ai' }]);
       if (isAudioPremium) playAlvaroAudio(reply);
-    }, 1500);
+    } catch (error) {
+      console.error("Error calling Chat API:", error);
+      setMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
-  const [candyMessages, setCandyMessages] = useState([
-    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
-  ]);
-  const [candyInputMsg, setCandyInputMsg] = useState('');
+
 
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
@@ -121,26 +157,51 @@ export default function AgentesClient() {
     }
   };
 
-  const handleSendCandyMessage = (e) => {
+  const handleSendCandyMessage = async (e) => {
     e.preventDefault();
-    if (!candyInputMsg.trim()) return;
+    if (!candyInputMsg.trim() || isCandyLoading) return;
 
-    if (candyInputMsg.trim() === '/yessel-audio') {
+    const userMessage = candyInputMsg.trim();
+
+    if (userMessage === '/yessel-audio') {
       setIsAudioPremium(true);
       setCandyInputMsg('');
       setCandyMessages(prev => [...prev, { text: '✅ ¡Voz VIP de Yessel desbloqueada con éxito!', sender: 'ai' }]);
       return;
     }
 
-    const newMessages = [...candyMessages, { text: candyInputMsg, sender: 'user' }];
+    const newMessages = [...candyMessages, { text: userMessage, sender: 'user' }];
     setCandyMessages(newMessages);
     setCandyInputMsg('');
+    setIsCandyLoading(true);
 
-    setTimeout(() => {
-      const reply = "Me encanta ese plan. Tengo acceso a unas tarifas preferenciales que no están publicadas en internet. Para enviarte la información confidencial, regálame tu **WhatsApp** o **Correo Electrónico** y te contacto enseguida.";
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          agentId: 'default'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const reply = data.reply || "Lo siento, no pude obtener respuesta.";
+
       setCandyMessages([...newMessages, { text: reply, sender: 'ai' }]);
       if (isAudioPremium) playAlvaroAudio(reply);
-    }, 1500);
+    } catch (error) {
+      console.error("Error calling Chat API:", error);
+      setCandyMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
+    } finally {
+      setIsCandyLoading(false);
+    }
   };
 
   return (
@@ -295,6 +356,20 @@ export default function AgentesClient() {
                   </div>
                 </div>
               ))}
+              {isLoading && (
+                <div style={{ alignSelf: 'flex-start', maxWidth: '80%' }}>
+                  <div style={{ 
+                    background: 'rgba(255,255,255,0.02)', 
+                    color: '#a0aab5', padding: '12px 18px', borderRadius: '20px', 
+                    borderBottomLeftRadius: '5px',
+                    lineHeight: '1.5', fontSize: '0.95rem',
+                    fontStyle: 'italic'
+                  }}>
+                    Escribiendo...
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
             </div>
 
             {/* Chat Input */}
@@ -303,11 +378,12 @@ export default function AgentesClient() {
                 type="text" 
                 value={inputMsg}
                 onChange={e => setInputMsg(e.target.value)}
-                placeholder={`Escribe a ${activeChat.name}...`} 
-                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
+                placeholder={isLoading ? "Pensando..." : `Escribe a ${activeChat.name}...`} 
+                disabled={isLoading}
+                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none', opacity: isLoading ? 0.6 : 1 }}
               />
-              <button type="submit" style={{ background: activeChat.color, border: 'none', borderRadius: '15px', padding: '0 20px', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}>
-                Enviar
+              <button type="submit" disabled={isLoading} style={{ background: isLoading ? '#555' : activeChat.color, border: 'none', borderRadius: '15px', padding: '0 20px', color: isLoading ? '#888' : '#000', fontWeight: 'bold', cursor: isLoading ? 'not-allowed' : 'pointer' }}>
+                {isLoading ? '...' : 'Enviar'}
               </button>
             </form>
 
@@ -357,6 +433,20 @@ export default function AgentesClient() {
                   </div>
                 </div>
               ))}
+              {isCandyLoading && (
+                <div style={{ alignSelf: 'flex-start', maxWidth: '80%' }}>
+                  <div style={{ 
+                    background: 'rgba(255,255,255,0.02)', 
+                    color: '#a0aab5', padding: '12px 18px', borderRadius: '20px', 
+                    borderBottomLeftRadius: '5px',
+                    lineHeight: '1.5', fontSize: '0.95rem',
+                    fontStyle: 'italic'
+                  }}>
+                    Escribiendo...
+                  </div>
+                </div>
+              )}
+              <div ref={candyChatEndRef} />
             </div>
 
             <form onSubmit={handleSendCandyMessage} style={{ padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '10px' }}>
@@ -364,11 +454,12 @@ export default function AgentesClient() {
                 type="text" 
                 value={candyInputMsg}
                 onChange={e => setCandyInputMsg(e.target.value)}
-                placeholder={`Escribe a Yessel...`} 
-                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
+                placeholder={isCandyLoading ? "Pensando..." : `Escribe a Yessel...`} 
+                disabled={isCandyLoading}
+                style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none', opacity: isCandyLoading ? 0.6 : 1 }}
               />
-              <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>
-                Enviar
+              <button type="submit" disabled={isCandyLoading} style={{ background: isCandyLoading ? '#555' : 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: isCandyLoading ? 'not-allowed' : 'pointer' }}>
+                {isCandyLoading ? '...' : 'Enviar'}
               </button>
             </form>
 
