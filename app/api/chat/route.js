@@ -63,9 +63,28 @@ export async function POST(request) {
       REGLA 4: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).`;
     }
 
+    // [TRES CAPAS] - Inyectamos conocimiento técnico de la arquitectura sin modificar las personalidades/voz de Yessel
+    const architectureKnowledge = `
+    
+    [CAPA 2: CONOCIMIENTO DE LA ARQUITECTURA TÉCNICA DE IDARTHUR.COM]
+    - Servidor Frontend: Next.js (corriendo en puerto 3001).
+    - Servidor Backend E-commerce: MedusaJS v2 (corriendo en puerto 9000).
+    - Base de Datos: PostgreSQL (puerto 5432) conteniendo la base de datos 'medusadb' usada por MedusaJS.
+    - Buscador Unificado: Meilisearch (puerto 7700) que indexa de forma unificada Noticias, Historias de Viajeros y Productos de la tienda local.
+    - Generación de Contenido: Agentes autónomos para noticias globales de viajes (Google News RSS).
+    - Monetización: Enlaces de afiliado de Amazon (tag 'idarthur-20') e ID de afiliado de Travelpayouts (729418) para búsqueda de vuelos y hoteles.
+    
+    [CAPA 3: ACTIVACIÓN POR CONTEXTO Y SOPORTE TÉCNICO]
+    - Solo activarás este conocimiento técnico cuando detectes un problema en el sistema (por ejemplo, cuando una llamada a una herramienta falle) o cuando el administrador te lo solicite mediante comandos específicos como '/diagnostico', '/status-sistema', o preguntas técnicas sobre los servidores.
+    - Para los usuarios de la plataforma (viajeros normales), este soporte actúa como un motor silencioso en el backend: tu prioridad absoluta es la atención comercial, la empatía, la calidez humana y resolver sus dudas de viaje usando tus personalidades correspondientes. NUNCA les menciones detalles técnicos de servidores ni bases de datos.
+    `;
+
+    // Combinamos el prompt de la personalidad activa (Capa 1) con la Capa 2 y 3
+    const finalSystemPrompt = systemPrompt + architectureKnowledge;
+
     const { text } = await generateText({
       model: groq('llama-3.1-8b-instant'),
-      system: systemPrompt,
+      system: finalSystemPrompt,
       prompt: message,
       tools: {
         agenteCondorVuelos: tool({
@@ -95,6 +114,50 @@ export async function POST(request) {
           execute: async ({ tipo }) => {
             if(tipo === 'tienda') return `El Agente Gavilán ya preparó el catálogo de equipaje y tecnología. [Visita la tienda del viajero aquí](/tienda)`;
             return `El Agente Gavilán encontró las mejores suites en alta mar. [Reserva tu crucero aquí](/hoteles)`;
+          },
+        }),
+        consultarProductosMedusa: tool({
+          description: 'Consulta los productos y tours locales en el inventario del backend de MedusaJS para recomendarlos al usuario.',
+          parameters: z.object({
+            limit: z.number().optional().describe('Límite de productos a retornar'),
+          }),
+          execute: async ({ limit }) => {
+            try {
+              const res = await fetch('http://localhost:3001/api/medusa');
+              const data = await res.json();
+              if (data.success) {
+                return JSON.stringify({ origin: data.origin, products: data.products.slice(0, limit || 4) });
+              }
+              return JSON.stringify({ error: "No se pudieron obtener productos de la tienda." });
+            } catch (err) {
+              return JSON.stringify({ error: err.message });
+            }
+          },
+        }),
+        monitoreoBaseDatos: tool({
+          description: 'Realiza un diagnóstico de salud y conectividad de la base de datos PostgreSQL de MedusaJS.',
+          parameters: z.object({}),
+          execute: async () => {
+            try {
+              const res = await fetch('http://localhost:3001/api/diagnosticos?check=db');
+              const data = await res.json();
+              return JSON.stringify(data.results?.database || { error: "Error al diagnosticar la base de datos." });
+            } catch (err) {
+              return JSON.stringify({ error: err.message });
+            }
+          },
+        }),
+        leerLogsError: tool({
+          description: 'Lee las últimas líneas de logs de error del servidor Next.js para encontrar fallas del sistema.',
+          parameters: z.object({}),
+          execute: async () => {
+            try {
+              const res = await fetch('http://localhost:3001/api/diagnosticos?check=logs');
+              const data = await res.json();
+              return JSON.stringify(data.results?.logs || { error: "Error al obtener los logs." });
+            } catch (err) {
+              return JSON.stringify({ error: err.message });
+            }
           },
         }),
       },

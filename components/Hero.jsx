@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from 'react';
+import UnifiedSearchBar from './UnifiedSearchBar';
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [searchTab, setSearchTab] = useState('vuelos');
+  const [searchTab, setSearchTab] = useState('global');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [hotelDestination, setHotelDestination] = useState('');
@@ -121,7 +122,25 @@ export default function Hero() {
           margin: '0 auto'
         }}>
           {/* Pestanas */}
-          <div className="search-tabs" style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '15px' }}>
+          <div className="search-tabs" style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '15px', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => setSearchTab('global')} 
+              style={{
+                background: searchTab === 'global' ? 'linear-gradient(45deg, var(--primary), var(--secondary))' : 'transparent',
+                color: 'white',
+                border: searchTab === 'global' ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                padding: '10px 20px',
+                borderRadius: '15px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s'
+              }}
+            >
+              <span>🪐</span> Explorador Global
+            </button>
             <button 
               onClick={() => setSearchTab('vuelos')} 
               style={{
@@ -174,88 +193,94 @@ export default function Hero() {
                 transition: 'all 0.3s'
               }}
             >
-              <span>🚗</span> Alquiler de Autos
+              <span>🚗</span> Autos
             </button>
           </div>
 
           {/* Formulario */}
-          <form onSubmit={handleSearch}>
-            {searchTab === 'vuelos' && (
-              <div className="search-form-grid">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Origen</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ej. Medellín, MDE" 
-                    value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
-                  />
+          {searchTab === 'global' ? (
+            <div style={{ padding: '10px 0' }}>
+              <UnifiedSearchBar />
+            </div>
+          ) : (
+            <form onSubmit={handleSearch}>
+              {searchTab === 'vuelos' && (
+                <div className="search-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Origen</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ej. Medellín, MDE" 
+                      value={origin}
+                      onChange={(e) => setOrigin(e.target.value)}
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Destino</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ej. París, CDG" 
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      required
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    Buscar Vuelos ✈️
+                  </button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Destino</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ej. París, CDG" 
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    required
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
-                  />
-                </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  Buscar Vuelos ✈️
-                </button>
-              </div>
-            )}
+              )}
 
-            {searchTab === 'hoteles' && (
-              <div className="search-form-grid">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Destino / Hotel</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ej. Dubái, Emiratos Árabes" 
-                    value={hotelDestination}
-                    onChange={(e) => setHotelDestination(e.target.value)}
-                    required
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
-                  />
+              {searchTab === 'hoteles' && (
+                <div className="search-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Destino / Hotel</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ej. Dubái, Emiratos Árabes" 
+                      value={hotelDestination}
+                      onChange={(e) => setHotelDestination(e.target.value)}
+                      required
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Huéspedes</label>
+                    <select style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none', cursor: 'pointer' }}>
+                      <option value="1" style={{ background: '#0a0f19' }}>1 Adulto</option>
+                      <option value="2" style={{ background: '#0a0f19' }}>2 Adultos</option>
+                      <option value="3" style={{ background: '#0a0f19' }}>3 Adultos</option>
+                      <option value="4" style={{ background: '#0a0f19' }}>4 Adultos o Familia</option>
+                    </select>
+                  </div>
+                  <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    Buscar Hoteles 🏨
+                  </button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Huéspedes</label>
-                  <select style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none', cursor: 'pointer' }}>
-                    <option value="1" style={{ background: '#0a0f19' }}>1 Adulto</option>
-                    <option value="2" style={{ background: '#0a0f19' }}>2 Adultos</option>
-                    <option value="3" style={{ background: '#0a0f19' }}>3 Adultos</option>
-                    <option value="4" style={{ background: '#0a0f19' }}>4 Adultos o Familia</option>
-                  </select>
-                </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  Buscar Hoteles 🏨
-                </button>
-              </div>
-            )}
+              )}
 
-            {searchTab === 'autos' && (
-              <div className="search-form-grid" style={{ gridTemplateColumns: '1.5fr auto' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Lugar de Entrega</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ej. Aeropuerto de Madrid Barajas (MAD)" 
-                    value={carLocation}
-                    onChange={(e) => setCarLocation(e.target.value)}
-                    required
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
-                  />
+              {searchTab === 'autos' && (
+                <div className="search-form-grid" style={{ gridTemplateColumns: '1.5fr auto' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <label style={{ fontSize: '0.8rem', color: '#a0aab5', fontWeight: 'bold' }}>Lugar de Entrega</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ej. Aeropuerto de Madrid Barajas (MAD)" 
+                      value={carLocation}
+                      onChange={(e) => setCarLocation(e.target.value)}
+                      required
+                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
+                    />
+                  </div>
+                  <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    Buscar Autos 🚗
+                  </button>
                 </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  Buscar Autos 🚗
-                </button>
-              </div>
-            )}
-          </form>
+              )}
+            </form>
+          )}
         </div>
       </div>
 
