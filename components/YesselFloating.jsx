@@ -38,6 +38,53 @@ export default function YesselFloating() {
     return () => window.removeEventListener('openCandyChat', handleOpenChat);
   }, [isAudioPremium, messages]);
 
+  // Escucha del servidor WebSocket de TikTok Live
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    let ws;
+    const connectWS = () => {
+      ws = new WebSocket('ws://localhost:3002');
+      
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.event === 'chat') {
+            // Abrir el chat automáticamente si estaba cerrado
+            setIsOpen(true);
+            // Agregar el mensaje del usuario y la respuesta de Yessel al chat de la UI
+            setMessages(prev => [
+              ...prev, 
+              { role: 'user', content: `[TikTok @${data.username}]: ${data.comment}` },
+              { role: 'assistant', content: data.reply }
+            ]);
+            // Reproducir la voz si la cuenta tiene el audio premium activado
+            if (isAudioPremium) {
+              playAlvaroAudio(data.reply);
+            }
+          }
+        } catch (e) {
+          console.error('[TikTok WS Msg Error]', e);
+        }
+      };
+      
+      ws.onclose = () => {
+        // Intentar reconectar cada 5 segundos si el servidor local de TikTok se apaga
+        setTimeout(connectWS, 5000);
+      };
+      
+      ws.onerror = () => {
+        ws.close();
+      };
+    };
+    
+    connectWS();
+    
+    return () => {
+      if (ws) ws.close();
+    };
+  }, [isAudioPremium]);
+
   const formatMessage = (text) => {
     const formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #45f3ff; text-decoration: underline; font-weight: bold; background: rgba(69,243,255,0.1); padding: 5px 10px; border-radius: 10px; display: inline-block; margin-top: 5px;">$1</a>');
     return { __html: formatted };
