@@ -1,14 +1,33 @@
 "use client";
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import LoginModal from './LoginModal';
 
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   // Close mobile menu when a link is clicked
   const closeMenu = () => setIsMobileMenuOpen(false);
+
+  // Dynamically assign active styles
+  const getLinkStyle = (isActive, type = 'accent') => {
+    if (isActive) {
+      if (type === 'primary') {
+        return { transition: 'color 0.3s', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold' };
+      }
+      return { 
+        transition: 'color 0.3s', 
+        textDecoration: 'none', 
+        color: '#45f3ff', 
+        fontWeight: 'bold', 
+        textShadow: '0 0 10px rgba(69,243,255,0.5)' 
+      };
+    }
+    return { transition: 'color 0.3s', textDecoration: 'none', color: 'white' };
+  };
 
   return (
     <>
@@ -36,14 +55,14 @@ export default function Navbar() {
 
         {/* Links Container */}
         <div className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-          <Link href="/" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Vuelos</Link>
-          <Link href="/hoteles" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Hoteles</Link>
-          <Link href="/noticias" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold' }}>Noticias 🌍</Link>
-          <Link href="/eventos" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Eventos</Link>
-          <Link href="/tienda" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Tienda</Link>
-          <Link href="/autos" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Autos</Link>
-          <Link href="/historias" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: 'white' }}>Historias</Link>
-          <Link href="/agentes" onClick={closeMenu} style={{ transition: 'color 0.3s', textDecoration: 'none', color: '#45f3ff', fontWeight: 'bold', textShadow: '0 0 10px rgba(69,243,255,0.5)' }}>Escuadrón IA</Link>
+          <Link href="/" onClick={closeMenu} style={getLinkStyle(pathname === '/')}>Vuelos</Link>
+          <Link href="/hoteles" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/hoteles'))}>Hoteles</Link>
+          <Link href="/noticias" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/noticias'), 'primary')}>Noticias 🌍</Link>
+          <Link href="/eventos" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/eventos'))}>Eventos</Link>
+          <Link href="/tienda" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/tienda'))}>Tienda</Link>
+          <Link href="/autos" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/autos'))}>Autos</Link>
+          <Link href="/historias" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/historias'))}>Historias</Link>
+          <Link href="/agentes" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/agentes'))}>Escuadrón IA</Link>
           
           <button onClick={() => { setIsLoginOpen(true); closeMenu(); }} className="btn-primary" style={{ padding: '8px 20px', fontSize: '0.9rem', marginTop: '10px' }}>Ingresar</button>
         </div>
