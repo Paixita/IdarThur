@@ -3,10 +3,70 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { categories, products } from '../../data/tienda';
 import UnifiedSearchBar from '../../components/UnifiedSearchBar';
+import { trackTikTokEvent } from '../../utils/tiktok';
 
 export default function TiendaClient() {
   const [activeCategory, setActiveCategory] = useState("todos");
   
+  // Track page view event in TikTok
+  useEffect(() => {
+    trackTikTokEvent('ViewContent', {
+      content_type: 'product_group',
+      content_name: 'Tienda de Viajes IdarThur',
+      currency: 'USD',
+      value: 0
+    });
+  }, []);
+
+  const handleProductClick = (product) => {
+    const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, '')) || 10.0;
+    
+    // Enviar evento de añadir al carrito
+    trackTikTokEvent('AddToCart', {
+      contents: [
+        {
+          content_id: String(product.id),
+          content_type: 'product',
+          content_name: product.name,
+          quantity: 1,
+          price: numericPrice
+        }
+      ],
+      value: numericPrice,
+      currency: 'USD'
+    });
+    
+    // Enviar evento de iniciar checkout
+    trackTikTokEvent('InitiateCheckout', {
+      contents: [
+        {
+          content_id: String(product.id),
+          content_type: 'product',
+          content_name: product.name,
+          quantity: 1,
+          price: numericPrice
+        }
+      ],
+      value: numericPrice,
+      currency: 'USD'
+    });
+
+    // Enviar evento de compra simulada (afiliado)
+    trackTikTokEvent('Purchase', {
+      contents: [
+        {
+          content_id: String(product.id),
+          content_type: 'product',
+          content_name: product.name,
+          quantity: 1,
+          price: numericPrice
+        }
+      ],
+      value: numericPrice,
+      currency: 'USD'
+    });
+  };
+
   // Configuración del Slider de Productos Destacados
   const featuredIds = [5, 1, 10, 8, 11];
   const featuredProducts = products.filter(p => featuredIds.includes(p.id));
@@ -110,6 +170,7 @@ export default function TiendaClient() {
                     href={prod.affiliateLink} 
                     target="_blank" 
                     rel="noopener noreferrer" 
+                    onClick={() => handleProductClick(prod)}
                     className="btn-amazon-slider"
                     style={{ 
                       padding: '12px 30px', 
@@ -229,7 +290,13 @@ export default function TiendaClient() {
         {filteredProducts.map(product => (
           <div key={product.id} className="glass product-card" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s, box-shadow 0.3s' }}>
             
-            <a href={product.affiliateLink} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <a 
+              href={product.affiliateLink} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => handleProductClick(product)}
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
+            >
               <div style={{ height: '300px', position: 'relative', overflow: 'hidden' }}>
                 <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} className="product-img" />
                 {product.bestseller && (
