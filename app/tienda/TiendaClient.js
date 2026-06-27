@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { categories, products } from '../../data/tienda';
+import UnifiedSearchBar from '../../components/UnifiedSearchBar';
 
 export default function TiendaClient() {
   const [activeCategory, setActiveCategory] = useState("todos");
@@ -35,6 +36,11 @@ export default function TiendaClient() {
         <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
           Todo lo que necesitas para tu próxima aventura, probado en batalla y garantizado por las reseñas de miles de viajeros. Compra directo y seguro en Amazon.
         </p>
+      </div>
+
+      {/* BUSCADOR UNIFICADO Y ASESORÍA */}
+      <div style={{ marginBottom: '50px' }}>
+        <UnifiedSearchBar />
       </div>
 
       {/* SLIDER DE PRODUCTOS DESTACADOS */}

@@ -28,12 +28,11 @@ export async function POST(request) {
       Actúa también como un asesor experto de ventas: pregúntale coherentemente sobre su destino y su estado físico para recomendarle el seguro médico internacional de IdarThur o un botiquín de nuestra tienda (Agente Gavilán). Pídele su WhatsApp o Correo diciéndole que le enviarás un plan de seguros con descuento y el informe médico del destino.
       Mantén tus respuestas claras pero concisas (máximo 3 oraciones por mensaje).`;
     } else if (agentId === 'nicolas') {
-      systemPrompt = `Eres Yessel Ventas, la Asistente de Compras oficial de la tienda IdarThur. Eres entusiasta, carismática, muy amigable y una vendedora nata. Te expresas como una amiga cercana que adora ir de compras contigo y quiere lo mejor para tu aventura.
-      Tu objetivo es guiar de forma experta al usuario en la compra de artículos de viaje, maletas, mochilas, adaptadores y ropa para climas extremos.
-      Hazle preguntas muy lógicas y coherentes de perfilamiento: ¿a dónde viaja?, ¿cómo estará el clima allá?, ¿viaja solo o en familia?, para poder asesorarle perfectamente con los artículos ideales.
-      Además del lado comercial, demuestra una amistad y cariño sincero: pregúntale cómo se siente, compártele consejos de viajera experimentada y hazle sentir escuchado y apoyado en todo momento.
-      Pídele su WhatsApp o Correo Electrónico ofreciéndole un cupón del 15% de descuento en la tienda y una lista de recomendados personalizada para su destino.
-      Respuestas cortas y amigables (máximo 2-3 oraciones).`;
+      systemPrompt = `Eres Yessel Ventas, la Asistente de Compras oficial de la tienda IdarThur. Eres entusiasta, carismática, muy amigable y una vendedora nata. Te expresas como una amiga de confianza.
+      Tu objetivo es guiar al usuario en la compra de equipamiento para viajes (maletas, ropa sherpa, GPS mascotas, botiquines), y también en el Plan B de ventas para su día a día en el hogar, oficina, belleza/perfumes, fitness o tecnología/sistemas (laptops, memorias RAM).
+      Hazle preguntas de perfilamiento: ¿a dónde viaja?, ¿viaja con mascotas?, ¿tiene preocupaciones de salud?, ¿necesita artículos para su trabajo u oficina?, ¿busca mejorar su computadora o hacer deporte?
+      Si le recomiendas productos, recomiéndale usar nuestro [Buscador de Utensilios](#buscador-ventas) de abajo para ver el catálogo y filtrar en tiempo real.
+      Demuestra una amistad y cariño sincero. Respuestas cortas y amigables (máximo 2-3 oraciones).`;
     } else if (agentId === 'altamar') {
       systemPrompt = `Eres el Capitán Yessel, especialista en cruceros de IdarThur. Tienes un tono alegre, marinero, confiable y lleno de energía. Eres un capitán amigable que trata al usuario con gran camaradería y amistad.
       Tu objetivo es ayudar a los usuarios a planificar cruceros inolvidables por el Caribe, el Mediterráneo o Alaska, ofreciendo camarotes de lujo y tarifas confidenciales.
@@ -48,19 +47,13 @@ export async function POST(request) {
       // Default Conserje VIP
       systemPrompt = `Eres Yessel, el Conserje VIP y Director de Operaciones de la agencia de viajes 'IdarThur'.
       Tienes una personalidad madura, elegante, de mucha confianza (tienes 55 años) y altamente resolutiva.
-      TU OBJETIVO PRINCIPAL ES CAPTURAR LEADS (Contactos).
-      Cuando el cliente muestre interés en un viaje, hotel, vuelo o crucero, SIEMPRE dile que tienes acceso a una "tarifa secreta o no publicada".
-      Para enviarle esa tarifa, pídele amablemente su número de WhatsApp o su Correo Electrónico.
-      Ejemplo: "Tengo una tarifa confidencial para ese destino. Regálame tu WhatsApp o Correo y te envío el enlace seguro inmediatamente."
-      No hables de audio ni de voces, eres un asistente de chat de texto premium.
-      REGLA 1 (Ventas): NUNCA ofrezcas lo más barato por defecto. Ofrece opciones "Confort" o "Premium". Solo ofrece lo más barato si el cliente usa palabras como "económico", "barato" o "promoción".
-      REGLA 2 (Perfilamiento): Antes de buscar, haz preguntas clave: ¿Cuántos viajan? ¿Llevan mascotas? ¿Les falta equipo de viaje o maletas?
-      REGLA 3 (Tus Subagentes): Tienes 3 subagentes:
-      - Agente Cóndor: Especialista en Vuelos.
-      - Agente Flash: Especialista en Hoteles y Autos.
-      - Agente Gavilán: Especialista en Cruceros y Tienda Amazon.
-      Cuando el cliente quiera reservar, avísale que llamarás a tu subagente y usa las herramientas (tools).
-      REGLA 4: Tus respuestas deben ser MUY CORTAS (1 o 2 oraciones).`;
+      TU OBJETIVO PRINCIPAL ES CAPTURAR LEADS (Contactos) y asesorar en compras (Viaje y Plan B de uso diario).
+      Cuando muestren interés en viajes, ofrece "tarifas secretas" a cambio de su WhatsApp o Correo.
+      REGLA 1 (Ventas): Ofrece opciones "Confort" o "Premium".
+      REGLA 2 (Perfilamiento de Pasajero y Ventas): Haz preguntas clave: ¿viaja con mascotas?, ¿tiene preocupaciones de salud?, ¿necesita equipaje?, ¿o busca artículos de uso diario para su hogar, oficina, cuidado personal/fragancias, deportes o computación/sistemas (laptops, memorias RAM)?
+      Dirígelos siempre al [Buscador de Utensilios](#buscador-ventas) de abajo para buscar en tiempo real.
+      REGLA 3 (Tus Subagentes): Cóndor (Vuelos), Flash (Hoteles/Autos), Gavilán (Cruceros/Tienda).
+      REGLA 4: Respuestas muy cortas (1-2 oraciones).`;
     }
 
     // [TRES CAPAS] - Inyectamos conocimiento técnico de la arquitectura sin modificar las personalidades/voz de Yessel
@@ -74,6 +67,18 @@ export async function POST(request) {
     - Generación de Contenido: Agentes autónomos para noticias globales de viajes (Google News RSS).
     - Monetización: Enlaces de afiliado de Amazon (tag 'idarthur-20') e ID de afiliado de Travelpayouts (729418) para búsqueda de vuelos y hoteles.
     
+    [REGLAS CRÍTICAS DE LLAMADA A HERRAMIENTAS (TOOLS)]
+    - Solo puedes utilizar y llamar a las herramientas de software disponibles en request.tools. Sus nombres exactos son:
+      - 'buscarProductosCatalogo': Úsala para buscar CUALQUIER producto, repuestos, sistemas, RAM, laptops, fragancias, etc.
+      - 'consultarProductosMedusa'
+      - 'monitoreoBaseDatos'
+      - 'leerLogsError'
+      - 'agenteCondorVuelos'
+      - 'agenteFlashHoteles'
+      - 'agenteGavilan'
+    - NUNCA inventes nombres de funciones en español. Si vas a buscar cualquier producto, llama exclusivamente a 'buscarProductosCatalogo' usando parámetros válidos.
+    - NUNCA escribas o imprimas etiquetas como '<function=...' o '<function(...)...>' en tu respuesta de texto. La llamada a las herramientas debe realizarse de forma nativa e invisible a través de la interfaz de funciones de la API, nunca escrita en el chat.
+    
     [CAPA 3: ACTIVACIÓN POR CONTEXTO Y SOPORTE TÉCNICO]
     - Solo activarás este conocimiento técnico cuando detectes un problema en el sistema (por ejemplo, cuando una llamada a una herramienta falle) o cuando el administrador te lo solicite mediante comandos específicos como '/diagnostico', '/status-sistema', o preguntas técnicas sobre los servidores.
     - Para los usuarios de la plataforma (viajeros normales), este soporte actúa como un motor silencioso en el backend: tu prioridad absoluta es la atención comercial, la empatía, la calidez humana y resolver sus dudas de viaje usando tus personalidades correspondientes. NUNCA les menciones detalles técnicos de servidores ni bases de datos.
@@ -82,8 +87,64 @@ export async function POST(request) {
     // Combinamos el prompt de la personalidad activa (Capa 1) con la Capa 2 y 3
     const finalSystemPrompt = systemPrompt + architectureKnowledge;
 
-    const { text } = await generateText({
-      model: groq('llama-3.1-8b-instant'),
+    const buscarProductosCatalogoTool = tool({
+          description: 'Busca productos, utensilios, tecnología, cosméticos, salud o accesorios en la tienda de Amazon/Medusa usando palabras clave (ej: "RAM", "GPS", "maleta", "perfume", "chaqueta").',
+          parameters: z.object({
+            query: z.string().describe('Palabra clave de búsqueda (ej. "RAM", "GPS")'),
+            palabra_clave: z.string().optional().describe('Palabra clave de búsqueda en español (singular)'),
+            palabras_clave: z.string().optional().describe('Palabra clave de búsqueda en español (plural)'),
+            palabraClave: z.string().optional().describe('Palabra clave de búsqueda en camelCase (singular)'),
+            palabrasClave: z.string().optional().describe('Palabras clave de búsqueda en camelCase (plural)'),
+            termino_busqueda: z.string().optional().describe('Término de búsqueda'),
+            producto: z.string().optional().describe('Nombre del producto a buscar'),
+            articulo: z.string().optional().describe('Nombre del artículo a buscar'),
+            articulos: z.string().optional().describe('Nombre de los artículos a buscar'),
+            categoria: z.string().optional().describe('Categoría del producto'),
+            tipo: z.string().optional().describe('Tipo de artículo o categoría'),
+            q: z.string().optional().describe('Término de búsqueda abreviado'),
+            searchTerm: z.string().optional().describe('Término de búsqueda (camelCase)'),
+            search_term: z.string().optional().describe('Término de búsqueda (snake_case)'),
+            searchKeyword: z.string().optional().describe('Palabra clave de búsqueda (camelCase)'),
+            search_keyword: z.string().optional().describe('Palabra clave de búsqueda (snake_case)'),
+            palabras: z.string().optional().describe('Palabras de búsqueda'),
+            palabra: z.string().optional().describe('Palabra de búsqueda'),
+            busqueda: z.string().optional().describe('Búsqueda descriptiva'),
+            tag: z.string().optional().describe('Tag de afiliado')
+          }),
+      execute: async (args) => {
+        console.log("TOOL ARGS RECEIVED:", JSON.stringify(args));
+        const searchTerm = Object.values(args).find(val => typeof val === 'string') || '';
+        console.log("EXTRACTED SEARCH TERM:", searchTerm);
+        try {
+          const res = await fetch(`http://localhost:3001/api/search?q=${encodeURIComponent(searchTerm)}&type=producto`);
+          const data = await res.json();
+          if (data.success && data.hits && data.hits.length > 0) {
+            return JSON.stringify({ success: true, products: data.hits });
+          }
+          // Fallback to local products
+          const localRes = await fetch('http://localhost:3001/api/medusa');
+          const localData = await localRes.json();
+          if (localData.success && localData.products) {
+            const queryLower = searchTerm.toLowerCase();
+            const matched = localData.products.filter(p => 
+              p.name.toLowerCase().includes(queryLower) || 
+              (p.copy && p.copy.toLowerCase().includes(queryLower)) ||
+              (p.category && p.category.toLowerCase().includes(queryLower))
+            );
+            if (matched.length > 0) {
+              return JSON.stringify({ success: true, products: matched });
+            }
+            return JSON.stringify({ success: true, message: "No encontramos coincidencias exactas, pero aquí tienes algunos recomendados:", products: localData.products.slice(0, 4) });
+          }
+          return JSON.stringify({ success: false, error: "No se encontraron productos en el catálogo." });
+        } catch (err) {
+          return JSON.stringify({ error: err.message });
+        }
+      },
+    });
+
+    const result = await generateText({
+      model: groq('llama-3.3-70b-versatile'),
       system: finalSystemPrompt,
       prompt: message,
       tools: {
@@ -116,6 +177,10 @@ export async function POST(request) {
             return `El Agente Gavilán encontró las mejores suites en alta mar. [Reserva tu crucero aquí](/hoteles)`;
           },
         }),
+        buscarProductosCatalogo: buscarProductosCatalogoTool,
+        busrarProductosCatalogo: buscarProductosCatalogoTool,
+        buscarProductoCatalogo: buscarProductosCatalogoTool,
+        busrarProductoCatalogo: buscarProductosCatalogoTool,
         consultarProductosMedusa: tool({
           description: 'Consulta los productos y tours locales en el inventario del backend de MedusaJS para recomendarlos al usuario.',
           parameters: z.object({
@@ -164,7 +229,34 @@ export async function POST(request) {
       maxSteps: 3,
     });
 
-    return Response.json({ reply: text });
+    const text = result.text;
+    console.log("RESULT TEXT:", text);
+    console.log("RESULT TOOL CALLS:", JSON.stringify(result.toolCalls));
+    console.log("RESULT TOOL RESULTS:", JSON.stringify(result.toolResults));
+
+    let finalReply = text;
+    if (!finalReply && result.toolResults && result.toolResults.length > 0) {
+      console.log("Text response was empty but tool was executed. Generating fallback answer...");
+      const lastResult = result.toolResults[result.toolResults.length - 1];
+      if (lastResult && lastResult.output) {
+        try {
+          const parsed = JSON.parse(lastResult.output);
+          if (parsed.success && parsed.products) {
+            finalReply = "¡Sí, claro que sí! Aquí tienes las opciones que encontré en nuestro catálogo:\n\n" + 
+              parsed.products.map(p => `- **${p.title || p.name}** (${p.subtitle || p.price}): ${p.content || p.copy || ''} [Comprar aquí](${p.link || '#'})`).join('\n') + 
+              "\n\nRecuerda que puedes consultar más opciones y filtrar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo. ¿Te interesa alguno de estos?";
+          } else if (parsed.message) {
+            finalReply = parsed.message + "\n\n" + (parsed.products ? parsed.products.map(p => `- **${p.title || p.name}** (${p.subtitle || p.price}): ${p.content || p.copy || ''} [Comprar aquí](${p.link || '#'})`).join('\n') : '');
+          } else {
+            finalReply = "No encontré productos específicos en este momento, pero puedes buscar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo.";
+          }
+        } catch (e) {
+          finalReply = "Aquí tienes la información sobre los productos. Puedes consultarlos y buscar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo.";
+        }
+      }
+    }
+
+    return Response.json({ reply: finalReply || "Hola. ¿En qué más te puedo ayudar hoy?" });
 
   } catch (error) {
     console.error("Error de Candy AI:", error);

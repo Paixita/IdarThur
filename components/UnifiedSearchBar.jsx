@@ -64,196 +64,248 @@ export default function UnifiedSearchBar() {
   };
 
   return (
-    <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: "700px", margin: "0 auto" }}>
-      {/* Search Input Container */}
-      <div 
-        style={{
-          display: "flex",
-          alignItems: "center",
-          background: "rgba(10, 15, 26, 0.65)",
-          backdropFilter: "blur(12px)",
-          border: "1px solid rgba(69, 243, 255, 0.2)",
-          borderRadius: "20px",
-          padding: "5px 15px",
-          boxShadow: "0 0 25px rgba(69, 243, 255, 0.15), inset 0 0 15px rgba(69, 243, 255, 0.05)",
-          transition: "all 0.3s ease",
-          position: "relative",
-          zIndex: 10
-        }}
-        className="search-input-wrapper"
-      >
-        <span style={{ fontSize: "1.3rem", marginRight: "10px", color: "var(--primary)", filter: "drop-shadow(0 0 5px rgba(69, 243, 255, 0.5))" }}>
-          🛸
-        </span>
-        <input
-          type="text"
-          placeholder="Busca noticias, relatos de viaje o artículos..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setShowDropdown(true);
-          }}
-          onFocus={() => setShowDropdown(true)}
-          style={{
-            flex: 1,
-            background: "transparent",
-            border: "none",
-            color: "white",
-            fontSize: "1.05rem",
-            padding: "12px 5px",
-            outline: "none",
-            fontWeight: "500"
-          }}
-        />
-        {loading && (
-          <div className="spinner" style={{
-            width: "20px",
-            height: "20px",
-            border: "2px solid rgba(255, 255, 255, 0.1)",
-            borderTop: "2px solid var(--primary)",
-            borderRadius: "50%",
-            animation: "spin-loader 0.8s linear infinite"
-          }}></div>
-        )}
-      </div>
+    <section id="buscador-ventas" className="glass" style={{
+      padding: '40px 30px',
+      borderRadius: '35px',
+      background: 'rgba(10, 15, 26, 0.45)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.4)',
+      maxWidth: '850px',
+      margin: '60px auto',
+      textAlign: 'center'
+    }}>
+      <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '10px', color: 'white' }}>
+        Buscador Inteligente de Viaje y Artículos de Diario 🪐
+      </h2>
+      <p style={{ color: '#a0aab5', marginBottom: '30px', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto 30px auto', lineHeight: '1.6' }}>
+        Este buscador te ayuda a seleccionar qué tipo de compra en utensilios de viaje y artículos de uso diario te guiará; en tiempo real.
+      </p>
 
-      {/* Tabs list */}
-      <div 
-        style={{
-          display: "flex",
-          gap: "8px",
-          marginTop: "12px",
-          justifyContent: "center",
-          position: "relative",
-          zIndex: 9
-        }}
-      >
-        {[
-          { id: "todos", name: "🪐 Todo" },
-          { id: "noticia", name: "📰 Noticias" },
-          { id: "producto", name: "🛍️ Tienda" },
-          { id: "historia", name: "🎒 Historias" }
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => handleTabChange(tab.id)}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
+        <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: "700px", margin: "0 auto" }}>
+          {/* Search Input Container */}
+          <div 
             style={{
-              background: activeTab === tab.id 
-                ? "linear-gradient(45deg, rgba(69, 243, 255, 0.25), rgba(236, 72, 153, 0.15))" 
-                : "rgba(10, 15, 26, 0.45)",
-              color: activeTab === tab.id ? "var(--primary)" : "#a0aab5",
-              border: `1px solid ${activeTab === tab.id ? "var(--primary)" : "rgba(255, 255, 255, 0.05)"}`,
-              padding: "6px 14px",
-              borderRadius: "12px",
-              fontSize: "0.85rem",
-              fontWeight: "600",
-              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              background: "rgba(10, 15, 26, 0.65)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(69, 243, 255, 0.2)",
+              borderRadius: "20px",
+              padding: "5px 15px",
+              boxShadow: "0 0 25px rgba(69, 243, 255, 0.15), inset 0 0 15px rgba(69, 243, 255, 0.05)",
               transition: "all 0.3s ease",
-              backdropFilter: "blur(10px)"
+              position: "relative",
+              zIndex: 10
             }}
-            className="tab-btn"
+            className="search-input-wrapper"
           >
-            {tab.name}
-          </button>
-        ))}
-      </div>
+            <span style={{ fontSize: "1.3rem", marginRight: "10px", color: "var(--primary)", filter: "drop-shadow(0 0 5px rgba(69, 243, 255, 0.5))" }}>
+              🛸
+            </span>
+            <input
+              type="text"
+              placeholder="Busca noticias, relatos de viaje o artículos..."
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              style={{
+                flex: 1,
+                background: "transparent",
+                border: "none",
+                color: "white",
+                fontSize: "1.05rem",
+                padding: "12px 5px",
+                outline: "none",
+                fontWeight: "500"
+              }}
+            />
+            {loading && (
+              <div className="spinner" style={{
+                width: "20px",
+                height: "20px",
+                border: "2px solid rgba(255, 255, 255, 0.1)",
+                borderTop: "2px solid var(--primary)",
+                borderRadius: "50%",
+                animation: "spin-loader 0.8s linear infinite"
+              }}></div>
+            )}
+          </div>
 
-      {/* Results Dropdown */}
-      {showDropdown && query.trim().length > 0 && (
-        <div 
-          style={{
-            position: "absolute",
-            top: "calc(100% + 15px)",
-            left: 0,
-            width: "100%",
-            maxHeight: "450px",
-            overflowY: "auto",
-            background: "rgba(10, 15, 26, 0.95)",
-            backdropFilter: "blur(25px)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            borderRadius: "20px",
-            boxShadow: "0 15px 45px rgba(0, 0, 0, 0.8), 0 0 35px rgba(69, 243, 255, 0.05)",
-            zIndex: 100,
-            padding: "10px"
-          }}
-          className="scrollbar-custom"
-        >
-          {results.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "30px 10px", color: "#a0aab5" }}>
-              <span style={{ fontSize: "2rem", display: "block", marginBottom: "10px" }}>🛸</span>
-              <p style={{ margin: 0, fontSize: "0.95rem" }}>No encontramos resultados para tu exploración.</p>
-            </div>
-          ) : (
-            results.map((hit) => (
-              <a
-                key={hit.id}
-                href={hit.link}
-                target={hit.type === "noticia" ? "_blank" : "_self"}
-                rel={hit.type === "noticia" ? "noopener noreferrer" : undefined}
+          {/* Tabs list */}
+          <div 
+            style={{
+              display: "flex",
+              gap: "8px",
+              marginTop: "12px",
+              justifyContent: "center",
+              position: "relative",
+              zIndex: 9
+            }}
+          >
+            {[
+              { id: "todos", name: "🪐 Todo" },
+              { id: "noticia", name: "📰 Noticias" },
+              { id: "producto", name: "🛍️ Tienda" },
+              { id: "historia", name: "🎒 Historias" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
                 style={{
-                  display: "flex",
-                  gap: "15px",
-                  padding: "12px",
-                  borderRadius: "15px",
-                  textDecoration: "none",
-                  color: "white",
-                  marginBottom: "8px",
-                  transition: "all 0.25s ease",
-                  border: "1px solid transparent"
+                  background: activeTab === tab.id 
+                    ? "linear-gradient(45deg, rgba(69, 243, 255, 0.25), rgba(236, 72, 153, 0.15))" 
+                    : "rgba(10, 15, 26, 0.45)",
+                  color: activeTab === tab.id ? "var(--primary)" : "#a0aab5",
+                  border: `1px solid ${activeTab === tab.id ? "var(--primary)" : "rgba(255, 255, 255, 0.05)"}`,
+                  padding: "6px 14px",
+                  borderRadius: "12px",
+                  fontSize: "0.85rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  backdropFilter: "blur(10px)"
                 }}
-                className="result-item"
-                onClick={() => setShowDropdown(false)}
+                className="tab-btn"
               >
-                {/* Thumbnail */}
-                {hit.image && (
-                  <img
-                    src={hit.image}
-                    alt={hit.title}
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "10px",
-                      objectFit: "cover",
-                      border: "1px solid rgba(255, 255, 255, 0.1)"
-                    }}
-                  />
-                )}
-                
-                {/* Info */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                    <span 
-                      style={{
-                        fontSize: "0.75rem",
-                        padding: "2px 8px",
-                        borderRadius: "8px",
-                        background: hit.type === "noticia" ? "rgba(69, 243, 255, 0.15)" : 
-                                    hit.type === "historia" ? "rgba(236, 72, 153, 0.15)" : 
-                                    "rgba(251, 191, 36, 0.15)",
-                        color: hit.type === "noticia" ? "var(--primary)" : 
-                               hit.type === "historia" ? "var(--secondary)" : 
-                               "#fbbf24",
-                        fontWeight: "700"
-                      }}
-                    >
-                      {getTabLabel(hit.type)}
-                    </span>
-                    <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
-                      {hit.subtitle}
-                    </span>
-                  </div>
-                  <h4 style={{ margin: 0, fontSize: "0.95rem", fontWeight: "600", color: "#f3f4f6", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {hit.title}
-                  </h4>
-                  <p style={{ margin: "4px 0 0 0", fontSize: "0.8rem", color: "#9ca3af", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", lineHeight: "1.3" }}>
-                    {hit.content}
-                  </p>
+                {tab.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Results Dropdown */}
+          {showDropdown && query.trim().length > 0 && (
+            <div 
+              style={{
+                position: "absolute",
+                top: "calc(100% + 15px)",
+                left: 0,
+                width: "100%",
+                maxHeight: "450px",
+                overflowY: "auto",
+                background: "rgba(10, 15, 26, 0.95)",
+                backdropFilter: "blur(25px)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "20px",
+                boxShadow: "0 15px 45px rgba(0, 0, 0, 0.8), 0 0 35px rgba(69, 243, 255, 0.05)",
+                zIndex: 100,
+                padding: "10px"
+              }}
+              className="scrollbar-custom"
+            >
+              {results.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "30px 10px", color: "#a0aab5" }}>
+                  <span style={{ fontSize: "2rem", display: "block", marginBottom: "10px" }}>🛸</span>
+                  <p style={{ margin: 0, fontSize: "0.95rem" }}>No encontramos resultados para tu exploración.</p>
                 </div>
-              </a>
-            ))
+              ) : (
+                results.map((hit) => (
+                  <a
+                    key={hit.id}
+                    href={hit.link}
+                    target={hit.type === "noticia" ? "_blank" : "_self"}
+                    rel={hit.type === "noticia" ? "noopener noreferrer" : undefined}
+                    style={{
+                      display: "flex",
+                      gap: "15px",
+                      padding: "12px",
+                      borderRadius: "15px",
+                      textDecoration: "none",
+                      color: "white",
+                      marginBottom: "8px",
+                      transition: "all 0.25s ease",
+                      border: "1px solid transparent",
+                      textAlign: "left"
+                    }}
+                    className="result-item"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    {/* Thumbnail */}
+                    {hit.image && (
+                      <img
+                        src={hit.image}
+                        alt={hit.title}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                          border: "1px solid rgba(255, 255, 255, 0.1)"
+                        }}
+                      />
+                    )}
+                    
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                        <span 
+                          style={{
+                            fontSize: "0.75rem",
+                            padding: "2px 8px",
+                            borderRadius: "8px",
+                            background: hit.type === "noticia" ? "rgba(69, 243, 255, 0.15)" : 
+                                        hit.type === "historia" ? "rgba(236, 72, 153, 0.15)" : 
+                                        "rgba(251, 191, 36, 0.15)",
+                            color: hit.type === "noticia" ? "var(--primary)" : 
+                                   hit.type === "historia" ? "var(--secondary)" : 
+                                   "#fbbf24",
+                            fontWeight: "700"
+                          }}
+                        >
+                          {getTabLabel(hit.type)}
+                        </span>
+                        <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
+                          {hit.subtitle}
+                        </span>
+                      </div>
+                      <h4 style={{ margin: 0, fontSize: "0.95rem", fontWeight: "600", color: "#f3f4f6", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {hit.title}
+                      </h4>
+                      <p style={{ margin: "4px 0 0 0", fontSize: "0.8rem", color: "#9ca3af", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", lineHeight: "1.3" }}>
+                        {hit.content}
+                      </p>
+                    </div>
+                  </a>
+                ))
+              )}
+            </div>
           )}
         </div>
-      )}
+
+        {/* Style 2: Assistant Badge */}
+        <div 
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('openCandyChat'));
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            background: 'rgba(255, 42, 95, 0.12)',
+            border: '1px solid rgba(255, 42, 95, 0.3)',
+            borderRadius: '25px',
+            padding: '12px 24px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            marginTop: '10px',
+            boxShadow: '0 5px 15px rgba(255, 42, 95, 0.1)'
+          }}
+          className="yessel-search-badge"
+        >
+          <div style={{ position: 'relative', width: '35px', height: '35px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)' }}>
+            <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', border: '2px solid #000' }}></div>
+          </div>
+          <div style={{ textAlign: 'left' }}>
+            <span style={{ display: 'block', fontSize: '0.8rem', color: '#ff2a5f', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Estilo 2: Asistencia con IA</span>
+            <span style={{ fontSize: '0.95rem', color: '#f3f4f6' }}>¿Prefieres que <strong>Yessel AI</strong> te guíe? Pregúntale aquí 💬</span>
+          </div>
+        </div>
+      </div>
 
       {/* Global CSS Styles for details */}
       <style>{`
@@ -270,6 +322,12 @@ export default function UnifiedSearchBar() {
           background: rgba(255, 255, 255, 0.04) !important;
           border-color: rgba(69, 243, 255, 0.15) !important;
           transform: translateX(4px);
+        }
+        .yessel-search-badge:hover {
+          transform: scale(1.03);
+          background: rgba(255, 42, 95, 0.2) !important;
+          border-color: rgba(255, 42, 95, 0.5) !important;
+          box-shadow: 0 8px 25px rgba(255, 42, 95, 0.25) !important;
         }
         @keyframes spin-loader {
           0% { transform: rotate(0deg); }
@@ -289,6 +347,6 @@ export default function UnifiedSearchBar() {
           background: rgba(69, 243, 255, 0.3);
         }
       `}</style>
-    </div>
+    </section>
   );
 }

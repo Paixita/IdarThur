@@ -3,6 +3,7 @@ import Benefits from "@/components/Benefits";
 import YesselHero from "@/components/YesselHero";
 import EcommerceHighlights from "@/components/EcommerceHighlights";
 import DestinationsSlider from "@/components/DestinationsSlider";
+import UnifiedSearchBar from "@/components/UnifiedSearchBar";
 import Link from 'next/link';
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
 
       <Benefits />
       <YesselHero />
+      <UnifiedSearchBar />
       <EcommerceHighlights />
     </main>
   );
