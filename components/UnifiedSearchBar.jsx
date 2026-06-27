@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { trackTikTokEvent } from "@/utils/tiktok";
 
 export default function UnifiedSearchBar() {
   const [query, setQuery] = useState("");
@@ -49,6 +50,9 @@ export default function UnifiedSearchBar() {
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
     if (query.trim().length === 0) return;
+
+    // Track search event in TikTok
+    trackTikTokEvent('Search', { query: query });
 
     // Check if query is conversational or empty matches
     const conversationalWords = [
