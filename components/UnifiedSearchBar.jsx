@@ -46,6 +46,26 @@ export default function UnifiedSearchBar() {
     return () => clearTimeout(delayDebounce);
   }, [query, activeTab]);
 
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (query.trim().length === 0) return;
+
+    // Check if query is conversational or empty matches
+    const conversationalWords = [
+      "como", "cómo", "donde", "dónde", "quiero", "recomienda", "busca", "hola", 
+      "qué", "que", "quien", "quién", "dime", "precio", "cuesta", "comprar",
+      "puedo", "camisa", "chaqueta", "computador", "ram", "maleta", "viaje", "viajar"
+    ];
+    const isConversational = query.split(/\s+/).length > 3 || 
+      conversationalWords.some(word => query.toLowerCase().includes(word));
+
+    if (isConversational || results.length === 0) {
+      window.dispatchEvent(new CustomEvent('openCandyChat', { detail: { message: query } }));
+      setShowDropdown(false);
+      setQuery("");
+    }
+  };
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -85,7 +105,8 @@ export default function UnifiedSearchBar() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
         <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: "700px", margin: "0 auto" }}>
           {/* Search Input Container */}
-          <div 
+          <form 
+            onSubmit={handleSearchSubmit}
             style={{
               display: "flex",
               alignItems: "center",
@@ -131,10 +152,27 @@ export default function UnifiedSearchBar() {
                 border: "2px solid rgba(255, 255, 255, 0.1)",
                 borderTop: "2px solid var(--primary)",
                 borderRadius: "50%",
-                animation: "spin-loader 0.8s linear infinite"
+                animation: "spin-loader 0.8s linear infinite",
+                marginRight: "10px"
               }}></div>
             )}
-          </div>
+            <button 
+              type="submit"
+              style={{
+                background: "linear-gradient(45deg, var(--primary), var(--secondary))",
+                border: "none",
+                borderRadius: "12px",
+                padding: "8px 16px",
+                color: "#0b0c10",
+                fontWeight: "bold",
+                fontSize: "0.9rem",
+                cursor: "pointer",
+                transition: "all 0.3s ease"
+              }}
+            >
+              Buscar
+            </button>
+          </form>
 
           {/* Tabs list */}
           <div 
@@ -198,9 +236,29 @@ export default function UnifiedSearchBar() {
               className="scrollbar-custom"
             >
               {results.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "30px 10px", color: "#a0aab5" }}>
-                  <span style={{ fontSize: "2rem", display: "block", marginBottom: "10px" }}>🛸</span>
-                  <p style={{ margin: 0, fontSize: "0.95rem" }}>No encontramos resultados para tu exploración.</p>
+                <div 
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('openCandyChat', { detail: { message: query } }));
+                    setShowDropdown(false);
+                    setQuery("");
+                  }}
+                  style={{ 
+                    textAlign: "center", 
+                    padding: "30px 20px", 
+                    color: "white", 
+                    cursor: "pointer", 
+                    background: "rgba(255, 42, 95, 0.08)", 
+                    borderRadius: "15px", 
+                    border: "1px dashed rgba(255, 42, 95, 0.4)",
+                    transition: "all 0.3s ease"
+                  }}
+                  className="yessel-search-badge"
+                >
+                  <span style={{ fontSize: "2rem", display: "block", marginBottom: "10px" }}>🧠</span>
+                  <p style={{ margin: "0 0 10px 0", fontSize: "1.05rem", fontWeight: "bold", color: "#ff2a5f" }}>¿Sin resultados? ¡Pregúntale a Yessel!</p>
+                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#a0aab5", lineHeight: "1.4" }}>
+                    Haz clic aquí para enviar tu consulta <strong>"{query}"</strong> a nuestra Asistente IA. Ella revisará todo el catálogo por ti de inmediato.
+                  </p>
                 </div>
               ) : (
                 results.map((hit) => (

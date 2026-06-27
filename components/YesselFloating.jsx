@@ -25,9 +25,12 @@ export default function YesselFloating() {
 
   // Evento para abrir el chat desde botones externos
   useEffect(() => {
-    const handleOpenChat = () => {
+    const handleOpenChat = (e) => {
       setIsOpen(true);
-      if (isAudioPremium) {
+      const initialMessage = e.detail?.message;
+      if (initialMessage) {
+        processMessage(initialMessage);
+      } else if (isAudioPremium) {
         playAlvaroAudio(messages[0].content);
       }
     };
