@@ -1,4 +1,5 @@
 import { stories } from '../data/historias';
+import { products } from '../data/tienda';
 
 export default function sitemap() {
   const baseUrl = "https://idarthur.com";
@@ -28,5 +29,13 @@ export default function sitemap() {
     priority: 0.6,
   }));
 
-  return [...routes, ...storyRoutes];
+  // Rutas de productos dinámicas (Tienda / Plan B)
+  const productRoutes = products.map((product) => ({
+    url: `${baseUrl}/tienda?producto=${product.id || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    lastModified: new Date().toISOString().split('T')[0],
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  return [...routes, ...storyRoutes, ...productRoutes];
 }
