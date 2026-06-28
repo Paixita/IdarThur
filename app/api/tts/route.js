@@ -12,22 +12,33 @@ function detectLanguage(text, clientLang = '', clientTimezone = '') {
   if (clean.match(/[\u0600-\u06ff]/)) return 'ar-SA'; // Árabe
 
   // Frecuencia de palabras estrictamente únicas para evitar solapamientos entre idiomas occidentales
-  const esWords = /\b(y|el|los|las|del|al|pero|sus|muy|más|había|tiene|es|son|su|sus|donde|bienvenido|viaje|vuelo|historia|avión|aeropuerto)\b/g;
-  const enWords = /\b(the|and|you|that|was|for|on|are|with|as|at|this|it|is|they|have|had|not|but|what|where|when|hello|welcome|hotel|flight|travel|search|shop|store|booking|airport)\b/g;
-  const frWords = /\b(le|les|et|est|pour|dans|sur|qui|mais|plus|tres|avait|ont|sont|ses|ces|cette|ce|ou|où|bonjour|voyage|recherche)\b/g;
-  const ptWords = /\b(e|o|os|as|do|ao|mas|muito|havia|tem|é|são|seu|sua|seus|suas|onde|olá|bem-vindo|viagem|voo|loja|avião)\b/g;
-  const deWords = /\b(der|die|das|und|ist|in|zu|den|von|mit|nicht|aber|sehr|hat|haben|sind|seine|diese|wo|wenn|hier|hallo|reise|suche)\b/g;
-  const itWords = /\b(il|che|gli|per|è|sono|ma|più|molto|cera|ha|hanno|suo|sua|suoi|sue|questo|questa|tutto|tutti|dove|ciao|viaggio|ricerca)\b/g;
+  const esWords = ['y', 'el', 'los', 'las', 'del', 'al', 'pero', 'sus', 'muy', 'más', 'había', 'tiene', 'es', 'son', 'su', 'sus', 'donde', 'bienvenido', 'viaje', 'vuelo', 'historia', 'avión', 'aeropuerto'];
+  const enWords = ['the', 'and', 'you', 'that', 'was', 'for', 'on', 'are', 'with', 'as', 'at', 'this', 'it', 'is', 'they', 'have', 'had', 'not', 'but', 'what', 'where', 'when', 'hello', 'welcome', 'hotel', 'flight', 'travel', 'search', 'shop', 'store', 'booking', 'airport'];
+  const frWords = ['le', 'les', 'et', 'est', 'pour', 'dans', 'sur', 'qui', 'mais', 'plus', 'tres', 'avait', 'ont', 'sont', 'ses', 'ces', 'cette', 'ce', 'ou', 'où', 'bonjour', 'voyage', 'recherche'];
+  const ptWords = ['e', 'o', 'os', 'as', 'do', 'ao', 'mas', 'muito', 'havia', 'tem', 'é', 'são', 'seu', 'sua', 'seus', 'suas', 'onde', 'olá', 'bem-vindo', 'viagem', 'voo', 'loja', 'avião'];
+  const deWords = ['der', 'die', 'das', 'und', 'ist', 'in', 'zu', 'den', 'von', 'mit', 'nicht', 'aber', 'sehr', 'hat', 'haben', 'sind', 'seine', 'diese', 'wo', 'wenn', 'hier', 'hallo', 'reise', 'suche'];
+  const itWords = ['il', 'che', 'gli', 'per', 'è', 'sono', 'ma', 'più', 'molto', 'cera', 'ha', 'hanno', 'suo', 'sua', 'suoi', 'sue', 'questo', 'questa', 'tutto', 'tutti', 'dove', 'ciao', 'viaggio', 'ricerca'];
 
-  const count = (regex) => (clean.match(regex) || []).length;
+  // Limpiar el texto y obtener palabras limpias sin puntuación
+  const cleanWords = clean.split(/[\s.,;:!?()\-+*/"'`«»“”‘’]+/);
+  
+  const countMatches = (wordList) => {
+    let count = 0;
+    for (const w of cleanWords) {
+      if (wordList.includes(w)) {
+        count++;
+      }
+    }
+    return count;
+  };
 
   const scores = {
-    'es-ES': count(esWords),
-    'en-US': count(enWords),
-    'fr-FR': count(frWords),
-    'pt-BR': count(ptWords),
-    'de-DE': count(deWords),
-    'it-IT': count(itWords)
+    'es-ES': countMatches(esWords),
+    'en-US': countMatches(enWords),
+    'fr-FR': countMatches(frWords),
+    'pt-BR': countMatches(ptWords),
+    'de-DE': countMatches(deWords),
+    'it-IT': countMatches(itWords)
   };
 
   // 1. Determinar el idioma predeterminado usando la zona horaria del cliente o el idioma del navegador
@@ -61,7 +72,7 @@ function detectLanguage(text, clientLang = '', clientTimezone = '') {
   }
 
   let bestLang = defaultLang;
-  let maxScore = 1; // Mínima cantidad de coincidencias para cambiar del default
+  let maxScore = 0; // Mínima cantidad de coincidencias para cambiar del default
 
   for (const [lang, score] of Object.entries(scores)) {
     if (score > maxScore) {
