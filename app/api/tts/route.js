@@ -11,13 +11,13 @@ function detectLanguage(text, clientLang = '', clientTimezone = '') {
   if (clean.match(/[\u0400-\u04ff]/)) return 'ru-RU'; // Ruso
   if (clean.match(/[\u0600-\u06ff]/)) return 'ar-SA'; // Árabe
 
-  // Frecuencia de palabras más usadas para idiomas occidentales
-  const esWords = /\b(y|el|los|las|del|al|con|en|para|como|hola|bienvenido|viaje|vuelo|hotel|buscar|tienda|historia|avión|aeropuerto)\b/g;
-  const enWords = /\b(the|and|you|that|was|for|on|are|with|as|at|this|hello|welcome|hotel|flight|travel|search|shop|store|booking|airport)\b/g;
-  const frWords = /\b(le|la|les|et|en|un|une|pour|dans|sur|qui|bonjour|hotel|voyage|recherche)\b/g;
-  const ptWords = /\b(e|o|os|as|do|ao|com|em|olá|bem-vindo|viagem|voo|loja|história|avião|aeroporto)\b/g;
-  const deWords = /\b(der|die|das|und|ist|in|zu|den|von|mit|hallo|hotel|reise|suche)\b/g;
-  const itWords = /\b(il|la|i|gli|e|in|un|una|per|con|ciao|hotel|viaggio|ricerca)\b/g;
+  // Frecuencia de palabras estrictamente únicas para evitar solapamientos entre idiomas occidentales
+  const esWords = /\b(y|el|los|las|del|al|pero|sus|muy|más|había|tiene|es|son|su|sus|donde|bienvenido|viaje|vuelo|historia|avión|aeropuerto)\b/g;
+  const enWords = /\b(the|and|you|that|was|for|on|are|with|as|at|this|it|is|they|have|had|not|but|what|where|when|hello|welcome|hotel|flight|travel|search|shop|store|booking|airport)\b/g;
+  const frWords = /\b(le|les|et|est|pour|dans|sur|qui|mais|plus|tres|avait|ont|sont|ses|ces|cette|ce|ou|où|bonjour|voyage|recherche)\b/g;
+  const ptWords = /\b(e|o|os|as|do|ao|mas|muito|havia|tem|é|são|seu|sua|seus|suas|onde|olá|bem-vindo|viagem|voo|loja|avião)\b/g;
+  const deWords = /\b(der|die|das|und|ist|in|zu|den|von|mit|nicht|aber|sehr|hat|haben|sind|seine|diese|wo|wenn|hier|hallo|reise|suche)\b/g;
+  const itWords = /\b(il|che|gli|per|è|sono|ma|più|molto|cera|ha|hanno|suo|sua|suoi|sue|questo|questa|tutto|tutti|dove|ciao|viaggio|ricerca)\b/g;
 
   const count = (regex) => (clean.match(regex) || []).length;
 
