@@ -1,15 +1,8 @@
-# Fase 9: Inmersión y Diversificación de Afiliados
+# TODO Checklist - Mobile Fixes & Agent Alerts Logistics
 
-## 1. Monstruo de Afiliados (Booking & WayAway)
-- [/] Actualizar el Hero (`components/Hero.jsx`) para incluir botones principales e inteligentes que dirijan a:
-  - Booking.com (Hoteles con label `affnetTP_399989189573503`).
-  - WayAway (Vuelos con marker `729418`).
-
-## 2. Interactividad de Voz (Yessel AI)
-- [x] Implementar la API de Edge Neural TTS para una voz súper realista.
-- [x] Configurar eventos de audio y modulación por sentimientos en el servidor.
-
-## 3. Página de Eventos Globales
-- [x] Crear la página `/eventos` con diseño Glassmorphism.
-- [x] Agregar tarjetas para la Feria de las Flores (Medellín), Carnaval (Barranquilla) y eventos internacionales.
-- [x] Añadir botones de afiliación (Booking/WayAway) debajo de cada evento para monetización directa.
+- `[x]` 1. Configurar zona horaria e idioma nativo en `/api/tts/route.js`
+- `[x]` 2. Pasar idioma del navegador y zona horaria desde `/utils/playAlvaro.js`
+- `[x]` 3. Reemplazar caracteres Unicode por iconos SVG nativos en `/components/Navbar.jsx`
+- `[x]` 4. Crear cliente y servidor de alertas logísticas en `/utils/alerts.js` y `/app/api/alerts/route.js`
+- `[x]` 5. Conectar anomalías de imágenes de tienda en `/app/tienda/TiendaClient.js`
+- `[ ]` 6. Verificar compilación, realizar commit y desplegar a producción

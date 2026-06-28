@@ -1,4 +1,6 @@
 // playAlvaro.js - Gestor de voz neural premium para Yessel con precarga paralela de frases
+import { sendLogisticsAlert } from './alerts';
+
 let audioQueue = [];
 let currentQueueIndex = 0;
 let currentAudio = null;
@@ -24,7 +26,9 @@ export const playAlvaroAudio = (text) => {
   // Esto elimina las demoras por latencia de red entre oraciones
   audioQueue = sentences.map(sentence => {
     const encodedText = encodeURIComponent(sentence);
-    const audioUrl = `/api/tts?text=${encodedText}`;
+    const clientLang = typeof navigator !== 'undefined' ? (navigator.language || '') : '';
+    const clientTz = typeof Intl !== 'undefined' ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '') : '';
+    const audioUrl = `/api/tts?text=${encodedText}&lang=${encodeURIComponent(clientLang)}&timezone=${encodeURIComponent(clientTz)}`;
     const audio = new Audio(audioUrl);
     audio.preload = 'auto';
     audio.load(); // Iniciar precarga inmediata
@@ -64,6 +68,10 @@ const playNextInQueue = () => {
 
   const handleError = (e) => {
     console.error('[Neural TTS Client Error]', e);
+    sendLogisticsAlert('TTS_AUDIO_FAIL', 'Error al sintetizar o reproducir segmento de audio', {
+      text: currentItem.text,
+      error: String(e.message || e)
+    });
     currentAudio.removeEventListener('ended', handleEnd);
     currentAudio.removeEventListener('error', handleError);
     currentQueueIndex++;
@@ -75,6 +83,10 @@ const playNextInQueue = () => {
 
   currentAudio.play().catch((err) => {
     console.error('[Neural TTS Play Blocked/Failed]', err);
+    sendLogisticsAlert('TTS_PLAYBACK_BLOCKED', 'Reproducción de audio bloqueada por el navegador o fallo de carga', {
+      text: currentItem.text,
+      error: String(err.message || err)
+    });
     stopAlvaroAudio();
   });
 };

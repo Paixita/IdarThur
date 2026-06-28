@@ -2,7 +2,7 @@ import { Communicate } from 'edge-tts-universal';
 
 export const dynamic = 'force-dynamic';
 
-function detectLanguage(text) {
+function detectLanguage(text, clientLang = '', clientTimezone = '') {
   const clean = text.toLowerCase();
   
   // Detección directa por alfabeto/caracteres especiales
@@ -12,15 +12,17 @@ function detectLanguage(text) {
   if (clean.match(/[\u0600-\u06ff]/)) return 'ar-SA'; // Árabe
 
   // Frecuencia de palabras más usadas para idiomas occidentales
+  const esWords = /\b(y|el|los|las|del|al|con|en|para|como|hola|bienvenido|viaje|vuelo|hotel|buscar|tienda|historia|avión|aeropuerto)\b/g;
   const enWords = /\b(the|and|you|that|was|for|on|are|with|as|at|this|hello|welcome|hotel|flight|travel|search|shop|store|booking|airport)\b/g;
   const frWords = /\b(le|la|les|et|en|un|une|pour|dans|sur|qui|bonjour|hotel|voyage|recherche)\b/g;
-  const ptWords = /\b(o|a|os|as|e|em|um|uma|para|com|por|como|olá|hotel|viagem|busca)\b/g;
+  const ptWords = /\b(e|o|os|as|do|ao|com|em|olá|bem-vindo|viagem|voo|loja|história|avião|aeroporto)\b/g;
   const deWords = /\b(der|die|das|und|ist|in|zu|den|von|mit|hallo|hotel|reise|suche)\b/g;
   const itWords = /\b(il|la|i|gli|e|in|un|una|per|con|ciao|hotel|viaggio|ricerca)\b/g;
 
   const count = (regex) => (clean.match(regex) || []).length;
 
   const scores = {
+    'es-ES': count(esWords),
     'en-US': count(enWords),
     'fr-FR': count(frWords),
     'pt-BR': count(ptWords),
@@ -28,8 +30,38 @@ function detectLanguage(text) {
     'it-IT': count(itWords)
   };
 
-  let bestLang = 'es-ES'; // Por defecto es Español
-  let maxScore = 1; // Mínima cantidad de coincidencias para cambiar
+  // 1. Determinar el idioma predeterminado usando la zona horaria del cliente o el idioma del navegador
+  let defaultLang = 'es-ES';
+  
+  if (clientLang) {
+    const l = clientLang.toLowerCase();
+    if (l.startsWith('pt')) defaultLang = 'pt-BR';
+    else if (l.startsWith('en')) defaultLang = 'en-US';
+    else if (l.startsWith('fr')) defaultLang = 'fr-FR';
+    else if (l.startsWith('de')) defaultLang = 'de-DE';
+    else if (l.startsWith('it')) defaultLang = 'it-IT';
+    else if (l.startsWith('zh')) defaultLang = 'zh-CN';
+    else if (l.startsWith('ja')) defaultLang = 'ja-JP';
+    else if (l.startsWith('ru')) defaultLang = 'ru-RU';
+    else if (l.startsWith('ar')) defaultLang = 'ar-SA';
+  }
+
+  if (clientTimezone) {
+    const tz = clientTimezone.toLowerCase();
+    // Zonas horarias de habla hispana comunes
+    const esTimezones = ['bogota', 'mexico', 'buenos_aires', 'madrid', 'santiago', 'lima', 'caracas', 'montevideo', 'asuncion', 'quito', 'guatemala', 'honduras', 'san_salvador', 'managua', 'san_jose', 'panama', 'santo_domingo', 'puerto_rico', 'havana', 'la_paz'];
+    // Zonas horarias de Brasil
+    const ptTimezones = ['sao_paulo', 'rio', 'manaus', 'recife', 'fortaleza', 'porto_alegre', 'cuiaba', 'belem'];
+    
+    if (esTimezones.some(e => tz.includes(e))) {
+      defaultLang = 'es-ES';
+    } else if (ptTimezones.some(p => tz.includes(p))) {
+      defaultLang = 'pt-BR';
+    }
+  }
+
+  let bestLang = defaultLang;
+  let maxScore = 1; // Mínima cantidad de coincidencias para cambiar del default
 
   for (const [lang, score] of Object.entries(scores)) {
     if (score > maxScore) {
@@ -45,6 +77,8 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const text = searchParams.get('text');
+    const clientLang = searchParams.get('lang') || '';
+    const clientTimezone = searchParams.get('timezone') || '';
 
     if (!text) {
       return new Response('Falta el parámetro text', { status: 400 });
@@ -54,7 +88,7 @@ export async function GET(request) {
     const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
 
     // Detección de idioma y asignación de voz nativa correspondiente
-    const detectedLang = detectLanguage(cleanText);
+    const detectedLang = detectLanguage(cleanText, clientLang, clientTimezone);
     let voice = searchParams.get('voice');
     
     if (!voice) {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { categories, products } from '../../data/tienda';
 import UnifiedSearchBar from '../../components/UnifiedSearchBar';
 import { trackTikTokEvent } from '../../utils/tiktok';
+import { sendLogisticsAlert } from '../../utils/alerts';
 
 export default function TiendaClient() {
   const [activeCategory, setActiveCategory] = useState("todos");
@@ -64,6 +65,14 @@ export default function TiendaClient() {
       ],
       value: numericPrice,
       currency: 'USD'
+    });
+  };
+
+  const handleImageError = (prod) => {
+    sendLogisticsAlert('IMAGE_LOAD_FAIL', `Fallo al cargar la imagen del producto en la tienda: ${prod.name}`, {
+      productId: prod.id,
+      productName: prod.name,
+      imgUrl: prod.img
     });
   };
 
@@ -201,7 +210,7 @@ export default function TiendaClient() {
                   boxShadow: '0 15px 30px rgba(0,0,0,0.5)',
                   border: '1px solid rgba(255,255,255,0.1)'
                 }}>
-                  <img src={prod.img} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={prod.img} alt={prod.name} onError={() => handleImageError(prod)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               </div>
             </div>
@@ -298,7 +307,7 @@ export default function TiendaClient() {
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
             >
               <div style={{ height: '300px', position: 'relative', overflow: 'hidden' }}>
-                <img src={product.img} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} className="product-img" />
+                <img src={product.img} alt={product.name} onError={() => handleImageError(product)} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} className="product-img" />
                 {product.bestseller && (
                   <div style={{ position: 'absolute', top: '15px', right: '15px', background: '#ff0055', color: 'white', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', zIndex: 10 }}>
                     🔥 Más Vendido
