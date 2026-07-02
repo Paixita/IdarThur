@@ -14,14 +14,24 @@ export default function Terminos() {
           Última actualización: {new Date().toLocaleDateString('es-ES')}
         </p>
 
-        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Naturaleza del Servicio y Rol de Vocero</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>1. Naturaleza del Servicio y Rol de Intermediario</h2>
         <p style={{ marginBottom: '20px' }}>
-          IdarThur Global opera única y exclusivamente como un <strong>portal de descubrimiento, vocero y redirección de viajes (afiliación)</strong>. No somos una agencia de viajes directa, no poseemos aerolíneas, cadenas hoteleras ni flotas de vehículos. Proveemos enlaces hacia proveedores terceros (Booking.com, DiscoverCars, Amazon, etc.).
+          IdarThur Global opera única y exclusivamente como un <strong>portal de intermediación, vocero y recomendación (afiliación)</strong>. No somos una agencia de viajes directa ni operadores turísticos. No poseemos, administramos ni operamos aerolíneas, líneas de cruceros (navieras), hoteles, flotas de vehículos de alquiler ni centros de almacenamiento de productos de consumo. Proveemos enlaces hacia proveedores externos independientes (Booking.com, DiscoverCars, Amazon, etc.).
         </p>
 
-        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>2. Exención de Responsabilidad de Terceros</h2>
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>2. Exención de Responsabilidad Completa sobre Servicios de Terceros</h2>
         <p style={{ marginBottom: '20px' }}>
-          Cualquier reserva o compra realizada tras hacer clic en nuestros enlaces se celebra <strong>exclusivamente entre usted y el proveedor final</strong>. IdarThur no asume responsabilidad alguna por cancelaciones, sobreventas (overbooking), problemas en hoteles, o cualquier disputa. La resolución de conflictos, quejas o solicitudes de reembolso corresponde única y exclusivamente al proveedor del servicio (ej. la agencia de alquiler o el hotel), ya que IdarThur no tiene acceso a sus sistemas de reserva ni control sobre sus políticas.
+          Cualquier reserva de viaje o adquisición de productos físicos realizada tras hacer clic en nuestros enlaces se celebra <strong>exclusivamente entre usted y el proveedor final (ej. aerolínea, naviera, hotel, rentadora o Amazon)</strong>. 
+          <br /><br />
+          IdarThur no asume responsabilidad alguna por:
+          <br />
+          • Cancelaciones, retrasos, pérdida de equipaje o sobreventas (overbooking) de aerolíneas o navieras de cruceros.
+          <br />
+          • Problemas, incidentes de seguridad, accidentes, lesiones o mal comportamiento del personal en hoteles o a bordo de transportes de terceros.
+          <br />
+          • Fallos de entrega, retrasos en la distribución, productos defectuosos, reclamaciones de garantía, devoluciones o reembolsos asociados con productos comprados en la tienda a través del sistema de afiliación de Amazon.
+          <br /><br />
+          Cualquier reclamación, solicitud de reembolso o disputa legal debe dirigirse directa y exclusivamente al proveedor responsable de dicho servicio o producto, eximiendo por completo a IdarThur de cualquier reclamación civil, comercial o penal.
         </p>
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>3. Política Específica sobre Alquiler de Vehículos</h2>

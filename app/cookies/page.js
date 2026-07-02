@@ -21,12 +21,17 @@ export default function Cookies() {
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>Cómo usamos las cookies</h2>
         <p style={{ marginBottom: '20px' }}>
-          En IdarThur utilizamos cookies principalmente para el seguimiento de afiliación (Affiliate Tracking). Cuando usted hace clic en uno de nuestros enlaces de reserva (Booking.com, WayAway) o compra (Amazon), se coloca una cookie temporal para que el proveedor sepa que usted fue referido por nosotros. Esto es fundamental para mantener nuestro servicio gratuito.
+          En IdarThur utilizamos cookies principalmente para el seguimiento de afiliación (Affiliate Tracking). Cuando usted hace clic en uno de nuestros enlaces de reserva (Booking.com, WayAway) o de compra (Amazon), se coloca una cookie temporal en su navegador para que el proveedor correspondiente sepa que usted fue referido desde nuestra web. Esto es fundamental para que dichos proveedores nos otorguen la comisión de afiliación que mantiene nuestra web gratuita para usted.
+        </p>
+
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>Cookies de Terceros y Deslinde Legal</h2>
+        <p style={{ marginBottom: '20px' }}>
+          Tenga en cuenta que al ser redirigido a las páginas web de nuestros socios comerciales (como Amazon, Booking, DiscoverCars, etc.), dichos portales instalarán sus propias cookies de rendimiento, rastreo y marketing. Esas cookies se rigen estrictamente por las políticas de cookies y privacidad de esos proveedores terceros. IdarThur no tiene control sobre la instalación ni el tratamiento de los datos recolectados por esas cookies de terceros y queda exento de cualquier responsabilidad respecto a las mismas.
         </p>
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>Control de Cookies</h2>
         <p style={{ marginBottom: '20px' }}>
-          Puede controlar o borrar las cookies en cualquier momento a través de la configuración de su navegador web. Sin embargo, bloquear las cookies puede afectar el correcto funcionamiento de los redireccionamientos de ofertas de viaje.
+          Puede controlar, bloquear o borrar las cookies en cualquier momento a través de la configuración de su navegador de internet. Tenga en cuenta que si bloquea o elimina las cookies, es posible que los enlaces de redirección a las ofertas y productos de viajes de afiliación no funcionen correctamente.
         </p>
       </div>
     </div>
