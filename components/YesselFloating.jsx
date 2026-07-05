@@ -222,6 +222,9 @@ export default function YesselFloating() {
           </div>
 
           <div style={{ padding: '15px', borderTop: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.3)' }}>
+            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', marginBottom: '8px', lineHeight: '1.2' }}>
+              🤖 Estás chateando con un asistente de Inteligencia Artificial (Yessel AI) conforme al Reglamento de IA de la UE.
+            </div>
             <form onSubmit={sendMessage} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <input 
                 type="text" 

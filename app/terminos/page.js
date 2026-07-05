@@ -43,6 +43,19 @@ export default function Terminos() {
         <p style={{ marginBottom: '20px' }}>
           Los precios mostrados en IdarThur son puramente informativos. El precio final y la disponibilidad siempre serán los mostrados en la página oficial del proveedor al momento del pago.
         </p>
+
+        <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>5. Uso de Sistemas de Inteligencia Artificial y Transparencia</h2>
+        <p style={{ marginBottom: '20px' }}>
+          En cumplimiento con el <strong>Reglamento de Inteligencia Artificial de la Unión Europea (EU AI Act)</strong> y normativas globales de protección de derechos de los usuarios, IdarThur.com informa de forma explícita que nuestro chat de ayuda y conserjería virtual (como "Yessel AI") es un <strong>sistema automatizado asistido por Inteligencia Artificial (modelos de lenguaje a gran escala)</strong>. 
+          <br /><br />
+          El usuario acepta y declara tener pleno conocimiento de que interactúa con un agente digital. Toda respuesta o información (médica, de seguridad, turística o comercial) es puramente informativa, generada automáticamente y no representa declaraciones oficiales, ofertas vinculantes ni reemplazo de asesoramiento profesional presencial.
+          <br /><br />
+          <strong>Límites de Responsabilidad para los Desarrolladores y Creadores:</strong> Bajo ninguna circunstancia los creadores, desarrolladores, administradores u operadores de IdarThur.com serán responsables de daños directos, indirectos, incidentales o consecuentes derivados de errores, omisiones, difamaciones, infracciones de derechos de autor o imprecisiones en los textos generados de forma automática por la Inteligencia Artificial. El usuario asume en su totalidad el riesgo derivado de la interpretación de la información generada por la IA.
+          <br /><br />
+          <strong>Prohibición de Uso Abusivo y Ataques de Inyección de Prompts:</strong> Queda estrictamente prohibido cualquier intento de ingeniería inversa, hackeo, explotación de vulnerabilidades o ataques de "inyección de prompts" (prompt injection/jailbreaking) destinados a alterar las directivas del sistema de Yessel AI, extraer información confidencial o evadir los límites de uso. IdarThur.com se reserva el derecho de vetar el acceso a cualquier usuario que infrinja esta norma y de iniciar las acciones legales civiles o penales pertinentes.
+          <br /><br />
+          <strong>Propiedad Intelectual de Contenidos Generados:</strong> Las respuestas y crónicas de viajes creadas en tiempo real por los sistemas de Inteligencia Artificial no otorgan propiedad intelectual exclusiva al usuario. La plataforma se reserva el derecho de reutilizar y mostrar dichos formatos informativos para la comunidad de IdarThur.
+        </p>
       </div>
     </div>
   );
