@@ -59,8 +59,8 @@ export default function VoicePlayer() {
       onClick={togglePlay}
       style={{
         position: 'fixed',
-        bottom: '20px',
-        right: '20px',
+        bottom: '120px',
+        right: '35px',
         width: '60px',
         height: '60px',
         borderRadius: '50%',

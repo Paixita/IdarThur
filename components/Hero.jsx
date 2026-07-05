@@ -122,34 +122,7 @@ export default function Hero() {
       ))}
 
       {/* Main Content inside the Slider */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px', maxWidth: '900px', width: '100%', marginTop: '60px' }}>
-        
-        {/* Pulsing Voice Guide Button */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '25px' }}>
-          <button 
-            onClick={toggleWelcomeSpeech}
-            style={{
-              background: isPlaying ? 'rgba(255, 42, 95, 0.25)' : 'rgba(10, 15, 26, 0.85)',
-              border: isPlaying ? '2px solid var(--primary)' : '2px solid #45f3ff',
-              color: 'white',
-              borderRadius: '30px',
-              padding: '12px 28px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              boxShadow: isPlaying ? '0 0 20px rgba(255, 42, 95, 0.6)' : '0 10px 30px rgba(69,243,255,0.2)',
-              transition: 'all 0.4s ease',
-              animation: isPlaying ? 'glowBreathe 2.5s infinite ease-in-out' : 'none'
-            }}
-          >
-            <span style={{ fontSize: '1.3rem' }}>{isPlaying ? '⏹️' : '🎙️'}</span>
-            <span>{isPlaying ? 'Detener Guía de Yessel' : 'Escuchar Bienvenida de Yessel'}</span>
-          </button>
-        </div>
-
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px', maxWidth: '900px', width: '100%' }}>
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 'bold', marginBottom: '15px', lineHeight: '1.1', textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>
           {slides[currentSlide].title.split(' ').map((word, i, arr) => 
             i === arr.length - 1 ? <span key={i} className="text-gradient"> {word}</span> : <span key={i}>{word} </span>
@@ -171,6 +144,33 @@ export default function Hero() {
           maxWidth: '800px',
           margin: '0 auto'
         }}>
+          {/* Pulsing Voice Guide Button inside the Card */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '15px' }}>
+            <button 
+              type="button"
+              onClick={toggleWelcomeSpeech}
+              style={{
+                background: isPlaying ? 'rgba(255, 42, 95, 0.2)' : 'rgba(255,255,255,0.05)',
+                border: isPlaying ? '2px solid var(--primary)' : '1px solid #45f3ff',
+                color: 'white',
+                borderRadius: '30px',
+                padding: '10px 24px',
+                fontSize: '0.95rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                boxShadow: isPlaying ? '0 0 15px rgba(255, 42, 95, 0.5)' : '0 4px 15px rgba(69,243,255,0.1)',
+                transition: 'all 0.3s ease',
+                animation: isPlaying ? 'glowBreathe 2s infinite ease-in-out' : 'none'
+              }}
+            >
+              <span style={{ fontSize: '1.2rem' }}>{isPlaying ? '⏹️' : '🎙️'}</span>
+              <span>{isPlaying ? 'Detener Guía de Yessel' : 'Escuchar Bienvenida de Yessel'}</span>
+            </button>
+          </div>
+
           {/* Pestanas */}
           <div className="search-tabs" style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '15px', flexWrap: 'wrap' }}>
             <button 
