@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 
 export default function Hero() {
+  const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchTab, setSearchTab] = useState('vuelos');
   const [origin, setOrigin] = useState('');
@@ -25,11 +27,33 @@ export default function Hero() {
   ];
 
   useEffect(() => {
+    const handleStart = () => setIsPlaying(true);
+    const handleEnd = () => setIsPlaying(false);
+
+    window.addEventListener("alvaro-tts-start", handleStart);
+    window.addEventListener("alvaro-tts-end", handleEnd);
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     }, 10500);
-    return () => clearInterval(timer);
+
+    return () => {
+      window.removeEventListener("alvaro-tts-start", handleStart);
+      window.removeEventListener("alvaro-tts-end", handleEnd);
+      clearInterval(timer);
+    };
   }, [slides.length]);
+
+  const toggleWelcomeSpeech = () => {
+    if (isPlaying) {
+      stopAlvaroAudio();
+      setIsPlaying(false);
+    } else {
+      const speech = "Bienvenidos a IdarThur, el sitio donde aquí podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza; tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, también tenemos la opción de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con la sección de noticias por si deseas viajar a uno de esos destinos que están siempre actualizados. Contamos con secciones donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. Y en la última sección te encontrarás con el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. Solo entra y conocerás más cosas que están listas para ti. Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.";
+      playAlvaroAudio(speech);
+      setIsPlaying(true);
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -98,7 +122,34 @@ export default function Hero() {
       ))}
 
       {/* Main Content inside the Slider */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px', maxWidth: '900px', width: '100%' }}>
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px', maxWidth: '900px', width: '100%', marginTop: '60px' }}>
+        
+        {/* Pulsing Voice Guide Button */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '25px' }}>
+          <button 
+            onClick={toggleWelcomeSpeech}
+            style={{
+              background: isPlaying ? 'rgba(255, 42, 95, 0.25)' : 'rgba(10, 15, 26, 0.85)',
+              border: isPlaying ? '2px solid var(--primary)' : '2px solid #45f3ff',
+              color: 'white',
+              borderRadius: '30px',
+              padding: '12px 28px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              boxShadow: isPlaying ? '0 0 20px rgba(255, 42, 95, 0.6)' : '0 10px 30px rgba(69,243,255,0.2)',
+              transition: 'all 0.4s ease',
+              animation: isPlaying ? 'glowBreathe 2.5s infinite ease-in-out' : 'none'
+            }}
+          >
+            <span style={{ fontSize: '1.3rem' }}>{isPlaying ? '⏹️' : '🎙️'}</span>
+            <span>{isPlaying ? 'Detener Guía de Yessel' : 'Escuchar Bienvenida de Yessel'}</span>
+          </button>
+        </div>
+
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 'bold', marginBottom: '15px', lineHeight: '1.1', textShadow: '2px 2px 10px rgba(0,0,0,0.5)' }}>
           {slides[currentSlide].title.split(' ').map((word, i, arr) => 
             i === arr.length - 1 ? <span key={i} className="text-gradient"> {word}</span> : <span key={i}>{word} </span>
@@ -279,6 +330,11 @@ export default function Hero() {
       </div>
 
       <style>{`
+        @keyframes glowBreathe {
+          0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 42, 95, 0.4); }
+          50% { transform: scale(1.04); box-shadow: 0 0 25px rgba(255, 42, 95, 0.8); }
+          100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 42, 95, 0.4); }
+        }
         .search-form-grid {
           display: grid;
           grid-template-columns: 1fr 1fr auto;
