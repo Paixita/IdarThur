@@ -9,7 +9,7 @@ export default function YesselFloating() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "¡Hola! Soy Yessel, el conserje principal de IdarThur. Estoy aquí para conseguirte las mejores tarifas no publicadas. ¿A dónde te gustaría viajar hoy?" }
+    { role: 'assistant', content: "¡Bienvenidos a IdarThur! El sitio donde podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza; tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, contamos con opciones para seleccionar y escoger automóviles dentro del plan de tu viaje. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con la sección de noticias por si deseas viajar a uno de esos destinos que están siempre actualizados. Contamos con secciones donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. Y en la última sección te encontrarás conmigo, el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. ¡Solo entra y conocerás más cosas que están listas para ti! Gracias por visitarnos en IdarThur, tu casa segura para tus viajes." }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
