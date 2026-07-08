@@ -13,7 +13,7 @@ export default function AgentesClient() {
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [isCandyChatOpen, setIsCandyChatOpen] = useState(false);
   const [candyMessages, setCandyMessages] = useState([
-    { text: "Bienvenidos a IdarThur, el sitio donde aquí podrás escoger tus viajes con, de aerolíneas y también tus cruceros; de confianza, tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour, lo demás también tenemos Si quieres aparte de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, aún para tus mascotas que tanto amas; para que te sientas cómodo y cómoda, y placentero; está bien te encontrarás con el sitio de las noticias por si de pronto deseas viajar a uno de esos sitios a los cuales están siempre actualizados; Y tenemos las dos últimas secciones donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales que vivieron ellos en sus vuelos o en el lugar de su tour, y en la última sección te encontrarás con el agente Yessel, quién está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso, solo dentro y conocerás más cosas de las cuales están listas para ti Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.", sender: "ai" }
+    { text: "¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?", sender: "ai" }
   ]);
   const [candyInputMsg, setCandyInputMsg] = useState('');
 
@@ -153,7 +153,7 @@ export default function AgentesClient() {
   const handleOpenCandyChat = () => {
     setIsCandyChatOpen(true);
     if (isAudioPremium) {
-      playAlvaroAudio("Bienvenidos a IdarThur, el sitio donde aquí podrás escoger tus viajes con, de aerolíneas y también tus cruceros; de confianza, tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour, lo demás también tenemos Si quieres aparte de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, aún para tus mascotas que tanto amas; para que te sientas cómodo y cómoda, y placentero; está bien te encontrarás con el sitio de las noticias por si de pronto deseas viajar a uno de esos sitios a los cuales están siempre actualizados; Y tenemos las dos últimas secciones donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales que vivieron ellos en sus vuelos o en el lugar de su tour, y en la última sección te encontrarás con el agente Yessel, quién está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso, solo dentro y conocerás más cosas de las cuales están listas para ti Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.");
+      playAlvaroAudio("¡Hola! Soy Yessel, el conserje principal y Director de Operaciones. Estoy aquí para garantizar que tu viaje sea perfecto. ¿En qué te puedo ayudar hoy?");
     }
   };
 
