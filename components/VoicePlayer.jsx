@@ -1,12 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { useVipAudio } from '@/hooks/useVipAudio';
 import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking } from '@/utils/playAlvaro';
 
 export default function VoicePlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [text, setText] = useState('');
-  const [isPremium] = useVipAudio(); // returns [isAudioPremium, setIsAudioPremium]
 
   useEffect(() => {
     const handleStart = () => setIsPlaying(true);
@@ -23,36 +20,14 @@ export default function VoicePlayer() {
     };
   }, []);
 
-  // Gather visible textual content from the page
-  const collectText = () => {
-    const selectors = 'p, h1, h2, h3, h4, li, span, div';
-    const nodes = document.querySelectorAll(selectors);
-    let combined = '';
-    nodes.forEach(n => {
-      if (n.innerText) combined += n.innerText + ' ';
-    });
-    return combined.trim();
-  };
-
-  // Update text when DOM changes (simple MutationObserver)
-  useEffect(() => {
-    const update = () => setText(collectText());
-    update();
-    const observer = new MutationObserver(update);
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
-
   const togglePlay = () => {
     if (isPlaying) {
       stopAlvaroAudio();
-      return;
+    } else {
+      const speech = "Bienvenidos a IdarThur, el sitio donde aquí podrás escoger tus viajes con, de aerolíneas y también tus cruceros; de confianza, tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour, lo demás también tenemos Si quieres aparte de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, aún para tus mascotas que tanto amas; para que te sientas cómodo y cómoda, y placentero; está bien te encontrarás con el sitio de las noticias por si de pronto deseas viajar a uno de esos sitios a los cuales están siempre actualizados; Y tenemos las dos últimas secciones donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales que vivieron ellos en sus vuelos o en el lugar de su tour, y en la última sección te encontrarás con el agente Yessel, quién está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso, solo dentro y conocerás más cosas de las cuales están listas para ti Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.";
+      playAlvaroAudio(speech);
     }
-    if (!text) return;
-    playAlvaroAudio(text);
   };
-
-  if (!isPremium) return null;
 
   return (
     <div
@@ -64,7 +39,7 @@ export default function VoicePlayer() {
         width: '60px',
         height: '60px',
         borderRadius: '50%',
-        background: isPlaying ? 'rgba(0,212,255,0.2)' : 'linear-gradient(45deg, var(--primary), var(--accent))',
+        background: isPlaying ? 'rgba(255, 42, 95, 0.25)' : 'linear-gradient(45deg, var(--primary), var(--accent))',
         color: '#fff',
         display: 'flex',
         alignItems: 'center',
@@ -73,10 +48,11 @@ export default function VoicePlayer() {
         boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
         transition: 'background 0.3s',
         zIndex: 1000,
+        border: '2px solid rgba(255,255,255,0.2)'
       }}
-      title={isPlaying ? 'Detener narración' : 'Escuchar página'}
+      title={isPlaying ? 'Detener bienvenida' : 'Escuchar bienvenida'}
     >
-      {isPlaying ? '⏸' : '▶'}
+      {isPlaying ? '⏹️' : '▶'}
     </div>
   );
 }
