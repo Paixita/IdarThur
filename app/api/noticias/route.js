@@ -29,12 +29,22 @@ async function fetchRSS(url) {
 
 export async function GET() {
   try {
-    const alphaItems = await fetchRSS('https://news.google.com/rss/search?q=clima+aeropuerto+vuelos&hl=es-419&gl=US&ceid=US:es-419');
-    const betaItems = await fetchRSS('https://news.google.com/rss/search?q=turismo+cruceros+eventos&hl=es-419&gl=US&ceid=US:es-419');
+    const alphaItems = await fetchRSS('https://news.google.com/rss/search?q=clima+aeropuerto+vuelos+when:7d&hl=es-419&gl=US&ceid=US:es-419');
+    const betaItems = await fetchRSS('https://news.google.com/rss/search?q=turismo+cruceros+eventos+when:7d&hl=es-419&gl=US&ceid=US:es-419');
     
     const cleanDesc = (htmlStr) => {
       if (!htmlStr) return "Lee el artículo completo para más detalles.";
-      const text = htmlStr.replace(/<[^>]*>?/gm, ''); 
+      const decoded = htmlStr
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'");
+      
+      const text = decoded.replace(/<[^>]*>?/gm, '').trim();
+      if (text.toLowerCase().includes('google noticias') || text.toLowerCase().includes('google news')) {
+        return "Lee el artículo completo para más detalles.";
+      }
       return text.length > 150 ? text.substring(0, 150) + "..." : text;
     };
 
