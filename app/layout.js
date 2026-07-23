@@ -13,7 +13,7 @@ const outfit = Outfit({
 export const metadata = {
   title: "IdarThur - Agencia de Viajes Inteligente",
   description: "Descubre IdarThur: Tu agencia de viajes impulsada por Inteligencia Artificial. Encuentra los mejores vuelos con cashback, cruceros de lujo, noticias globales y la mejor tienda de viaje.",
-  keywords: "agencia de viajes, vuelos baratos, cruceros de lujo, inteligencia artificial, noticias de viajes, nómada digital, viajar con mascotas",
+  keywords: "idarthur, IdarThur, agencia de viajes, vuelos baratos, cruceros de lujo, inteligencia artificial, noticias de viajes, nómada digital, viajar con mascotas",
   openGraph: {
     title: "IdarThur - El futuro de los viajes está aquí",
     description: "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
