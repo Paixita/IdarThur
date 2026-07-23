@@ -15,7 +15,7 @@ export async function POST(request) {
     const groq = createGroq({ apiKey: apiKey });
 
     const response = await generateText({
-      model: groq('openai/gpt-oss-20b'),
+      model: groq('llama-3.1-8b-instant'),
       system: `Eres Yessel Cronista, el agente de Inteligencia Artificial especializado en relatos y crónicas de viaje de 'IdarThur'.
       Tu misión es recibir una idea o anécdota y redactarla como una historia de viajes altamente cinematográfica, emocionante, inspiradora y profesional en español.
       

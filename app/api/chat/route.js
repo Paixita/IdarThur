@@ -151,7 +151,7 @@ export async function POST(request) {
     });
 
     const result = await generateText({
-      model: groq('openai/gpt-oss-120b'),
+      model: groq('llama-3.3-70b-versatile'),
       system: finalSystemPrompt,
       prompt: message,
       tools: {
