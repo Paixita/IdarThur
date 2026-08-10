@@ -15,7 +15,7 @@ export const products = [
     categoryId: "ropa",
     name: "Chaqueta Cotrasen para Hombre",
     price: "$119.99",
-    img: "/tienda/chaqueta_hombre.jpg",
+    img: "/tienda/chaqueta_hombre.png",
     affiliateLink: "https://www.amazon.com/s?k=Cotrasen+Chaqueta+de+trabajo+para+hombre&tag=idarthur-20",
     copy: "Chaqueta de trabajo impermeable, de lona de pato, forro sherpa térmica y cálida con múltiples bolsillos. La protección absoluta para tus viajes más fríos.",
     bestseller: true
@@ -25,7 +25,7 @@ export const products = [
     categoryId: "ropa",
     name: "Abrigo MAGCOMSEN para Mujer",
     price: "$72.98",
-    img: "/tienda/chaqueta_mujer.jpg",
+    img: "/tienda/chaqueta_mujer.png",
     affiliateLink: "https://www.amazon.com/s?k=MAGCOMSEN+Abrigos+de+invierno+3+en+1+para+mujer&tag=idarthur-20",
     copy: "Abrigo de invierno 3 en 1, chaqueta de esquí impermeable, cortavientos con forro polar y parka. Diseño elegante y máxima protección térmica.",
     bestseller: true
@@ -35,7 +35,7 @@ export const products = [
     categoryId: "equipaje",
     name: "Cámara Blink Mini 2K+",
     price: "$39.99",
-    img: "/tienda/camara_seguridad.jpg",
+    img: "/tienda/camara_seguridad.png",
     affiliateLink: "https://www.amazon.com/dp/B0F3B4PPGM?tag=idarthur-20",
     copy: "Cámara interior inteligente. Ve a tus mascotas o el interior de tu casa en resolución 2K mientras viajas, con visión nocturna a color y detección de movimiento.",
     bestseller: false
@@ -45,7 +45,7 @@ export const products = [
     categoryId: "cuidado",
     name: "Botiquín CTIME Organizador",
     price: "$29.99",
-    img: "/tienda/botiquin_viaje.jpg",
+    img: "/tienda/botiquin_viaje.png",
     affiliateLink: "https://www.amazon.com/dp/B0FH239CV6?tag=idarthur-20",
     copy: "Organizador de medicamentos XL de 4 niveles. Botiquín portátil premium para tener todo a la mano en casa rodante, viajes o campamentos.",
     bestseller: false
@@ -55,7 +55,7 @@ export const products = [
     categoryId: "equipaje",
     name: "Maleta de Viaje Premium",
     price: "$149.99",
-    img: "/tienda/equipaje_premium.jpg",
+    img: "/tienda/equipaje_premium.png",
     affiliateLink: "https://www.amazon.com/s?k=Premium+Polycarbonate+Luggage+Travel+Suitcase&tag=idarthur-20",
     copy: "Elegancia, resistencia y capacidad. Diseñada con tecnología de policarbonato ultraligero y candado TSA integrado. El equipaje perfecto para recorrer el mundo con estilo.",
     bestseller: true

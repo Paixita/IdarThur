@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export default function EcommerceHighlights() {
   const products = [
-    { id: 1, name: "Cámara Blink Mini 2K+", price: "$44.99", img: "/tienda/camara_seguridad.jpg", category: "Seguridad", affiliateLink: "https://amzn.to/4ulMw3w?tag=idarthur-20" },
-    { id: 2, name: "Chaqueta Cotrasen", price: "$119.99", img: "/tienda/chaqueta_hombre.jpg", category: "Ropa Invierno", affiliateLink: "https://www.amazon.com/s?k=Winter+Jacket+Men+Cotrasen&tag=idarthur-20" },
+    { id: 1, name: "Cámara Blink Mini 2K+", price: "$44.99", img: "/tienda/camara_seguridad.png", category: "Seguridad", affiliateLink: "https://amzn.to/4ulMw3w?tag=idarthur-20" },
+    { id: 2, name: "Chaqueta Cotrasen", price: "$119.99", img: "/tienda/chaqueta_hombre.png", category: "Ropa Invierno", affiliateLink: "https://www.amazon.com/s?k=Winter+Jacket+Men+Cotrasen&tag=idarthur-20" },
     { id: 3, name: "Botella y Dispensador Portátil", price: "$22.50", img: "/tienda/botella_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Dog+Water+Bottle+Portable+Dispenser&tag=idarthur-20" },
     { id: 4, name: "Collar Rastreador GPS Smart", price: "$89.99", img: "/tienda/gps_mascota.png", category: "Mascotas", affiliateLink: "https://www.amazon.com/s?k=Pet+GPS+Tracker+Smart+Collar&tag=idarthur-20" },
-    { id: 5, name: "Set de Maletas Rígidas", price: "$159.00", img: "/tienda/equipaje_premium.jpg", category: "Equipaje", affiliateLink: "https://www.amazon.com/s?k=Hard+Shell+Luggage+Set&tag=idarthur-20" }
+    { id: 5, name: "Set de Maletas Rígidas", price: "$159.00", img: "/tienda/equipaje_premium.png", category: "Equipaje", affiliateLink: "https://www.amazon.com/s?k=Hard+Shell+Luggage+Set&tag=idarthur-20" }
   ];
 
   return (
