@@ -1,3 +1,5 @@
+import config from '../data/config.json';
+
 export default function robots() {
   return {
     rules: {
@@ -5,6 +7,6 @@ export default function robots() {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://idarthur.com/sitemap.xml',
+    sitemap: `https://${config.domainName}/sitemap.xml`,
   }
 }

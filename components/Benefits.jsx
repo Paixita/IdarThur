@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import config from '@/data/config.json';
 
 export default function Benefits() {
   const steps = [
@@ -37,7 +38,7 @@ export default function Benefits() {
         
         {/* Cómo Funciona */}
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 'bold', marginBottom: '20px' }}>Cómo Funciona <span className="text-gradient">IdarThur</span></h2>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 'bold', marginBottom: '20px' }}>Cómo Funciona <span className="text-gradient">{config.brandName}</span></h2>
           <p style={{ color: '#a0aab5', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 50px' }}>
             Tres pasos simples para el viaje de tus sueños, con el respaldo de la Inteligencia Artificial.
           </p>

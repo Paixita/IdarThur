@@ -1,8 +1,9 @@
 import { stories } from '../data/historias';
 import { products } from '../data/tienda';
+import config from '../data/config.json';
 
 export default function sitemap() {
-  const baseUrl = "https://idarthur.com";
+  const baseUrl = `https://${config.domainName}`;
 
   // Rutas principales
   const routes = [

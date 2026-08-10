@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import config from '@/data/config.json';
 
 export default function LoginModal({ isOpen, onClose }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -38,7 +39,7 @@ export default function LoginModal({ isOpen, onClose }) {
 
         <div style={{ textAlign: 'center', marginBottom: '35px' }}>
           <h2 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>
-            Únete a <span className="text-gradient">IdarThur</span>
+            Únete a <span className="text-gradient">{config.brandName}</span>
           </h2>
           <p style={{ color: '#a0aab5', fontSize: '0.95rem' }}>Desbloquea ofertas secretas y el poder de nuestros Agentes IA.</p>
         </div>

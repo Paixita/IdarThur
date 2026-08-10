@@ -4,12 +4,13 @@ import { usePathname } from "next/navigation";
 import PremiumAudioModal from './PremiumAudioModal';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
+import config from '@/data/config.json';
 
 export default function YesselFloating() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "¡Hola! Soy Yessel, el conserje principal de IdarThur. Estoy aquí para conseguirte las mejores tarifas no publicadas. ¿A dónde te gustaría viajar hoy?" }
+    { role: 'assistant', content: `¡Hola! Soy Yessel, el conserje principal de ${config.brandName}. Estoy aquí para conseguirte las mejores tarifas no publicadas. ¿A dónde te gustaría viajar hoy?` }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);

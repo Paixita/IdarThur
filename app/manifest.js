@@ -1,8 +1,10 @@
+import config from '../data/config.json';
+
 export default function manifest() {
   return {
-    name: 'IdarThur Agencia VIP',
-    short_name: 'IdarThur',
-    description: 'Tu agencia de viajes inteligente VIP',
+    name: `${config.brandName} Agencia VIP`,
+    short_name: config.brandName,
+    description: config.description,
     start_url: '/',
     display: 'standalone',
     background_color: '#0a0f1a',
