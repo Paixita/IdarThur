@@ -1,0 +1,26 @@
+{
+  "brandName": "ViajesPro",
+  "domainName": "viajespro.com",
+  "tagline": "Agencia de Viajes Inteligente",
+  "description": "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
+  "keywords": [
+    "viajespro",
+    "ViajesPro",
+    "agencia de viajes",
+    "vuelos baratos",
+    "cruceros de lujo",
+    "inteligencia artificial",
+    "noticias de viajes",
+    "nómada digital",
+    "viajar con mascotas"
+  ],
+  "supportEmail": "soporte@viajespro.com",
+  "defaultAffiliateTag": "viajespro-20",
+  "socials": {
+    "whatsapp": "https://wa.me/573000000000",
+    "instagram": "https://instagram.com/viajespro",
+    "facebook": "https://facebook.com/viajespro"
+  },
+  "logoUrl": "/logo_blue.png",
+  "yesselAvatarUrl": "/yessel_avatar.png"
+}

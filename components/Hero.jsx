@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
+import config from '@/data/config.json';
 
 export default function Hero() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -16,7 +17,7 @@ export default function Hero() {
       type: 'video',
       src: '/video-hero.mp4',
       title: 'Tu viaje ideal empieza aquí',
-      subtitle: 'Descubre el mundo con IdarThur. La forma más inteligente y económica de volar y alojarte.',
+      subtitle: `Descubre el mundo con ${config.brandName}. La forma más inteligente y económica de volar y alojarte.`,
     },
     {
       type: 'image',
@@ -49,7 +50,7 @@ export default function Hero() {
       stopAlvaroAudio();
       setIsPlaying(false);
     } else {
-      const speech = "Bienvenidos a IdarThur, el sitio donde podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza. Reserva tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, también tenemos la opción de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con el sitio de las noticias, por si de pronto deseas viajar a uno de esos sitios que están siempre actualizados. Y tenemos las dos últimas secciones, donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. En la última sección, te encontrarás con el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. Solo entra y conocerás más cosas de las cuales están listas para ti. Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.";
+      const speech = `Bienvenidos a ${config.brandName}, el sitio donde podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza. Reserva tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, también tenemos la opción de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con el sitio de las noticias, por si de pronto deseas viajar a uno de esos sitios que están siempre actualizados. Y tenemos las dos últimas secciones, donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. En la última sección, te encontrarás con el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. Solo entra y conocerás más cosas de las cuales están listas para ti. Gracias por visitarnos en ${config.brandName}, tu casa segura para tus viajes.`;
       playAlvaroAudio(speech);
       setIsPlaying(true);
     }
@@ -66,7 +67,7 @@ export default function Hero() {
       window.open(`https://search.hotellook.com/?destination=${encodeURIComponent(hotelDestination)}&marker=729418`, '_blank');
     } else if (searchTab === 'autos') {
       // Abrir buscador de DiscoverCars con ID de afiliado
-      window.open(`https://www.discovercars.com/?a_aid=IdarThur`, '_blank');
+      window.open(`https://www.discovercars.com/?a_aid=${config.brandName}`, '_blank');
     }
   };
 

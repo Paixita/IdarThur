@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import LoginModal from './LoginModal';
 
+import config from "@/data/config.json";
+
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} onClick={closeMenu}>
           <div className="nav-logo-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-             <img src="/logo_blue.png" alt="IdarThur Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+             <img src={config.logoUrl} alt={`${config.brandName} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
         </Link>
 

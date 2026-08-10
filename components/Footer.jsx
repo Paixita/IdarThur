@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import config from '@/data/config.json';
 
 export default function Footer() {
   return (
@@ -7,9 +8,9 @@ export default function Footer() {
         
         {/* Marca */}
         <div>
-          <h3 style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' }}>IdarThur</h3>
+          <h3 style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' }}>{config.brandName}</h3>
           <p style={{ lineHeight: '1.6', fontSize: '0.9rem' }}>
-            La plataforma #1 impulsada por IA para descubrir el mundo, reservar tus viajes y conseguir el mejor equipamiento, de la manera más inteligente.
+            La plataforma #1 impulsada por IA para descubrir el mundo, reservar tus viajes y conseguir el mejor equipamiento de la manera más inteligente.
           </p>
         </div>
 
@@ -37,8 +38,8 @@ export default function Footer() {
       </div>
 
       <div style={{ textAlign: 'center', paddingTop: '30px', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>
-        <p>&copy; {new Date().getFullYear()} IdarThur Global. Todos los derechos reservados.</p>
-        <p style={{ marginTop: '5px', fontSize: '0.75rem', opacity: 0.6 }}>IdarThur actúa como socio afiliado de WayAway, Booking.com y Amazon Associates.</p>
+        <p>&copy; {new Date().getFullYear()} {config.brandName} Global. Todos los derechos reservados.</p>
+        <p style={{ marginTop: '5px', fontSize: '0.75rem', opacity: 0.6 }}>{config.brandName} actúa como socio afiliado de WayAway, Booking.com y Amazon Associates.</p>
       </div>
     </footer>
   );

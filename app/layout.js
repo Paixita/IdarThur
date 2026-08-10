@@ -3,6 +3,7 @@ import "./globals.css";
 import YesselFloating from "@/components/YesselFloating";
 import VoicePlayer from "@/components/VoicePlayer";
 import Script from "next/script";
+import config from "@/data/config.json";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -11,20 +12,20 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "IdarThur - Agencia de Viajes Inteligente",
-  description: "Descubre IdarThur: Tu agencia de viajes impulsada por Inteligencia Artificial. Encuentra los mejores vuelos con cashback, cruceros de lujo, noticias globales y la mejor tienda de viaje.",
-  keywords: "idarthur, IdarThur, agencia de viajes, vuelos baratos, cruceros de lujo, inteligencia artificial, noticias de viajes, nómada digital, viajar con mascotas",
+  title: `${config.brandName} - ${config.tagline}`,
+  description: config.description,
+  keywords: config.keywords.join(", "),
   openGraph: {
-    title: "IdarThur - El futuro de los viajes está aquí",
-    description: "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
-    url: "https://idarthur.com",
-    siteName: "IdarThur",
+    title: `${config.brandName} - El futuro de los viajes está aquí`,
+    description: config.description,
+    url: `https://${config.domainName}`,
+    siteName: config.brandName,
     images: [
       {
-        url: "https://idarthur.com/logo_blue.png",
+        url: `https://${config.domainName}${config.logoUrl}`,
         width: 1200,
         height: 630,
-        alt: "IdarThur Agencia de Viajes Inteligente"
+        alt: `${config.brandName} ${config.tagline}`
       }
     ],
     locale: "es_CO",
@@ -45,21 +46,21 @@ export default function RootLayout({ children }) {
   const jsonLdOrg = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "IdarThur",
-    "url": "https://idarthur.com",
-    "logo": "https://idarthur.com/logo_blue.png",
-    "description": "Tu agencia de viajes inteligente impulsada por Inteligencia Artificial. Encuentra los mejores vuelos con cashback, cruceros de lujo y noticias globales.",
+    "name": config.brandName,
+    "url": `https://${config.domainName}`,
+    "logo": `https://${config.domainName}${config.logoUrl}`,
+    "description": config.description,
     "sameAs": []
   };
 
   const jsonLdSite = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "IdarThur",
-    "url": "https://idarthur.com",
+    "name": config.brandName,
+    "url": `https://${config.domainName}`,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://idarthur.com/noticias?search={search_term_string}",
+      "target": `https://${config.domainName}/noticias?search={search_term_string}`,
       "query-input": "required name=search_term_string"
     }
   };
