@@ -23,6 +23,42 @@ Hemos modificado y unificado la arquitectura del portal para que toda la persona
 3.  **LICENSE.md:** Contrato legal de uso comercial único que prohíbe la reventa del código fuente por parte del comprador.
 4.  **INSTRUCCIONES_COMPRADOR.md:** Guía paso a paso para el comprador que enseña cómo instalar, configurar y desplegar en Vercel, hostings propios (cPanel, PM2) y transferencias de dominio de registradores como IONOS.
 
+### Plano Visual de la Infraestructura y Conexiones
+
+```mermaid
+graph TD
+    User([Cliente / Visitante]) -->|Interactúa / Busca / Chatea| FE[Frontend Next.js - Puerto 3001]
+    
+    subgraph Frontend [Aplicación Cliente (Next.js)]
+        FE -->|Lee Configuración| Config[(config.json)]
+        FE -->|Renderiza Vistas| Pages[Páginas Estáticas & Dinámicas]
+        FE -->|Chat / TTS / Historias| API[API Routes / Edge Runtime]
+    end
+
+    subgraph Backend_Services [Servicios de Backend & Datos]
+        API -->|Consulta Modelos de Lenguaje| Groq[Groq Cloud API - Llama/GPT-OSS]
+        API -->|Búsqueda Rápida e Historias| Meili[Meilisearch Server - Puerto 7700]
+        API -->|Gestión de Carrito y Catálogo| Medusa[MedusaJS Headless Commerce - Puerto 9000]
+        Medusa -->|Almacenamiento de Productos| DB[(Base de Datos PostgreSQL)]
+    end
+
+    subgraph External_APIs [Monetización & Enlaces de Afiliados]
+        FE -->|Reserva Vuelos / Hoteles| Travelpayouts[Travelpayouts / WayAway / Hotellook]
+        FE -->|Alquiler de Vehículos| DiscoverCars[DiscoverCars Affiliate Portal]
+        FE -->|Compra Equipaje y Accesorios| Amazon[Amazon Associates Affiliate Program]
+    end
+
+    classDef FEColor fill:#0f172a,stroke:#00f3ff,stroke-width:2px,color:#fff;
+    classDef BEColor fill:#1e1b4b,stroke:#a855f7,stroke-width:2px,color:#fff;
+    classDef ExtColor fill:#0c0a09,stroke:#eab308,stroke-width:2px,color:#fff;
+    
+    class FE,Pages,API FEColor;
+    class Groq,Meili,Medusa,DB BEColor;
+    class Travelpayouts,DiscoverCars,Amazon ExtColor;
+```
+
+---
+
 ---
 
 ## 3. ¿Cuánto Vale en el Mercado? (Valuación)
