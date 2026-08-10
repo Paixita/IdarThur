@@ -73,11 +73,11 @@ export const products = [
   {
     id: 7,
     categoryId: "mascotas",
-    name: "Kit de Viaje Amistad Peluda",
-    price: "$45.00",
-    img: "/tienda/mascotas_amigos.jpg",
-    affiliateLink: "https://www.amazon.com/s?k=Pet+Travel+Kit+Portable+Bowl+Carrier&tag=idarthur-20",
-    copy: "¡La comodidad de tu perro y gato es lo primero! Incluye comedero portátil plegable, cinturones de seguridad para el asiento trasero y dispensador de bolsas. Viajar juntos nunca fue tan fácil.",
+    name: "Comedero Automático Inteligente",
+    price: "$69.99",
+    img: "/tienda/comedero_inteligente.png",
+    affiliateLink: "https://www.amazon.com/s?k=Automatic+Pet+Feeder+with+Camera&tag=idarthur-20",
+    copy: "Alimenta y monitorea a tus mascotas desde cualquier lugar. Dispensador automático de comida con cámara de video HD y audio bidireccional para ver y hablar con ellos desde tu celular.",
     bestseller: true
   },
   {
