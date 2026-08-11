@@ -1,11 +1,11 @@
 {
-  "brandName": "ViajesPro",
-  "domainName": "viajespro.com",
+  "brandName": "IdarThur",
+  "domainName": "idarthur.com",
   "tagline": "Agencia de Viajes Inteligente",
   "description": "Vuelos, Hoteles, Cruceros y Noticias Globales con el poder de la IA. Explora el mundo con nosotros.",
   "keywords": [
-    "viajespro",
-    "ViajesPro",
+    "idarthur",
+    "IdarThur",
     "agencia de viajes",
     "vuelos baratos",
     "cruceros de lujo",
@@ -14,12 +14,12 @@
     "nómada digital",
     "viajar con mascotas"
   ],
-  "supportEmail": "soporte@viajespro.com",
-  "defaultAffiliateTag": "viajespro-20",
+  "supportEmail": "soporte@idarthur.com",
+  "defaultAffiliateTag": "idarthur-20",
   "socials": {
     "whatsapp": "https://wa.me/573000000000",
-    "instagram": "https://instagram.com/viajespro",
-    "facebook": "https://facebook.com/viajespro"
+    "instagram": "https://instagram.com/idarthur",
+    "facebook": "https://facebook.com/idarthur"
   },
   "logoUrl": "/logo_blue.png",
   "yesselAvatarUrl": "/yessel_avatar.png"
