@@ -1,9 +1,9 @@
 # LICENCIA COMERCIAL DE USO ÚNICO (SINGLE-USE COMMERCIAL LICENSE)
 
-**Propietario / Licenciante:** ViajesPro
+**Propietario / Licenciante:** IdarThur
 **Versión de la Licencia:** 1.0 (Marca Blanca)
 
-Esta Licencia Comercial de Uso Único ("Licencia") rige el uso del código fuente de la plataforma **ViajesPro** (anteriormente IdarThur). Al adquirir y utilizar este software, usted ("Licenciatario") acepta cumplir con los siguientes términos y condiciones:
+Esta Licencia Comercial de Uso Único ("Licencia") rige el uso del código fuente de la plataforma **IdarThur**. Al adquirir y utilizar este software, usted ("Licenciatario") acepta cumplir con los siguientes términos y condiciones:
 
 ---
 

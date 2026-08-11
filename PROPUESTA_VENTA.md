@@ -1,4 +1,4 @@
-# Propuesta de Comercialización: Venta de la Plataforma ViajesPro
+# Propuesta de Comercialización: Venta de la Plataforma IdarThur
 
 Este documento contiene el análisis estratégico, valuación y canales de venta para la plataforma comercial de marca blanca.
 

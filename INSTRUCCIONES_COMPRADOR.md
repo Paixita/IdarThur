@@ -1,6 +1,6 @@
-# Manual de Instalación y Configuración: ViajesPro (Marca Blanca)
+# Manual de Instalación y Configuración: IdarThur (Marca Blanca)
 
-¡Bienvenido a **ViajesPro**! Este documento te guiará paso a paso para configurar, personalizar y desplegar tu nuevo portal inteligente de afiliados de viajes.
+¡Bienvenido a **IdarThur**! Este documento te guiará paso a paso para configurar, personalizar y desplegar tu nuevo portal inteligente de afiliados de viajes.
 
 ---
 
@@ -82,17 +82,17 @@ Abre el archivo `data/config.json` en la raíz del proyecto. Este archivo te per
 
 ```json
 {
-  "brandName": "ViajesPro",
-  "domainName": "viajespro.com",
+  "brandName": "IdarThur",
+  "domainName": "idarthur.com",
   "tagline": "Agencia de Viajes Inteligente",
   "description": "Vuelos, Hoteles, Cruceros con el poder de la IA...",
-  "keywords": ["viajespro", "viajes", "inteligencia artificial"],
-  "supportEmail": "soporte@viajespro.com",
-  "defaultAffiliateTag": "viajespro-20",
+  "keywords": ["idarthur", "viajes", "inteligencia artificial"],
+  "supportEmail": "soporte@idarthur.com",
+  "defaultAffiliateTag": "idarthur-20",
   "socials": {
     "whatsapp": "https://wa.me/573000000000",
-    "instagram": "https://instagram.com/viajespro",
-    "facebook": "https://facebook.com/viajespro"
+    "instagram": "https://instagram.com/idarthur",
+    "facebook": "https://facebook.com/idarthur"
   }
 }
 ```
@@ -106,7 +106,7 @@ Puedes elegir cualquiera de los dos métodos de despliegue según tus preferenci
 ### Opción A: Despliegue en Vercel (Recomendado y Gratis)
 1.  Sube el código a un repositorio privado de **GitHub**.
 2.  Inicia sesión en [Vercel](https://vercel.com) y haz clic en **Add New Project**.
-3.  Importa el repositorio de GitHub de ViajesPro.
+3.  Importa el repositorio de GitHub de IdarThur.
 4.  Configura las variables de entorno definidas en tu `.env.local` en el panel de configuración de Vercel.
 5.  Haz clic en **Deploy**. ¡Tu web estará lista!
 
@@ -126,7 +126,7 @@ Puedes elegir cualquiera de los dos métodos de despliegue según tus preferenci
     ```
     Inicia la aplicación (ejemplo en puerto 3000):
     ```bash
-    pm2 start npm --name "viajespro-frontend" -- run start -- -p 3000
+    pm2 start npm --name "idarthur-frontend" -- run start -- -p 3000
     ```
 5.  Configura un proxy inverso con **Nginx** y obtén un certificado SSL gratuito con **Let's Encrypt / Certbot** para asegurar tu dominio.
 
@@ -136,7 +136,7 @@ Puedes elegir cualquiera de los dos métodos de despliegue según tus preferenci
 
 ### Vinculación de un Dominio Existente
 En tu panel de hosting o Vercel:
-1.  Añade tu dominio (ej: `viajespro.com`).
+1.  Añade tu dominio (ej: `idarthur.com`).
 2.  En el proveedor donde compraste el dominio (IONOS, GoDaddy, etc.), añade los registros DNS sugeridos:
     *   **Registro A:** Apuntando a la IP de tu VPS.
     *   **Registro CNAME:** Apuntando a los servidores de Vercel (si usas Vercel).
