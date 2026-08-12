@@ -1,38 +1,18 @@
 import { useState, useEffect } from 'react';
 
 export function useVipAudio() {
-  const [isAudioPremium, setIsAudioPremiumState] = useState(false);
+  const [isAudioPremium, setIsAudioPremiumState] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // 1. Detectar si viene la palabra secreta en la URL para activar
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('vip') === 'true' || params.get('yessel') === 'vip') {
-          try {
-            localStorage.setItem('yesselVipAudio', 'true');
-          } catch (e) {
-            console.warn('Storage blocked:', e);
-            // Fallback en sessionStorage si localStorage está bloqueado
-            try { sessionStorage.setItem('yesselVipAudio', 'true'); } catch (err) {}
-          }
-          setIsAudioPremiumState(true);
-          return;
-        }
-
-        // 2. Leer de localStorage (o sessionStorage como fallback)
-        let stored = null;
+        // Force VIP audio to be true by default for all users
         try {
-          stored = localStorage.getItem('yesselVipAudio');
+          localStorage.setItem('yesselVipAudio', 'true');
         } catch (e) {
-          try { stored = sessionStorage.getItem('yesselVipAudio'); } catch (err) {}
+          try { sessionStorage.setItem('yesselVipAudio', 'true'); } catch (err) {}
         }
-
-        if (stored === 'true') {
-          setTimeout(() => {
-            setIsAudioPremiumState(true);
-          }, 0);
-        }
+        setIsAudioPremiumState(true);
       } catch (globalError) {
         console.error('Error in useVipAudio initialization:', globalError);
       }
