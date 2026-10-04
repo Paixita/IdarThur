@@ -134,7 +134,7 @@ export default function HotelesClient() {
                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')}>
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: '0.5', transition: 'opacity 0.4s' }} />
+              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: '0.82', transition: 'opacity 0.4s' }} />
             </div>
             <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '30px', zIndex: 2, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)' }}>
               <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>{dest.city}</h3>

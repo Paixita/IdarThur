@@ -1,5 +1,15 @@
 [
   {
+    "id": "el-viaje-que-no-estaba-en-el-mapa",
+    "titulo": "El Viaje que No Estaba en el Mapa",
+    "subtitulo": "Una noche en Estambul le enseñó a Clara que algunos destinos se encuentran cuando dejamos de buscarlos",
+    "personajes": "Clara (Fotógrafa) y Yusuf (Guía local)",
+    "ano": "2026",
+    "categoria": "Aventura y Descubrimiento",
+    "narrativa": "<p>Clara llegó a Estambul con una cámara, una libreta y una regla que había seguido durante años: nunca fotografiar un lugar dos veces.</p><br><p>Había viajado para capturar el amanecer sobre el Bósforo. Sin embargo, aquella mañana una lluvia intensa cubrió la ciudad y convirtió las calles en espejos de luz. Frustrada, guardó la cámara y comenzó a caminar sin rumbo.</p><br><div style='margin: 40px 0; border-radius: 15px; overflow: hidden;'><img src='/historias/estambul_portada.png' alt='Clara caminando por Estambul bajo la lluvia' style='width: 100%; height: auto; display: block;' /></div><br><p>Fue entonces cuando escuchó música detrás de una pequeña puerta azul. Al entrar, encontró un patio escondido donde un hombre joven preparaba té.</p><br><p>—Busco el lugar desde donde pueda fotografiar el Bósforo —dijo Clara.</p><br><p>El joven sonrió.</p><br><p>—Entonces estás buscando demasiado.</p><br><p>Se llamaba Yusuf. No le ofreció un mirador famoso ni una ruta turística. Le propuso caminar.</p><br><div style='margin: 40px 0; border-radius: 15px; overflow: hidden;'><img src='/historias/estambul_calle.png' alt='Clara y Yusuf recorriendo una calle de Estambul' style='width: 100%; height: auto; display: block;' /></div><br><p>Juntos atravesaron callejones, pequeñas tiendas y mercados donde el aroma del café recién molido se mezclaba con el de las especias. Clara dejó de mirar la pantalla de su cámara. Por primera vez en mucho tiempo estaba mirando directamente a las personas.</p><br><p>Cuando cayó la tarde, Yusuf la llevó hasta una terraza sencilla. Desde allí, el Bósforo apareció entre las nubes como una cinta de plata.</p><br><div style='margin: 40px 0; border-radius: 15px; overflow: hidden;'><img src='/historias/estambul_bosforo.png' alt='El Bósforo al atardecer' style='width: 100%; height: auto; display: block;' /></div><br><p>Clara levantó la cámara, pero no disparó inmediatamente.</p><br><p>—¿Sabes qué es lo extraño? —dijo—. Vine buscando una fotografía y terminé encontrando una historia.</p><br><p>Yusuf miró la ciudad encenderse.</p><br><p>—Eso es viajar.</p><br><p>Esa noche Clara escribió en su libreta una nueva regla: <em>los mejores destinos no siempre aparecen en el mapa.</em></p><br><p>Y por primera vez, guardó la cámara antes de que terminara el viaje.</p>",
+    "imagen": "/historias/estambul_portada.png"
+  },
+  {
     "id": "el-vuelo-de-mateo",
     "titulo": "El Amanecer en los Alpes",
     "subtitulo": "Un aterrizaje inesperado que lo cambió todo",

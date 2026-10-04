@@ -118,7 +118,7 @@ export default function Hero() {
             />
           )}
           {/* Dark Overlay for better text readability */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.55)' }}></div>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.34)' }}></div>
         </div>
       ))}
 
@@ -137,10 +137,10 @@ export default function Hero() {
         <div className="glass" style={{ 
           padding: '25px', 
           borderRadius: '25px', 
-          background: 'rgba(10, 15, 26, 0.75)',
+          background: 'rgba(10, 15, 26, 0.62)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.38)',
           textAlign: 'left',
           maxWidth: '800px',
           margin: '0 auto'
