@@ -10,6 +10,10 @@ const nextConfig = {
     '/api/tts': [
       'assets/kokoro-model/**',
       'node_modules/kokoro-js/voices/em_alex.bin',
+      'node_modules/kokoro-js/voices/am_michael.bin',
+      'node_modules/kokoro-js/voices/ff_siwis.bin',
+      'node_modules/kokoro-js/voices/im_nicola.bin',
+      'node_modules/kokoro-js/voices/pm_alex.bin',
       'node_modules/espeak-ng/dist/*.wasm',
       'node_modules/onnxruntime-node/bin/napi-v3/linux/x64/*',
     ],

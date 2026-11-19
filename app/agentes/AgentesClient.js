@@ -154,7 +154,8 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
-          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text })),
+          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language })),
+          browserLanguage: navigator.language,
           agentId: activeChat.id
         })
       });
@@ -166,8 +167,8 @@ export default function AgentesClient() {
       const data = await response.json();
       const reply = data.reply || "Lo siento, no pude obtener respuesta.";
 
-      setMessages([...newMessages, { text: reply, sender: 'ai' }]);
-      if (isAudioPremium) playAlvaroAudio(reply);
+      setMessages([...newMessages, { text: reply, sender: 'ai', language: data.language }]);
+      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language });
     } catch (error) {
       console.error("Error calling Chat API:", error);
       setMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
@@ -211,7 +212,8 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
-          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text })),
+          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language })),
+          browserLanguage: navigator.language,
           agentId: 'default'
         })
       });
@@ -223,8 +225,8 @@ export default function AgentesClient() {
       const data = await response.json();
       const reply = data.reply || "Lo siento, no pude obtener respuesta.";
 
-      setCandyMessages([...newMessages, { text: reply, sender: 'ai' }]);
-      if (isAudioPremium) playAlvaroAudio(reply);
+      setCandyMessages([...newMessages, { text: reply, sender: 'ai', language: data.language }]);
+      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language });
     } catch (error) {
       console.error("Error calling Chat API:", error);
       setCandyMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
@@ -394,7 +396,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    <ChatMessage text={msg.text} assistant={msg.sender !== 'user'} />
+                    <ChatMessage language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}
@@ -471,7 +473,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    <ChatMessage text={msg.text} assistant={msg.sender !== 'user'} />
+                    <ChatMessage language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}

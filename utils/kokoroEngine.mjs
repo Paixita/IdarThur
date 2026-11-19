@@ -3,6 +3,7 @@ import ESpeakNg from 'espeak-ng';
 import { StyleTextToSpeech2Model, AutoTokenizer } from '@huggingface/transformers';
 import { join } from 'node:path';
 import { packSpeechText } from './speechText.mjs';
+import { getNeuralVoice } from './languageConfig.mjs';
 
 // El modelo se instala durante el build; no se descarga al comenzar cada narración.
 const MODEL_DIR = join(process.cwd(), 'assets', 'kokoro-model');
@@ -22,7 +23,8 @@ export function getSpeechModel() {
 let phonemeCounter = 0;
 
 export async function phonemize(text, lang) {
-  const voice = lang === 'en' ? 'en-us' : 'es';
+  const voice = getNeuralVoice(lang)?.phonemes;
+  if (!voice) throw new Error('No hay fonemización Kokoro instalada para este idioma.');
   const outFile = `phon-${process.pid}-${phonemeCounterSafe()}`;
   const espeak = await ESpeakNg({
     arguments: [
@@ -84,7 +86,8 @@ export function encodeWavPcm16(samples, sampleRate = 24000) {
 
 
 export async function synthesizeSpeech(text, lang = 'es') {
-  const voice = lang === 'en' ? 'am_michael' : 'em_alex';
+  const voice = getNeuralVoice(lang)?.voice;
+  if (!voice) throw new Error('No hay voz Kokoro instalada para este idioma.');
   const tts = await getSpeechModel();
   const pieces = [];
   let sampleRate = 24000;

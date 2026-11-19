@@ -29,14 +29,14 @@ export default function YesselFloating() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, messages: [...messages, userMessage].slice(-12) })
+        body: JSON.stringify({ message: text, browserLanguage: navigator.language, messages: [...messages, userMessage].slice(-12) })
       });
       const data = await res.json();
       if (!res.ok || typeof data.reply !== 'string' || !data.reply.trim()) throw new Error('Respuesta no disponible');
       
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply, language: data.language }]);
       if (isAudioPremium) {
-        playAlvaroAudio(data.reply);
+        playAlvaroAudio(data.reply, { language: data.language });
       }
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: "Error de conexión." }]);
@@ -86,11 +86,11 @@ export default function YesselFloating() {
             setMessages(prev => [
               ...prev, 
               { role: 'user', content: `[TikTok @${data.username}]: ${data.comment}` },
-              { role: 'assistant', content: data.reply }
+              { role: 'assistant', content: data.reply, language: data.language }
             ]);
             // Reproducir la voz si la cuenta tiene el audio premium activado
             if (isAudioPremium) {
-              playAlvaroAudio(data.reply);
+              playAlvaroAudio(data.reply, { language: data.language });
             }
           }
         } catch (e) {
@@ -218,7 +218,7 @@ export default function YesselFloating() {
                 fontSize: '0.95rem', lineHeight: '1.4',
                 borderBottomRightRadius: msg.role === 'user' ? '5px' : '20px',
                 borderTopLeftRadius: msg.role === 'assistant' ? '5px' : '20px',
-              }}><ChatMessage text={msg.content} assistant={msg.role === 'assistant'} /></div>
+              }}><ChatMessage language={msg.language} text={msg.content} assistant={msg.role === 'assistant'} /></div>
             ))}
             {isLoading && (
               <div style={{ alignSelf: 'flex-start', color: '#45f3ff', fontStyle: 'italic', fontSize: '0.9rem' }}>Yessel está escribiendo...</div>

@@ -1,5 +1,6 @@
 import { prepareSpeechText } from '@/utils/speechText.mjs';
 import { synthesizeSpeech } from '@/utils/kokoroEngine.mjs';
+import { normalizeLanguage, getNeuralVoice } from '@/utils/languageConfig.mjs';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -8,10 +9,6 @@ const MAX_CONCURRENT = 2;    // el CPU no da para más síntesis simultáneas
 const MAX_CACHE_ENTRIES = 120;
 const GENERATION_TIMEOUT_MS = 45000;
 
-function normalizeLang(value) {
-  const lang = String(value || '').toLowerCase();
-  return lang.startsWith('en') ? 'en' : 'es';
-}
 
 // ---------------------------------------------------------------------------
 // Cola de concurrencia: evita que varias frases se sinteticen a la vez
@@ -73,8 +70,9 @@ async function withTimeout(promise, ms) {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const text = prepareSpeechText(searchParams.get('text'));
-  const lang = normalizeLang(searchParams.get('lang'));
+  const lang = normalizeLanguage(searchParams.get('lang') || 'es');
+  if (!getNeuralVoice(lang)) return Response.json({ error: 'Use a matching browser voice for this language.' }, { status: 422, headers: { 'X-TTS-Fallback':'browser', 'Cache-Control':'no-store' } });
+  const text = prepareSpeechText(searchParams.get('text'), lang);
 
   if (!text) {
     return Response.json(
@@ -87,7 +85,7 @@ export async function GET(request) {
     return Response.json({ success: false, error: 'Divide el texto en bloques de hasta 12000 caracteres.' }, { status: 413 });
   }
 
-  const cacheKey = `continuous-v3::${lang}::${text}`;
+  const cacheKey = `multilingual-v4::${lang}::${text}`;
   const cached = getCached(cacheKey);
   if (cached) {
     return new Response(cached, {
@@ -96,7 +94,7 @@ export async function GET(request) {
         'Content-Length': String(cached.length),
         'Cache-Control': 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
-        'X-TTS-Version': 'continuous-v3',
+        'X-TTS-Version': 'multilingual-v4',
         'X-TTS-Cache': 'hit',
       },
     });
@@ -122,7 +120,7 @@ export async function GET(request) {
         'Content-Length': String(wav.length),
         'Cache-Control': 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
-        'X-TTS-Version': 'continuous-v3',
+        'X-TTS-Version': 'multilingual-v4',
         'X-TTS-Voice': voice,
         'X-TTS-Cache': 'miss',
       },

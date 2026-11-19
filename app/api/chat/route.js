@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { normalizeReplyLinks } from '@/utils/travelLinks.mjs';
 import { buildConversation } from '@/utils/chatMessage.mjs';
 import { researchTravel } from '@/utils/travelResearch.mjs';
+import { conversationLanguage } from '@/utils/languageDetection.mjs';
+import { LANGUAGE_NAMES, languageCopy } from '@/utils/languageConfig.mjs';
 import config from '@/data/config.json';
 import { products as catalogoLocal } from '@/data/tienda';
 import { buildTravelKnowledge, buildFlightLink, buildHotelLink } from '@/utils/yesselKnowledge';
@@ -114,15 +116,19 @@ Activa este conocimiento solo si el administrador pide diagnóstico técnico. A 
 `;
 
 export async function POST(request) {
+  let responseLanguage = 'es';
   try {
-    const { message, agentId, messages } = await request.json();
+    const { message, agentId, messages, browserLanguage } = await request.json();
+    responseLanguage = conversationLanguage(message, messages, browserLanguage || request.headers.get('accept-language'));
+    const copy = languageCopy(responseLanguage);
     if (typeof message !== 'string' || !message.trim() || message.length > 6000) return Response.json({ error: 'Escribe tu consulta.' }, { status: 400 });
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return Response.json({
         reply:
-          'Hola. Mi cerebro está desconectado porque falta la clave GROQ_API_KEY en el servidor. Configúrala y vuelvo a estar disponible.',
+          copy.unavailable,
+        language: responseLanguage,
       });
     }
 
@@ -154,6 +160,11 @@ export async function POST(request) {
 - Los vuelos directos MDE–LIM se orientan con LATAM o JetSMART como referencias, sujetos al calendario de la aerolínea.
 - Usa el enlace exacto que devuelve la herramienta, en formato [Comparar vuelos](URL). Abre un comparador externo; no lo presentes como un servicio de ayuda, una tarifa cotizada o una reserva confirmada.
 - Nunca uses Hotellook: su servicio fue retirado. No inventes rutas de URL.
+
+[IDIOMA DE RESPUESTA — PRIORIDAD SOBRE LAS INSTRUCCIONES DE ESTILO ANTERIORES]
+- El idioma elegido para esta respuesta es ${LANGUAGE_NAMES[responseLanguage]} (${responseLanguage}). Responde íntegramente en ese idioma; sustituye las indicaciones anteriores que exigían español, incluso en aclaraciones, errores y descargos médicos. Conserva su significado y las precauciones sanitarias.
+- Mantén nombres propios, códigos aeroportuarios y enlaces. No traduzcas una ciudad a otra ni cambies cifras, fechas o monedas. No añadas una traducción española duplicada.
+- El idioma ya se detectó en el mensaje o en una petición explícita. No confundas el país de destino con el idioma del viajero.
 `;
 
     const buscarProductosCatalogoTool = tool({
@@ -192,7 +203,7 @@ export async function POST(request) {
             if (researchAttempted) return { status:'limit', message:'Ya se realizó la investigación de este turno. Usa sus resultados o pregunta lo que falte.' };
             researchAttempted = true;
             try {
-              const evidence = await researchTravel(consulta, { apiKey });
+              const evidence = await researchTravel(consulta, { apiKey, language: responseLanguage });
               researchResults.push(evidence);
               return evidence;
             } catch (error) {
@@ -263,8 +274,9 @@ export async function POST(request) {
     });
 
     let finalReply = researchResults[0]?.text || result.text;
-    if (researchAttempted && !researchResults.length) finalReply = 'No pude verificar las fuentes en internet en este momento. Puedo seguir preparando tu viaje aquí, pero no voy a inventar precios ni disponibilidad. ¿Qué aspecto de tu itinerario quieres que revisemos mientras se restablece la consulta?';
+    if (researchAttempted && !researchResults.length) finalReply = copy.unavailable;
 
+    if (!finalReply && responseLanguage !== 'es') finalReply = copy.unavailable;
     if (!finalReply) {
       const lastTool = result.toolResults?.[result.toolResults.length - 1];
       const output = lastTool?.output;
@@ -283,23 +295,25 @@ export async function POST(request) {
       }
     }
 
-    if (researchLimited) finalReply = 'La consulta en internet alcanzó temporalmente su límite de uso. Podemos seguir organizando tu viaje aquí con los datos que ya tenemos; no presentaré tarifas ni disponibilidad como verificadas hasta poder consultar de nuevo.';
+    if (researchLimited) finalReply = copy.unavailable;
     const sources = researchResults.flatMap(r => r.sources).filter((s,i,a) => a.findIndex(x => x.url === s.url) === i).slice(0,6);
     if (sources.length) {
-      finalReply = (finalReply || 'Encontré estas fuentes para tu viaje. Dime qué opción quieres revisar.') + '\n\nFuentes consultadas (' + new Date().toLocaleString('es-CO', { timeZone:'UTC' }) + ' UTC):\n' + sources.map((s,i) => `${i+1}. [${s.title.replace(/[\[\]\n]/g,' ')}](${s.url})`).join('\n');
+      finalReply = (finalReply || 'Encontré estas fuentes para tu viaje. Dime qué opción quieres revisar.') + '\n\n' + copy.sources + ' (' + new Date().toLocaleString(responseLanguage, { timeZone:'UTC' }) + ' UTC):\n' + sources.map((s,i) => `${i+1}. [${s.title.replace(/[\[\]\n]/g,' ')}](${s.url})`).join('\n');
     }
     return Response.json({
+      language: responseLanguage,
       sources,
       checkedAt: researchResults[0]?.checkedAt || null,
       researchStatus: sources.length ? 'verified_sources' : researchLimited ? 'rate_limited' : researchAttempted ? 'unavailable' : 'not_requested',
       reply:
-        normalizeReplyLinks(finalReply || 'No logré completar la respuesta. ¿Me indicas el destino o el producto que buscas?'),
+        normalizeReplyLinks(finalReply || copy.unavailable),
     });
   } catch (error) {
     console.error('Error del chat de Yessel:', error);
     return Response.json({
       reply:
-        'Lo siento, tuve una falla al conectar con mi red neuronal. Intenta de nuevo en un momento.',
+        languageCopy(responseLanguage).unavailable,
+      language: responseLanguage,
     });
   }
 }

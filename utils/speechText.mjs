@@ -1,3 +1,4 @@
+import { stripSourcesFooter } from './languageConfig.mjs';
 // Preparación exclusiva de audio: nunca modifica el texto visible ni los prompts.
 const ENTITIES = {
   amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
@@ -6,7 +7,7 @@ const ENTITIES = {
 };
 
 export function prepareSpeechText(value, lang = 'es') {
-  return String(value ?? '')
+  return stripSourcesFooter(String(value ?? ''))
     .normalize('NFC')
     .replace(/\n\nFuentes consultadas \([\s\S]*$/, '')
     .replace(/[【〖][^】〗]*[】〗]/g, '')
@@ -29,7 +30,7 @@ export function prepareSpeechText(value, lang = 'es') {
     .replace(/[*_`#>|]/g, '')
     .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D]/gu, '')
     .replace(/["“”«»„‟]/g, '')
-    .replace(/&/g, lang === 'en' ? ' and ' : ' y ')
+    .replace(/&/g, ({es:' y ',en:' and ',fr:' et ',it:' e ',pt:' e ',de:' und '})[lang] || ' ')
     .replace(/[^\S\n]+/g, ' ')
     .replace(/ *\n */g, '\n')
     .replace(/\n{3,}/g, '\n\n')

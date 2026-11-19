@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 import ESpeakNg from 'espeak-ng';
+import { detectLanguage } from '../utils/languageDetection.mjs';
+import { getNeuralVoice, normalizeLanguage, chooseBrowserVoice, languageCopy } from '../utils/languageConfig.mjs';
 import { prepareSpeechText, splitSpeechText, packSpeechText } from '../utils/speechText.mjs';
 
 test('El formato se limpia solo para audio y conserva el mensaje y los acentos', () => {
@@ -24,7 +26,7 @@ test('La fonemización real usa UTF-8 y no convierte acentos ni signos en sus no
   const source = readFileSync(new URL('../utils/kokoroEngine.mjs', import.meta.url), 'utf8');
   const start = source.indexOf('let phonemeCounter = 0;');
   const end = source.indexOf('// Utilidades de audio', start);
-  const context = { ESpeakNg, process, Date };
+  const context = { ESpeakNg, process, Date, getNeuralVoice };
   vm.createContext(context);
   vm.runInContext(source.slice(start, end).replace(/export /g, ''), context);
   const phonemes = await context.phonemize('Aquí, aerolíneas, Perú. ¡Hola! ¿Qué tal?', 'es');
@@ -33,8 +35,8 @@ test('La fonemización real usa UTF-8 y no convierte acentos ni signos en sus no
   assert.doesNotMatch(phonemes, /tˈilðe|pˈunto|θiɾkum|kˈopir|komˈi/);
 });
 
-function player(prerecordedNarrations = {}) {
-  const audios = [], spoken = [], alerts = [], timers = new Map(), events = [];
+function player(prerecordedNarrations = {}, voices = [{name:'Spanish',lang:'es-ES'},{name:'English',lang:'en-US'}]) {
+  const audios = [], spoken = [], alerts = [], timers = new Map(), events = [], voiceEvents = new Map();
   let nextId = 0;
   class Audio {
     constructor(src) { this.src = src; this.handlers = new Map(); audios.push(this); }
@@ -47,7 +49,7 @@ function player(prerecordedNarrations = {}) {
     fire(name) { this.handlers.get(name)?.(); }
   }
   const context = {
-    Audio, prepareSpeechText, packSpeechText, prerecordedNarrations,
+    Audio, prepareSpeechText, packSpeechText, prerecordedNarrations, detectLanguage, normalizeLanguage, getNeuralVoice, chooseBrowserVoice, languageCopy,
     sendLogisticsAlert: (...args) => alerts.push(args),
     setTimeout: (fn, ms) => { timers.set(++nextId, { fn, ms }); return nextId; },
     clearTimeout: (id) => timers.delete(id),
@@ -55,14 +57,14 @@ function player(prerecordedNarrations = {}) {
     SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } },
     window: {
       dispatchEvent: (event) => events.push(event.type),
-      speechSynthesis: { getVoices: () => [], speak: (u) => spoken.push(u), cancel() {} },
+      speechSynthesis: { getVoices: () => voices, speak: (u) => spoken.push(u), cancel() {}, addEventListener:(name,fn)=>voiceEvents.set(name,fn),removeEventListener:(name)=>voiceEvents.delete(name) },
     },
   };
   const code = readFileSync(new URL('../utils/playAlvaro.js', import.meta.url), 'utf8')
     .replace(/^import .*;$/mg, '').replace(/export /g, '');
   vm.createContext(context);
   vm.runInContext(code, context);
-  return { context, audios, spoken, alerts, timers, events };
+  return { context, audios, spoken, alerts, timers, events, voiceEvents };
 }
 
 test('Una reproducción iniciada no tiene un límite de 20 segundos que la interrumpa', () => {
@@ -176,4 +178,34 @@ test('La preparación inicial usa su plazo de carga y no se corta como si fuera 
  p.audios[0].fire('playing'); p.audios[0].fire('waiting');
  assert.equal(p.timers.size,1); assert.equal([...p.timers.values()][0].ms,20000);
  p.context.stopAlvaroAudio(); assert.equal(p.timers.size,0);
+});
+
+
+test('El idioma se envía a Kokoro y a la precarga de los siguientes bloques', () => {
+ const p=player(); p.context.playAlvaroAudio('Bonjour, nous préparons votre voyage. '.repeat(30),{language:'fr'});
+ assert.match(p.audios[0].src,/lang=fr/); p.audios[0].fire('playing');
+ assert.ok(p.audios.length>1); assert.ok(p.audios.every(a=>a.src.includes('lang=fr')));
+ assert.equal(vm.runInContext('getAlvaroSnapshot()',p.context).language,'fr');
+ p.context.stopAlvaroAudio();
+});
+test('El respaldo inglés elige una voz inglesa, sin cambiar a español', () => {
+ const p=player();p.context.playAlvaroAudio('Your flight is ready for review.',{language:'en'});p.audios[0].fire('error');
+ assert.equal(p.spoken[0].lang,'en-US');assert.equal(p.spoken[0].voice.lang,'en-US');p.context.stopAlvaroAudio();
+});
+test('Un idioma sin Kokoro usa directamente su voz de navegador y puede detenerse', () => {
+ const p=player({},[{name:'German',lang:'de-DE'}]);p.context.playAlvaroAudio('Ihre Reise wird vorbereitet.',{language:'de'});
+ assert.equal(p.audios.length,0);assert.equal(p.spoken[0].lang,'de-DE');p.context.stopAlvaroAudio();
+ assert.equal(p.context.isAlvaroSpeaking(),false);
+});
+test('No se usa una voz española cuando falta la voz del idioma solicitado', () => {
+ const p=player({},[{name:'Spanish',lang:'es-ES'}]);p.context.playAlvaroAudio('こんにちは',{language:'ja'});
+ for(const t of [...p.timers.values()])t.fn();
+ assert.equal(p.audios.length,0);assert.equal(p.spoken.length,0);
+ assert.equal(vm.runInContext('getAlvaroSnapshot()',p.context).status,'error');
+ assert.equal(vm.runInContext('getAlvaroSnapshot()',p.context).error,languageCopy('ja').noVoice);
+});
+test('Las voces cargadas tarde respetan el idioma y no reviven una sesión cancelada', () => {
+ const voices=[];const p=player({},voices);p.context.playAlvaroAudio('Guten Tag',{language:'de'});
+ voices.push({name:'German',lang:'de-DE'});p.voiceEvents.get('voiceschanged')();assert.equal(p.spoken[0].lang,'de-DE');p.context.stopAlvaroAudio();
+ const q=player({},[]);q.context.playAlvaroAudio('こんにちは',{language:'ja'});const stale=[...q.timers.values()][0].fn;q.context.stopAlvaroAudio();stale();assert.equal(q.spoken.length,0);
 });

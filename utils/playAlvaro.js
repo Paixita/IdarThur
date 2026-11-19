@@ -3,14 +3,17 @@ import { sendLogisticsAlert } from './alerts';
 import { prepareSpeechText, packSpeechText } from './speechText.mjs';
 
 import prerecordedNarrations from '@/data/audio/manifest.json';
+import { detectLanguage } from './languageDetection.mjs';
+import { normalizeLanguage, getNeuralVoice, chooseBrowserVoice, languageCopy } from './languageConfig.mjs';
 
 let sessionId = 0;
-const idleSnapshot = { status: 'idle', text: '', error: '' };
+let speechLanguage = 'es';
+const idleSnapshot = { status: 'idle', text: '', error: '', language: 'es' };
 let playbackSnapshot = idleSnapshot;
 export const getAlvaroSnapshot = () => playbackSnapshot;
 export const getAlvaroServerSnapshot = () => idleSnapshot;
 function setPlaybackSnapshot(status, text = playbackSnapshot.text, error = '') {
-  playbackSnapshot = { status, text, error };
+  playbackSnapshot = { status, text, error, language: speechLanguage };
   window.dispatchEvent(new CustomEvent('alvaro-tts-change', { detail: null }));
 }
 const preparedAudios = new Map();
@@ -50,22 +53,36 @@ function nextSentence(session) {
   playCurrent(session);
 }
 
-function speakWithBrowser(sentence, session) {
+function speakWithBrowser(sentence, session, waited = false) {
   if (!isActive(session)) return;
   if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') {
-    finishPlayback('No hay una voz de respaldo disponible.');
+    finishPlayback(languageCopy(speechLanguage).noVoice);
+    return;
+  }
+  const synth = window.speechSynthesis;
+  const voice = chooseBrowserVoice(synth.getVoices(), speechLanguage);
+  if (!voice) {
+    if (waited || !synth.addEventListener) {
+      finishPlayback(languageCopy(speechLanguage).noVoice);
+      return;
+    }
+    let timer;
+    const cleanup = () => { clearTimeout(timer); synth.removeEventListener('voiceschanged', onVoices); };
+    const retry = () => { cleanup(); if (isActive(session)) { cancelCurrent = null; speakWithBrowser(sentence, session, true); } };
+    const onVoices = () => { if (chooseBrowserVoice(synth.getVoices(), speechLanguage)) retry(); };
+    synth.addEventListener('voiceschanged', onVoices);
+    timer = setTimeout(retry, 2000);
+    cancelCurrent = cleanup;
     return;
   }
   const utterance = new SpeechSynthesisUtterance(sentence);
-  const spanish = window.speechSynthesis.getVoices().filter((v) => /^es/i.test(v.lang));
-  const voice = spanish.find((v) => /jorge|diego|[áa]lvaro|pablo|enrique|carlos|gonzalo|ra[uú]l/i.test(v.name)) || spanish[0];
-  if (voice) utterance.voice = voice;
-  utterance.lang = voice?.lang || 'es-ES';
+  utterance.voice = voice;
+  utterance.lang = voice.lang;
   utterance.rate = 0.98;
   utterance.pitch = 0.9;
   let cancelled = false;
   const timer = setTimeout(() => {
-    if (!cancelled && isActive(session)) finishPlayback('La voz del navegador no pudo terminar.');
+    if (!cancelled && isActive(session)) finishPlayback(languageCopy(speechLanguage).voiceError);
   }, Math.max(15000, sentence.length * 200));
   cancelCurrent = () => {
     cancelled = true;
@@ -78,13 +95,13 @@ function speakWithBrowser(sentence, session) {
     if (!cancelled && isActive(session)) nextSentence(session);
   };
   utterance.onerror = () => {
-    if (!cancelled && isActive(session)) finishPlayback('No se pudo reproducir la voz.');
+    if (!cancelled && isActive(session)) finishPlayback(languageCopy(speechLanguage).voiceError);
   };
   try {
     setPlaybackSnapshot('playing');
     window.speechSynthesis.speak(utterance);
   } catch {
-    finishPlayback('No se pudo iniciar la voz del navegador.');
+    finishPlayback(languageCopy(speechLanguage).voiceError);
   }
 }
 
@@ -95,7 +112,8 @@ function playCurrent(session) {
     return;
   }
   const sentence = queue[index];
-  const url = prerecordedUrl || '/api/tts?text=' + encodeURIComponent(sentence) + '&lang=es&v=3';
+  if (!getNeuralVoice(speechLanguage)) { speakWithBrowser(sentence, session); return; }
+  const url = prerecordedUrl || '/api/tts?text=' + encodeURIComponent(sentence) + '&lang=' + speechLanguage + '&v=4';
   const audio = preparedAudios.get(index) || new Audio(url);
   preparedAudios.delete(index);
   audio.preload = 'auto';
@@ -134,7 +152,7 @@ function playCurrent(session) {
     if (!prerecordedUrl) {
       for (let ahead = index + 1; ahead <= Math.min(index + 2, queue.length - 1); ahead += 1) {
         if (preparedAudios.has(ahead)) continue;
-        const next = new Audio('/api/tts?text=' + encodeURIComponent(queue[ahead]) + '&lang=es&v=3');
+        const next = new Audio('/api/tts?text=' + encodeURIComponent(queue[ahead]) + '&lang=' + speechLanguage + '&v=4');
         next.preload = 'auto';
         next.load();
         preparedAudios.set(ahead, next);
@@ -155,18 +173,19 @@ function playCurrent(session) {
   audio.play().catch((error) => {
     if (settled || !isActive(session)) return;
     if (error?.name === 'NotAllowedError') {
-      finishPlayback('Pulsa reproducir para permitir el audio en este navegador.');
+      finishPlayback(languageCopy(speechLanguage).voiceError);
       return;
     }
     fallback('TTS_AUDIO_FAIL');
   });
 }
 
-export function playAlvaroAudio(text) {
+export function playAlvaroAudio(text, options = {}) {
   if (typeof window === 'undefined') return;
   stopAlvaroAudio();
-  const prepared = prepareSpeechText(text);
-  prerecordedUrl = prerecordedNarrations[prepared] || null;
+  speechLanguage = normalizeLanguage(options.language) || detectLanguage(text, 'es');
+  const prepared = prepareSpeechText(text, speechLanguage);
+  prerecordedUrl = speechLanguage === 'es' ? prerecordedNarrations[prepared] || null : null;
   queue = prerecordedUrl ? [prepared] : packSpeechText(prepared);
   if (!queue.length) return;
   index = 0;
