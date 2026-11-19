@@ -4,6 +4,9 @@
   --primary: #45f3ff;
   --secondary: #0088ff;
   --accent: #ff2a5f;
+  --emerald: #10b981;
+  --emerald-soft: #34d399;
+  --emerald-deep: #059669;
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
   --radius: 20px;
@@ -135,4 +138,11 @@ a {
 /* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Foco visible para teclado y control remoto de Smart TV */
+:focus-visible {
+  outline: 3px solid var(--emerald-soft);
+  outline-offset: 3px;
+  border-radius: 10px;
 }

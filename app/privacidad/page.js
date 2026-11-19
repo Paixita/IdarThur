@@ -23,11 +23,11 @@ export default function Privacidad() {
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>2. Descargo de Responsabilidad e Interacción con Inteligencia Artificial (Yessel AI / Candy AI)</h2>
         <p style={{ marginBottom: '20px', padding: '15px', background: 'rgba(255, 100, 100, 0.1)', borderLeft: '4px solid #ff4444', borderRadius: '5px' }}>
-          <strong>Aviso Importante (EU AI Act):</strong> Nuestra plataforma cuenta con sistemas de Inteligencia Artificial ("Yessel AI") para brindar atención inmediata. En cumplimiento con los estándares del <strong>Reglamento de IA de la Unión Europea</strong>, le informamos que:
+          <strong>Aviso Importante (EU AI Act):</strong> Nuestra plataforma cuenta con sistemas de Inteligencia Artificial (&quot;Yessel AI&quot;) para brindar atención inmediata. En cumplimiento con los estándares del <strong>Reglamento de IA de la Unión Europea</strong>, le informamos que:
           <br /><br />
           • <strong>Tratamiento de Datos de Chat:</strong> Las conversaciones entabladas con Yessel AI son procesadas de manera anónima a través de pasarelas de API seguras (tales como Groq, OpenAI o similares) para la generación de respuestas. No solicitamos ni almacenamos datos personales confidenciales (como contraseñas, números de identificación o tarjetas de crédito) a través del chat. Le exhortamos a no introducir información confidencial.
           <br />
-          • <strong>Margen de Error de la IA:</strong> Al ser un sistema generativo, <strong>la IA puede cometer errores o alucinar datos</strong>. Toda recomendación sobre destinos, stock de productos, vuelos o pautas médicas/primeros auxilios de "Dr. Yessel" es meramente orientativa y de divulgación. No constituye un diagnóstico clínico, receta, ni asesoría vinculante. El usuario debe corroborar toda la información directamente en fuentes oficiales antes de tomar cualquier decisión de salud, viaje o compra.
+          • <strong>Margen de Error de la IA:</strong> Al ser un sistema generativo, <strong>la IA puede cometer errores o alucinar datos</strong>. Toda recomendación sobre destinos, stock de productos, vuelos o pautas médicas/primeros auxilios de &quot;Dr. Yessel&quot; es meramente orientativa y de divulgación. No constituye un diagnóstico clínico, receta, ni asesoría vinculante. El usuario debe corroborar toda la información directamente en fuentes oficiales antes de tomar cualquier decisión de salud, viaje o compra.
         </p>
 
         <h2 style={{ fontSize: '1.5rem', color: 'white', marginTop: '30px', marginBottom: '15px' }}>3. Cookies y Seguimiento de Afiliados</h2>

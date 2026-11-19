@@ -12,7 +12,6 @@ export function useVipAudio() {
         } catch (e) {
           try { sessionStorage.setItem('yesselVipAudio', 'true'); } catch (err) {}
         }
-        setIsAudioPremiumState(true);
       } catch (globalError) {
         console.error('Error in useVipAudio initialization:', globalError);
       }

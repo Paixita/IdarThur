@@ -137,10 +137,10 @@ export default function Hero() {
         <div className="glass" style={{ 
           padding: '25px', 
           borderRadius: '25px', 
-          background: 'rgba(10, 15, 26, 0.62)',
+          background: 'rgba(7, 20, 16, 0.72)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.38)',
+          border: '1px solid rgba(52, 211, 153, 0.35)',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.38), 0 0 40px rgba(16, 185, 129, 0.12)',
           textAlign: 'left',
           maxWidth: '800px',
           margin: '0 auto'
@@ -152,7 +152,7 @@ export default function Hero() {
               onClick={toggleWelcomeSpeech}
               style={{
                 background: isPlaying ? 'rgba(255, 42, 95, 0.2)' : 'rgba(255,255,255,0.05)',
-                border: isPlaying ? '2px solid var(--primary)' : '1px solid #45f3ff',
+                border: isPlaying ? '2px solid #34d399' : '1px solid #34d399',
                 color: 'white',
                 borderRadius: '30px',
                 padding: '10px 24px',
@@ -177,7 +177,7 @@ export default function Hero() {
             <button 
               onClick={() => setSearchTab('vuelos')} 
               style={{
-                background: searchTab === 'vuelos' ? 'linear-gradient(45deg, var(--primary), var(--secondary))' : 'transparent',
+                background: searchTab === 'vuelos' ? 'linear-gradient(135deg, #34d399, #059669)' : 'transparent',
                 color: 'white',
                 border: searchTab === 'vuelos' ? 'none' : '1px solid rgba(255,255,255,0.1)',
                 padding: '10px 20px',
@@ -195,7 +195,7 @@ export default function Hero() {
             <button 
               onClick={() => setSearchTab('hoteles')} 
               style={{
-                background: searchTab === 'hoteles' ? 'linear-gradient(45deg, var(--primary), var(--secondary))' : 'transparent',
+                background: searchTab === 'hoteles' ? 'linear-gradient(135deg, #34d399, #059669)' : 'transparent',
                 color: 'white',
                 border: searchTab === 'hoteles' ? 'none' : '1px solid rgba(255,255,255,0.1)',
                 padding: '10px 20px',
@@ -213,7 +213,7 @@ export default function Hero() {
             <button 
               onClick={() => setSearchTab('autos')} 
               style={{
-                background: searchTab === 'autos' ? 'linear-gradient(45deg, var(--primary), var(--secondary))' : 'transparent',
+                background: searchTab === 'autos' ? 'linear-gradient(135deg, #34d399, #059669)' : 'transparent',
                 color: 'white',
                 border: searchTab === 'autos' ? 'none' : '1px solid rgba(255,255,255,0.1)',
                 padding: '10px 20px',
@@ -255,7 +255,7 @@ export default function Hero() {
                     style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
                   />
                 </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: '800', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #34d399, #059669)', color: '#04231a', boxShadow: '0 6px 18px rgba(16, 185, 129, 0.35)' }}>
                   Buscar Vuelos ✈️
                 </button>
               </div>
@@ -283,7 +283,7 @@ export default function Hero() {
                     <option value="4" style={{ background: '#0a0f19' }}>4 Adultos o Familia</option>
                   </select>
                 </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: '800', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #34d399, #059669)', color: '#04231a', boxShadow: '0 6px 18px rgba(16, 185, 129, 0.35)' }}>
                   Buscar Hoteles 🏨
                 </button>
               </div>
@@ -302,7 +302,7 @@ export default function Hero() {
                     style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '12px', color: 'white', outline: 'none' }}
                   />
                 </div>
-                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: 'bold', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <button type="submit" className="btn-primary" style={{ padding: '15px 30px', alignSelf: 'flex-end', borderRadius: '12px', fontWeight: '800', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #34d399, #059669)', color: '#04231a', boxShadow: '0 6px 18px rgba(16, 185, 129, 0.35)' }}>
                   Buscar Autos 🚗
                 </button>
               </div>

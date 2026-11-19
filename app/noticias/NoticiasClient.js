@@ -36,7 +36,7 @@ export default function NoticiasClient() {
           <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Centro de Mando: <span className="text-gradient">Noticias Globales</span></h1>
             <p style={{ color: '#a0aab5', fontSize: '1.2rem' }}>
-              "Hola, soy Yessel. Mis subagentes Alpha y Beta están monitoreando la red mundial en tiempo real. Extraen reportes sobre clima, vuelos y cruceros para mantenerte seguro e informado."
+              &quot;Hola, soy Yessel. Mis subagentes Alpha y Beta están monitoreando la red mundial en tiempo real. Extraen reportes sobre clima, vuelos y cruceros para mantenerte seguro e informado.&quot;
             </p>
           </div>
         </div>

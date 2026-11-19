@@ -141,7 +141,7 @@ export default function HistoriasClient() {
         <div>
           <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#00ffaa', fontWeight: 'bold' }}>Yessel Cronista (Redacción e Ilustración)</h3>
           <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.1rem', fontStyle: 'italic' }}>
-            "¡Hola! Soy Yessel Cronista, del Escuadrón IA. Estoy aquí para convertir tus anécdotas de viajes en relatos cinematográficos e ilustrados. Haz clic aquí para chatear conmigo o usa el generador interactivo abajo para redactar y publicar historias en la web al instante."
+            &quot;¡Hola! Soy Yessel Cronista, del Escuadrón IA. Estoy aquí para convertir tus anécdotas de viajes en relatos cinematográficos e ilustrados. Haz clic aquí para chatear conmigo o usa el generador interactivo abajo para redactar y publicar historias en la web al instante.&quot;
           </p>
         </div>
       </div>

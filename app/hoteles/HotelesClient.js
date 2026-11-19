@@ -44,7 +44,7 @@ export default function HotelesClient() {
   };
   return (
     <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden' }}>
+      <div id="cruceros" style={{ textAlign: 'center', marginBottom: '50px', position: 'relative', padding: '100px 20px', borderRadius: '30px', overflow: 'hidden', scrollMarginTop: '120px' }}>
         {/* Background Video para animar */}
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
           <video autoPlay loop muted playsInline poster="/hoteles/hotel_lobby_banner.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
@@ -109,8 +109,8 @@ export default function HotelesClient() {
         <div>
           <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>El Consejo de Yessel</h3>
           <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-            "Siempre te recomendaré hoteles cerca del transporte público principal o aeropuertos. Haz clic aquí y dime a dónde vas para enviarte mis sugerencias confidenciales."
-          </p>
+            &quot;Siempre te recomendaré hoteles cerca del transporte público principal o aeropuertos. Haz clic aquí y dime a dónde vas para enviarte mis sugerencias confidenciales.&quot;
+               </p>
         </div>
       </div>
 

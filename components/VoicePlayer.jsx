@@ -1,25 +1,12 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking } from '@/utils/playAlvaro';
+import { useSyncExternalStore } from 'react';
+import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking, subscribeToAlvaro } from '@/utils/playAlvaro';
 import config from '@/data/config.json';
 
 export default function VoicePlayer() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const isPlaying = useSyncExternalStore(subscribeToAlvaro, isAlvaroSpeaking, () => false);
 
-  useEffect(() => {
-    const handleStart = () => setIsPlaying(true);
-    const handleEnd = () => setIsPlaying(false);
 
-    window.addEventListener('alvaro-tts-start', handleStart);
-    window.addEventListener('alvaro-tts-end', handleEnd);
-
-    setIsPlaying(isAlvaroSpeaking());
-
-    return () => {
-      window.removeEventListener('alvaro-tts-start', handleStart);
-      window.removeEventListener('alvaro-tts-end', handleEnd);
-    };
-  }, []);
 
   const togglePlay = () => {
     if (isPlaying) {

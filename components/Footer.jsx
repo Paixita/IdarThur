@@ -1,46 +1,137 @@
 import Link from 'next/link';
 import config from '@/data/config.json';
 
+const EXPLORAR = [
+  { href: '/', label: 'Vuelos' },
+  { href: '/hoteles', label: 'Hoteles y Cruceros' },
+  { href: '/peru', label: 'Perú: vuelos y rutas' },
+  { href: '/noticias', label: 'Noticias de Viaje' },
+  { href: '/eventos', label: 'Eventos Mundiales' },
+  { href: '/tienda', label: 'Tienda y Accesorios' },
+  { href: '/autos', label: 'Alquiler de Autos' },
+  { href: '/historias', label: 'Historias de Viajeros' },
+  { href: '/agentes', label: 'Escuadrón de IA' },
+];
+
 export default function Footer() {
   return (
-    <footer style={{ background: '#0a0f19', color: '#a0aab5', padding: '60px 20px 30px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '40px' }}>
-        
+    <footer className="site-footer">
+      <div className="container footer-grid">
+
         {/* Marca */}
         <div>
-          <h3 style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '20px' }}>{config.brandName}</h3>
-          <p style={{ lineHeight: '1.6', fontSize: '0.9rem' }}>
-            La plataforma #1 impulsada por IA para descubrir el mundo, reservar tus viajes y conseguir el mejor equipamiento de la manera más inteligente.
+          <h3 className="footer-brand">{config.brandName}</h3>
+          <p className="footer-copy">
+            La plataforma #1 impulsada por IA para descubrir el mundo, reservar tus viajes
+            y conseguir el mejor equipamiento de la manera más inteligente.
           </p>
         </div>
 
-        {/* Enlaces Rápidos */}
+        {/* Enlaces rápidos */}
         <div>
-          <h4 style={{ color: 'white', marginBottom: '20px', fontWeight: '600' }}>Explorar</h4>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <li><Link href="/" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Inicio</Link></li>
-            <li><Link href="/hoteles" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Hoteles y Cruceros</Link></li>
-            <li><Link href="/tienda" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Tienda y Accesorios</Link></li>
-            <li><Link href="/eventos" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Eventos Mundiales</Link></li>
+          <h4 className="footer-title">Explorar</h4>
+          <ul className="footer-list">
+            {EXPLORAR.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="footer-link">{item.label}</Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Legal */}
         <div>
-          <h4 style={{ color: 'white', marginBottom: '20px', fontWeight: '600' }}>Legal & Transparencia</h4>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <li><Link href="/privacidad" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Política de Privacidad</Link></li>
-            <li><Link href="/terminos" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Términos y Condiciones</Link></li>
-            <li><Link href="/cookies" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Política de Cookies</Link></li>
-            <li><Link href="/tienda" style={{ color: '#a0aab5', textDecoration: 'none', transition: 'color 0.3s' }}>Aviso de Afiliados</Link></li>
+          <h4 className="footer-title">Legal &amp; Transparencia</h4>
+          <ul className="footer-list">
+            <li><Link href="/privacidad" className="footer-link">Política de Privacidad</Link></li>
+            <li><Link href="/terminos" className="footer-link">Términos y Condiciones</Link></li>
+            <li><Link href="/cookies" className="footer-link">Política de Cookies</Link></li>
+            <li><Link href="/tienda" className="footer-link">Aviso de Afiliados</Link></li>
           </ul>
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', paddingTop: '30px', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>
+      <div className="footer-bottom">
         <p>&copy; {new Date().getFullYear()} {config.brandName} Global. Todos los derechos reservados.</p>
-        <p style={{ marginTop: '5px', fontSize: '0.75rem', opacity: 0.6 }}>{config.brandName} actúa como socio afiliado de WayAway, Booking.com y Amazon Associates.</p>
+        <p className="footer-legal">
+          {config.brandName} actúa como socio afiliado de WayAway, Booking.com y Amazon Associates.
+        </p>
       </div>
+
+      <style>{`
+        .site-footer {
+          background: #070c11;
+          color: #a0aab5;
+          padding: 64px 20px 30px;
+          border-top: 1px solid rgba(52, 211, 153, 0.16);
+        }
+        .footer-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+          gap: 40px;
+          margin-bottom: 40px;
+        }
+        .footer-brand {
+          color: #fff;
+          font-size: 1.55rem;
+          font-weight: 800;
+          margin-bottom: 18px;
+        }
+        .footer-copy { line-height: 1.7; font-size: 0.92rem; }
+        .footer-title {
+          color: #fff;
+          margin-bottom: 18px;
+          font-weight: 800;
+          font-size: 1rem;
+          letter-spacing: 0.3px;
+        }
+        .footer-list {
+          list-style: none;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .footer-link {
+          position: relative;
+          display: inline-block;
+          padding: 6px 10px 6px 0;
+          color: #a0aab5;
+          text-decoration: none;
+          font-size: 0.95rem;
+          font-weight: 600;
+          transition: color 0.25s ease, transform 0.25s ease, text-shadow 0.25s ease;
+        }
+        .footer-link::before {
+          content: "";
+          position: absolute;
+          left: -14px;
+          top: 50%;
+          width: 6px;
+          height: 6px;
+          margin-top: -3px;
+          border-radius: 50%;
+          background: #34d399;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+        .footer-link:hover,
+        .footer-link:focus-visible {
+          color: #34d399;
+          transform: translateX(8px);
+          text-shadow: 0 0 14px rgba(52, 211, 153, 0.45);
+        }
+        .footer-link:hover::before,
+        .footer-link:focus-visible::before { opacity: 1; }
+
+        .footer-bottom {
+          text-align: center;
+          padding-top: 30px;
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          font-size: 0.85rem;
+        }
+        .footer-legal { margin-top: 6px; font-size: 0.76rem; opacity: 0.65; }
+      `}</style>
     </footer>
   );
 }

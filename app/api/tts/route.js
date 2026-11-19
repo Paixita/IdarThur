@@ -1,169 +1,278 @@
-import { Communicate } from 'edge-tts-universal';
+// app/api/tts/route.js - Voz neuronal local de Yessel (Kokoro 82M)
+// Microsoft cerró el endpoint gratuito de Edge TTS en octubre de 2026 (403),
+// por eso el motor anterior quedó mudo. Ahora sintetizamos en el propio servidor.
+//
+// Voz por defecto: em_alex (masculina, español de España, tono de locutor).
+// Alternativa masculina: em_santa.
+import { KokoroTTS } from 'kokoro-js';
+import ESpeakNg from 'espeak-ng';
+import { env } from '@huggingface/transformers';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
+// En la nube el único directorio escribible es /tmp.
+if (process.env.VERCEL) env.cacheDir = join(tmpdir(), 'idarthur-kokoro');
+import { prepareSpeechText, splitSpeechText } from '@/utils/speechText.mjs';
+
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
-function detectLanguage(text, clientLang = '', clientTimezone = '') {
-  const clean = text.toLowerCase();
-  
-  // Detección directa por alfabeto/caracteres especiales
-  if (clean.match(/[\u4e00-\u9fff]/)) return 'zh-CN'; // Chino
-  if (clean.match(/[\u3040-\u309f\u30a0-\u30ff]/)) return 'ja-JP'; // Japonés
-  if (clean.match(/[\u0400-\u04ff]/)) return 'ru-RU'; // Ruso
-  if (clean.match(/[\u0600-\u06ff]/)) return 'ar-SA'; // Árabe
+const MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
+const VOICES = {
+  es: 'em_alex',
+  en: 'am_michael',
+};
 
-  // Frecuencia de palabras estrictamente únicas para evitar solapamientos entre idiomas occidentales
-  const esWords = ['y', 'el', 'los', 'las', 'del', 'al', 'pero', 'sus', 'muy', 'más', 'había', 'tiene', 'es', 'son', 'su', 'sus', 'donde', 'bienvenido', 'viaje', 'vuelo', 'historia', 'avión', 'aeropuerto'];
-  const enWords = ['the', 'and', 'you', 'that', 'was', 'for', 'on', 'are', 'with', 'as', 'at', 'this', 'it', 'is', 'they', 'have', 'had', 'not', 'but', 'what', 'where', 'when', 'hello', 'welcome', 'hotel', 'flight', 'travel', 'search', 'shop', 'store', 'booking', 'airport'];
-  const frWords = ['le', 'les', 'et', 'est', 'pour', 'dans', 'sur', 'qui', 'mais', 'plus', 'tres', 'avait', 'ont', 'sont', 'ses', 'ces', 'cette', 'ce', 'ou', 'où', 'bonjour', 'voyage', 'recherche'];
-  const ptWords = ['e', 'o', 'os', 'as', 'do', 'ao', 'mas', 'muito', 'havia', 'tem', 'é', 'são', 'seu', 'sua', 'seus', 'suas', 'onde', 'olá', 'bem-vindo', 'viagem', 'voo', 'loja', 'avião'];
-  const deWords = ['der', 'die', 'das', 'und', 'ist', 'in', 'zu', 'den', 'von', 'mit', 'nicht', 'aber', 'sehr', 'hat', 'haben', 'sind', 'seine', 'diese', 'wo', 'wenn', 'hier', 'hallo', 'reise', 'suche'];
-  const itWords = ['il', 'che', 'gli', 'per', 'è', 'sono', 'ma', 'più', 'molto', 'cera', 'ha', 'hanno', 'suo', 'sua', 'suoi', 'sue', 'questo', 'questa', 'tutto', 'tutti', 'dove', 'ciao', 'viaggio', 'ricerca'];
+const MAX_CHARS = 12000;    // límite explícito, sin recortar el relato
+const MAX_CONCURRENT = 2;    // el CPU no da para más síntesis simultáneas
+const MAX_CACHE_ENTRIES = 120;
+const GENERATION_TIMEOUT_MS = 45000;
 
-  // Limpiar el texto y obtener palabras limpias sin puntuación
-  const cleanWords = clean.split(/[\s.,;:!?()\-+*/"'`«»“”‘’]+/);
-  
-  const countMatches = (wordList) => {
-    let count = 0;
-    for (const w of cleanWords) {
-      if (wordList.includes(w)) {
-        count++;
-      }
+// ---------------------------------------------------------------------------
+// Modelo (se carga una sola vez por proceso)
+// ---------------------------------------------------------------------------
+let modelPromise = null;
+
+function getModel() {
+  if (!modelPromise) {
+    modelPromise = KokoroTTS.from_pretrained(MODEL_ID, {
+      dtype: 'q8',
+      device: 'cpu',
+    }).catch((error) => {
+      modelPromise = null; // permite reintentar en la siguiente petición
+      throw error;
+    });
+  }
+  return modelPromise;
+}
+
+// ---------------------------------------------------------------------------
+// Fonemización (eSpeak-NG compilado a WASM, sin dependencias del sistema)
+// ---------------------------------------------------------------------------
+let phonemeCounter = 0;
+
+async function phonemize(text, lang) {
+  const voice = lang === 'en' ? 'en-us' : 'es';
+  const outFile = `phon-${process.pid}-${phonemeCounterSafe()}`;
+  const espeak = await ESpeakNg({
+    arguments: [
+      '--phonout', outFile,
+      '--sep=',
+      '-q',
+      '-b1', // UTF-8: '-b=1' se interpretaba como otra codificación y leía símbolos.
+      '--ipa=3',
+      '-v', voice,
+      text,
+    ],
+  });
+  const raw = espeak.FS.readFile(outFile, { encoding: 'utf8' });
+  return raw.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function phonemeCounterSafe() {
+  phonemeCounter = (phonemeCounter + 1) % 100000;
+  return `${Date.now().toString(36)}-${phonemeCounter}`;
+}
+
+// ---------------------------------------------------------------------------
+// Utilidades de audio
+// ---------------------------------------------------------------------------
+function encodeWavPcm16(samples, sampleRate = 24000) {
+  const numSamples = samples.length;
+  const buffer = new ArrayBuffer(44 + numSamples * 2);
+  const view = new DataView(buffer);
+
+  const writeString = (offset, value) => {
+    for (let i = 0; i < value.length; i += 1) {
+      view.setUint8(offset + i, value.charCodeAt(i));
     }
-    return count;
   };
 
-  const scores = {
-    'es-ES': countMatches(esWords),
-    'en-US': countMatches(enWords),
-    'fr-FR': countMatches(frWords),
-    'pt-BR': countMatches(ptWords),
-    'de-DE': countMatches(deWords),
-    'it-IT': countMatches(itWords)
-  };
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + numSamples * 2, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true);       // tamaño del bloque fmt
+  view.setUint16(20, 1, true);        // PCM
+  view.setUint16(22, 1, true);        // mono
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true); // byte rate
+  view.setUint16(32, 2, true);        // block align
+  view.setUint16(34, 16, true);       // bits por muestra
+  writeString(36, 'data');
+  view.setUint32(40, numSamples * 2, true);
 
-  // 1. Determinar el idioma predeterminado usando la zona horaria del cliente o el idioma del navegador
-  let defaultLang = 'es-ES';
-  
-  if (clientLang) {
-    const l = clientLang.toLowerCase();
-    if (l.startsWith('pt')) defaultLang = 'pt-BR';
-    else if (l.startsWith('en')) defaultLang = 'en-US';
-    else if (l.startsWith('fr')) defaultLang = 'fr-FR';
-    else if (l.startsWith('de')) defaultLang = 'de-DE';
-    else if (l.startsWith('it')) defaultLang = 'it-IT';
-    else if (l.startsWith('zh')) defaultLang = 'zh-CN';
-    else if (l.startsWith('ja')) defaultLang = 'ja-JP';
-    else if (l.startsWith('ru')) defaultLang = 'ru-RU';
-    else if (l.startsWith('ar')) defaultLang = 'ar-SA';
+  let offset = 44;
+  for (let i = 0; i < numSamples; i += 1) {
+    const clamped = Math.max(-1, Math.min(1, samples[i] || 0));
+    view.setInt16(offset, clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff, true);
+    offset += 2;
   }
 
-  if (clientTimezone) {
-    const tz = clientTimezone.toLowerCase();
-    // Zonas horarias de habla hispana comunes
-    const esTimezones = ['bogota', 'mexico', 'buenos_aires', 'madrid', 'santiago', 'lima', 'caracas', 'montevideo', 'asuncion', 'quito', 'guatemala', 'honduras', 'san_salvador', 'managua', 'san_jose', 'panama', 'santo_domingo', 'puerto_rico', 'havana', 'la_paz'];
-    // Zonas horarias de Brasil
-    const ptTimezones = ['sao_paulo', 'rio', 'manaus', 'recife', 'fortaleza', 'porto_alegre', 'cuiaba', 'belem'];
-    
-    if (esTimezones.some(e => tz.includes(e))) {
-      defaultLang = 'es-ES';
-    } else if (ptTimezones.some(p => tz.includes(p))) {
-      defaultLang = 'pt-BR';
-    }
+  return Buffer.from(buffer);
+}
+
+function cleanText(value) {
+  return prepareSpeechText(value);
+}
+
+function normalizeLang(value) {
+  const lang = String(value || '').toLowerCase();
+  return lang.startsWith('en') ? 'en' : 'es';
+}
+
+// ---------------------------------------------------------------------------
+// Cola de concurrencia: evita que varias frases se sinteticen a la vez
+// ---------------------------------------------------------------------------
+let activeJobs = 0;
+const waiting = [];
+
+function acquireSlot() {
+  if (activeJobs < MAX_CONCURRENT) {
+    activeJobs += 1;
+    return Promise.resolve();
   }
+  return new Promise((resolve) => waiting.push(resolve));
+}
 
-  let bestLang = defaultLang;
-  let maxScore = 0; // Mínima cantidad de coincidencias para cambiar del default
-
-  for (const [lang, score] of Object.entries(scores)) {
-    if (score > maxScore) {
-      maxScore = score;
-      bestLang = lang;
-    }
+function releaseSlot() {
+  activeJobs = Math.max(0, activeJobs - 1);
+  const next = waiting.shift();
+  if (next) {
+    activeJobs += 1;
+    next();
   }
+}
 
-  return bestLang;
+// ---------------------------------------------------------------------------
+// Caché en memoria (frases repetidas: saludos, avisos, bienvenida)
+// ---------------------------------------------------------------------------
+const audioCache = new Map();
+
+function getCached(key) {
+  if (!audioCache.has(key)) return null;
+  const value = audioCache.get(key);
+  audioCache.delete(key); // refresca el orden LRU
+  audioCache.set(key, value);
+  return value;
+}
+
+function setCached(key, value) {
+  audioCache.set(key, value);
+  while (audioCache.size > MAX_CACHE_ENTRIES) {
+    const oldest = audioCache.keys().next().value;
+    audioCache.delete(oldest);
+  }
+}
+
+async function withTimeout(promise, ms) {
+  let timer;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('TTS timeout')), ms);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function synthesize(text, lang) {
+  const voice = VOICES[lang] || VOICES.es;
+  const tts = await getModel();
+  const pieces = [];
+  let sampleRate = 24000;
+  for (const chunk of splitSpeechText(text)) {
+    const phonemes = await phonemize(chunk, lang);
+    if (!phonemes) throw new Error('No se pudieron generar fonemas.');
+    const { input_ids } = tts.tokenizer(phonemes, { truncation: true });
+    const audio = await tts.generate_from_ids(input_ids, { voice, speed: 0.95 });
+    if (!audio?.audio?.length) throw new Error('El modelo devolvió audio vacío.');
+    sampleRate = audio.sampling_rate || 24000;
+    if (pieces.length) pieces.push(new Float32Array(Math.round(sampleRate * 0.15)));
+    pieces.push(audio.audio);
+  }
+  const samples = new Float32Array(pieces.reduce((total, piece) => total + piece.length, 0));
+  let offset = 0;
+  for (const piece of pieces) {
+    samples.set(piece, offset);
+    offset += piece.length;
+  }
+  return { wav: encodeWavPcm16(samples, sampleRate), voice, duration: samples.length / sampleRate };
 }
 
 export async function GET(request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const text = searchParams.get('text');
-    const clientLang = searchParams.get('lang') || '';
-    const clientTimezone = searchParams.get('timezone') || '';
+  const { searchParams } = new URL(request.url);
+  const text = cleanText(searchParams.get('text'));
+  const lang = normalizeLang(searchParams.get('lang'));
 
-    if (!text) {
-      return new Response('Falta el parámetro text', { status: 400 });
-    }
+  if (!text) {
+    return Response.json(
+      { success: false, error: 'Falta el parámetro text.' },
+      { status: 400 }
+    );
+  }
 
-    // Limpiar texto de caracteres y emojis extraños
-    const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+  if (text.length > MAX_CHARS) {
+    return Response.json({ success: false, error: 'Divide el texto en bloques de hasta 12000 caracteres.' }, { status: 413 });
+  }
 
-    // Detección de idioma y asignación de voz nativa correspondiente
-    const detectedLang = detectLanguage(cleanText, clientLang, clientTimezone);
-    let voice = searchParams.get('voice');
-    
-    if (!voice) {
-      if (detectedLang === 'en-US') voice = 'en-US-GuyNeural';
-      else if (detectedLang === 'fr-FR') voice = 'fr-FR-HenriNeural';
-      else if (detectedLang === 'pt-BR') voice = 'pt-BR-AntonioNeural';
-      else if (detectedLang === 'de-DE') voice = 'de-DE-ConradNeural';
-      else if (detectedLang === 'it-IT') voice = 'it-IT-DiegoNeural';
-      else if (detectedLang === 'zh-CN') voice = 'zh-CN-YunxiNeural';
-      else if (detectedLang === 'ja-JP') voice = 'ja-JP-KeitaNeural';
-      else if (detectedLang === 'ru-RU') voice = 'ru-RU-DmitryNeural';
-      else if (detectedLang === 'ar-SA') voice = 'ar-SA-HamedNeural';
-      else voice = 'es-ES-AlvaroNeural';
-    }
-
-    // Analizar el texto para modular velocidad (rate) y tono (pitch) según el sentimiento
-    const lowerText = cleanText.toLowerCase();
-    let rate = '+4%'; // Un poco más rápido para evitar sonar aburrido o lento
-    let pitch = '+0Hz';
-
-    if (lowerText.match(/(misterio|secreto|suspenso|oculto|noche|oscuro|miedo|tensión|desconocido|silencio)/)) {
-      rate = '-1%'; // Sutilmente pausado para el misterio pero manteniendo dinamismo
-      pitch = '-3Hz';
-    } else if (lowerText.match(/(rápido|correr|acción|increíble|explosión|emoción|corazón|adrenalina|peligro|urgente)/)) {
-      rate = '+9%'; 
-      pitch = '+2Hz';
-    } else if (lowerText.match(/(amor|romance|paz|calma|suave|tranquilo|relajante|brisa|luna|hermoso)/)) {
-      rate = '+1%'; 
-      pitch = '+1Hz';
-    }
-
-    console.log(`[TTS Stream] Voz: ${voice}, Rate: ${rate}, Pitch: ${pitch}. Texto: "${cleanText.substring(0, 50)}..."`);
-
-    const communicate = new Communicate(cleanText, {
-      voice,
-      rate,
-      pitch
-    });
-
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of communicate.stream()) {
-            if (chunk.type === 'audio' && chunk.data) {
-              controller.enqueue(chunk.data);
-            }
-          }
-          controller.close();
-        } catch (error) {
-          console.error('[TTS ReadableStream Error]', error);
-          controller.error(error);
-        }
-      }
-    });
-
-    return new Response(stream, {
+  const cacheKey = `utf8-v2::${lang}::${text}`;
+  const cached = getCached(cacheKey);
+  if (cached) {
+    return new Response(cached, {
       headers: {
-        'Content-Type': 'audio/mpeg',
-        'Transfer-Encoding': 'chunked',
-        'Cache-Control': 'no-cache, no-store, must-revalidate', // No cachear para forzar respuesta inmediata en tiempo real
+        'Content-Type': 'audio/wav',
+        'Content-Length': String(cached.length),
+        'Cache-Control': 'public, max-age=86400',
+        'X-TTS-Engine': 'kokoro',
+        'X-TTS-Version': 'utf8-v2',
+        'X-TTS-Cache': 'hit',
+      },
+    });
+  }
+
+  await acquireSlot();
+  try {
+    const startedAt = Date.now();
+    const { wav, voice, duration } = await withTimeout(
+      synthesize(text, lang).finally(releaseSlot),
+      GENERATION_TIMEOUT_MS
+    );
+
+    setCached(cacheKey, wav);
+    console.log(
+      `[TTS Kokoro] voz=${voice} dur=${duration.toFixed(2)}s ` +
+      `bytes=${wav.length} ms=${Date.now() - startedAt} :: "${text.slice(0, 60)}"`
+    );
+
+    return new Response(wav, {
+      headers: {
+        'Content-Type': 'audio/wav',
+        'Content-Length': String(wav.length),
+        'Cache-Control': 'public, max-age=86400',
+        'X-TTS-Engine': 'kokoro',
+        'X-TTS-Version': 'utf8-v2',
+        'X-TTS-Voice': voice,
+        'X-TTS-Cache': 'miss',
       },
     });
   } catch (error) {
-    console.error('[TTS Endpoint Error]', error);
-    return new Response(`Error al generar voz neural: ${error.message}`, { status: 500 });
+    console.error('[TTS Kokoro Error]', error?.message || error);
+    // El cliente usa la voz del navegador como respaldo cuando ve este estado.
+    return Response.json(
+      {
+        success: false,
+        error: 'La voz neuronal no está disponible en este momento.',
+        fallback: 'browser',
+      },
+      {
+        status: 503,
+        headers: { 'X-TTS-Fallback': 'browser', 'Cache-Control': 'no-store' },
+      }
+    );
   }
 }

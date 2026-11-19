@@ -109,7 +109,7 @@ export default function AutosClient() {
           <div>
             <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel Asistente de Rentas</h3>
             <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-              "Te recomiendo siempre tomar la Cobertura Total al momento de reservar. Haz clic aquí y hablemos para conseguirte un auto sin problemas."
+              &quot;Te recomiendo siempre tomar la Cobertura Total al momento de reservar. Haz clic aquí y hablemos para conseguirte un auto sin problemas.&quot;
             </p>
           </div>
         </div>

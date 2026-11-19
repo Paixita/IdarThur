@@ -1,121 +1,162 @@
-// playAlvaro.js - Gestor de voz neural premium para Yessel con precarga paralela de frases
+// Reproductor compartido: conserva el diálogo; prepara solo su representación sonora.
 import { sendLogisticsAlert } from './alerts';
+import { prepareSpeechText, splitSpeechText } from './speechText.mjs';
 
-let audioQueue = [];
-let currentQueueIndex = 0;
-let currentAudio = null;
-let isPlaying = false;
+let sessionId = 0;
+let queue = [];
+let index = 0;
+let playing = false;
+let alertSent = false;
+let cancelCurrent = null;
 
-export const playAlvaroAudio = (text) => {
-  if (typeof window === 'undefined') return;
+const LOAD_TIMEOUT_MS = 55000;
+const STALL_TIMEOUT_MS = 20000;
+const emit = (name, detail) => window.dispatchEvent(new CustomEvent(name, { detail }));
+const isActive = (session) => playing && session === sessionId;
 
-  // Detener cualquier reproducción previa y limpiar la cola
-  stopAlvaroAudio();
+function finishPlayback(error) {
+  cancelCurrent?.();
+  cancelCurrent = null;
+  playing = false;
+  queue = [];
+  index = 0;
+  if (error) emit('alvaro-tts-error', { message: error });
+  emit('alvaro-tts-end');
+}
 
-  if (!text || text.trim() === '') return;
+function nextSentence(session) {
+  if (!isActive(session)) return;
+  cancelCurrent?.();
+  cancelCurrent = null;
+  index += 1;
+  playCurrent(session);
+}
 
-  // Dividir el texto en frases usando puntos, signos de interrogación y exclamación
-  const sentences = text
-    .split(/(?<=[.!?])\s+/)
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-
-  if (sentences.length === 0) return;
-
-  // Crear y precargar todos los audios en paralelo de inmediato
-  // Esto elimina las demoras por latencia de red entre oraciones
-  audioQueue = sentences.map(sentence => {
-    const encodedText = encodeURIComponent(sentence);
-    const clientLang = typeof navigator !== 'undefined' ? (navigator.language || '') : '';
-    const clientTz = typeof Intl !== 'undefined' ? (Intl.DateTimeFormat().resolvedOptions().timeZone || '') : '';
-    const audioUrl = `/api/tts?text=${encodedText}&lang=${encodeURIComponent(clientLang)}&timezone=${encodeURIComponent(clientTz)}`;
-    const audio = new Audio(audioUrl);
-    audio.preload = 'auto';
-    audio.load(); // Iniciar precarga inmediata
-    return {
-      text: sentence,
-      audio: audio
-    };
-  });
-
-  currentQueueIndex = 0;
-  isPlaying = true;
-
-  window.dispatchEvent(new CustomEvent('alvaro-tts-start'));
-  playNextInQueue();
-};
-
-const playNextInQueue = () => {
-  if (!isPlaying) return;
-
-  if (currentQueueIndex >= audioQueue.length) {
-    // Fin de la cola
-    currentAudio = null;
-    isPlaying = false;
-    window.dispatchEvent(new CustomEvent('alvaro-tts-end'));
+function speakWithBrowser(sentence, session) {
+  if (!isActive(session)) return;
+  if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') {
+    finishPlayback('No hay una voz de respaldo disponible.');
     return;
   }
-
-  const currentItem = audioQueue[currentQueueIndex];
-  currentAudio = currentItem.audio;
-
-  const handleEnd = () => {
-    currentAudio.removeEventListener('ended', handleEnd);
-    currentAudio.removeEventListener('error', handleError);
-    currentQueueIndex++;
-    playNextInQueue();
+  const utterance = new SpeechSynthesisUtterance(sentence);
+  const spanish = window.speechSynthesis.getVoices().filter((v) => /^es/i.test(v.lang));
+  const voice = spanish.find((v) => /jorge|diego|[áa]lvaro|pablo|enrique|carlos|gonzalo|ra[uú]l/i.test(v.name)) || spanish[0];
+  if (voice) utterance.voice = voice;
+  utterance.lang = voice?.lang || 'es-ES';
+  utterance.rate = 0.98;
+  utterance.pitch = 0.9;
+  let cancelled = false;
+  const timer = setTimeout(() => {
+    if (!cancelled && isActive(session)) finishPlayback('La voz del navegador no pudo terminar.');
+  }, Math.max(15000, sentence.length * 200));
+  cancelCurrent = () => {
+    cancelled = true;
+    clearTimeout(timer);
+    utterance.onend = null;
+    utterance.onerror = null;
+    window.speechSynthesis.cancel();
   };
-
-  const handleError = (e) => {
-    console.error('[Neural TTS Client Error]', e);
-    sendLogisticsAlert('TTS_AUDIO_FAIL', 'Error al sintetizar o reproducir segmento de audio', {
-      text: currentItem.text,
-      error: String(e.message || e)
-    });
-    currentAudio.removeEventListener('ended', handleEnd);
-    currentAudio.removeEventListener('error', handleError);
-    currentQueueIndex++;
-    playNextInQueue();
+  utterance.onend = () => {
+    if (!cancelled && isActive(session)) nextSentence(session);
   };
+  utterance.onerror = () => {
+    if (!cancelled && isActive(session)) finishPlayback('No se pudo reproducir la voz.');
+  };
+  try {
+    window.speechSynthesis.speak(utterance);
+  } catch {
+    finishPlayback('No se pudo iniciar la voz del navegador.');
+  }
+}
 
-  currentAudio.addEventListener('ended', handleEnd);
-  currentAudio.addEventListener('error', handleError);
-
-  currentAudio.play().catch((err) => {
-    console.error('[Neural TTS Play Blocked/Failed]', err);
-    sendLogisticsAlert('TTS_PLAYBACK_BLOCKED', 'Reproducción de audio bloqueada por el navegador o fallo de carga', {
-      text: currentItem.text,
-      error: String(err.message || err)
-    });
-    stopAlvaroAudio();
-  });
-};
-
-export const stopAlvaroAudio = () => {
-  if (typeof window === 'undefined') return;
-  isPlaying = false;
-
-  // Detener y liberar recursos de toda la cola
-  audioQueue.forEach(item => {
-    if (item.audio) {
-      try {
-        item.audio.pause();
-        item.audio.src = '';
-        item.audio.load();
-      } catch (e) {
-        console.error('[Neural TTS Stop Error]', e);
-      }
+function playCurrent(session) {
+  if (!isActive(session)) return;
+  if (index >= queue.length) {
+    finishPlayback();
+    return;
+  }
+  const sentence = queue[index];
+  const audio = new Audio('/api/tts?text=' + encodeURIComponent(sentence) + '&lang=es&v=2');
+  audio.preload = 'auto';
+  let settled = false;
+  let loadTimer;
+  let stallTimer;
+  const handlers = {};
+  const cleanup = () => {
+    settled = true;
+    clearTimeout(loadTimer);
+    clearTimeout(stallTimer);
+    Object.entries(handlers).forEach(([name, fn]) => audio.removeEventListener(name, fn));
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+  };
+  cancelCurrent = cleanup;
+  const fallback = (type) => {
+    if (settled || !isActive(session)) return;
+    cleanup();
+    cancelCurrent = null;
+    if (!alertSent) {
+      alertSent = true;
+      sendLogisticsAlert(type, 'La voz neuronal no respondió; se intentará la voz del navegador.');
     }
+    speakWithBrowser(sentence, session);
+  };
+  handlers.playing = () => {
+    if (settled || !isActive(session)) return;
+    clearTimeout(loadTimer);
+    clearTimeout(stallTimer);
+  };
+  handlers.waiting = () => {
+    if (settled || !isActive(session)) return;
+    clearTimeout(stallTimer);
+    stallTimer = setTimeout(() => fallback('TTS_STALLED'), STALL_TIMEOUT_MS);
+  };
+  handlers.ended = () => {
+    if (!settled && isActive(session)) nextSentence(session);
+  };
+  handlers.error = () => fallback('TTS_AUDIO_FAIL');
+  Object.entries(handlers).forEach(([name, fn]) => audio.addEventListener(name, fn));
+  loadTimer = setTimeout(() => fallback('TTS_TIMEOUT'), LOAD_TIMEOUT_MS);
+  audio.play().catch((error) => {
+    if (settled || !isActive(session)) return;
+    if (error?.name === 'NotAllowedError') {
+      finishPlayback('Pulsa reproducir para permitir el audio en este navegador.');
+      return;
+    }
+    fallback('TTS_AUDIO_FAIL');
   });
+}
 
-  audioQueue = [];
-  currentQueueIndex = 0;
-  currentAudio = null;
+export function playAlvaroAudio(text) {
+  if (typeof window === 'undefined') return;
+  stopAlvaroAudio();
+  queue = splitSpeechText(prepareSpeechText(text));
+  if (!queue.length) return;
+  index = 0;
+  playing = true;
+  alertSent = false;
+  const session = ++sessionId;
+  emit('alvaro-tts-start');
+  playCurrent(session);
+}
 
-  window.dispatchEvent(new CustomEvent('alvaro-tts-end'));
-};
+export function stopAlvaroAudio() {
+  if (typeof window === 'undefined') return;
+  sessionId += 1;
+  finishPlayback();
+  window.speechSynthesis?.cancel();
+}
 
-export const isAlvaroSpeaking = () => {
-  if (typeof window === 'undefined') return false;
-  return isPlaying;
-};
+export function isAlvaroSpeaking() {
+  return typeof window !== 'undefined' && playing;
+}
+
+export function subscribeToAlvaro(onChange) {
+  window.addEventListener('alvaro-tts-start', onChange);
+  window.addEventListener('alvaro-tts-end', onChange);
+  return () => {
+    window.removeEventListener('alvaro-tts-start', onChange);
+    window.removeEventListener('alvaro-tts-end', onChange);
+  };
+}

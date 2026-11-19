@@ -1,29 +1,15 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useVipAudio } from '@/hooks/useVipAudio';
-import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking } from '@/utils/playAlvaro';
+import { playAlvaroAudio, stopAlvaroAudio, isAlvaroSpeaking, subscribeToAlvaro } from '@/utils/playAlvaro';
 import PremiumAudioModal from './PremiumAudioModal';
 
 export default function StoryAudioPlayer({ htmlText }) {
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const isPlaying = useSyncExternalStore(subscribeToAlvaro, isAlvaroSpeaking, () => false);
 
-  useEffect(() => {
-    const handleStart = () => setIsPlaying(true);
-    const handleEnd = () => setIsPlaying(false);
 
-    window.addEventListener('alvaro-tts-start', handleStart);
-    window.addEventListener('alvaro-tts-end', handleEnd);
-
-    // Sincronizar estado inicial
-    setIsPlaying(isAlvaroSpeaking());
-
-    return () => {
-      window.removeEventListener('alvaro-tts-start', handleStart);
-      window.removeEventListener('alvaro-tts-end', handleEnd);
-    };
-  }, []);
 
   const handlePlay = () => {
     if (!isAudioPremium) {

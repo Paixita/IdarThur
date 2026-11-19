@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import PremiumAudioModal from './PremiumAudioModal';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
@@ -19,6 +19,30 @@ export default function YesselFloating() {
   const [isAudioPremium, setIsAudioPremium] = useVipAudio();
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
 
+  const processMessage = useCallback(async (text) => {
+    const userMessage = { role: 'user', content: text };
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      if (isAudioPremium) {
+        playAlvaroAudio(data.reply);
+      }
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'assistant', content: "Error de conexión." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAudioPremium]);
+
   // Auto-scroll al fondo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,14 +61,17 @@ export default function YesselFloating() {
     };
     window.addEventListener('openCandyChat', handleOpenChat); // Mantenemos el nombre del evento para no romper dependencias
     return () => window.removeEventListener('openCandyChat', handleOpenChat);
-  }, [isAudioPremium, messages]);
+  }, [isAudioPremium, messages, processMessage]);
 
   // Escucha del servidor WebSocket de TikTok Live
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
     let ws;
+    let disposed = false;
+    let reconnectTimer;
     const connectWS = () => {
+      if (disposed) return;
       ws = new WebSocket('ws://localhost:3002');
       
       ws.onmessage = (event) => {
@@ -71,7 +98,7 @@ export default function YesselFloating() {
       
       ws.onclose = () => {
         // Intentar reconectar cada 5 segundos si el servidor local de TikTok se apaga
-        setTimeout(connectWS, 5000);
+        if (!disposed) reconnectTimer = setTimeout(connectWS, 5000);
       };
       
       ws.onerror = () => {
@@ -82,6 +109,8 @@ export default function YesselFloating() {
     connectWS();
     
     return () => {
+      disposed = true;
+      clearTimeout(reconnectTimer);
       if (ws) ws.close();
     };
   }, [isAudioPremium]);
@@ -108,29 +137,7 @@ export default function YesselFloating() {
     await processMessage(text);
   };
 
-  const processMessage = async (text) => {
-    const userMessage = { role: 'user', content: text };
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      const data = await res.json();
-      
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
-      if (isAudioPremium) {
-        playAlvaroAudio(data.reply);
-      }
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Error de conexión." }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <>

@@ -1,0 +1,282 @@
+{
+  "version": "2026-11",
+  "nota": "Base de conocimiento de IdarThur para Yessel. Los precios son rangos de referencia y cambian por temporada; siempre hay que confirmar con el buscador en vivo.",
+  "monedas": {
+    "Colombia": { "codigo": "COP", "simbolo": "$", "tasaRefUSD": 4000, "pagos": "Tarjeta débito/crédito, PSE y Nequi. Avisar al banco antes de viajar." },
+    "Perú": { "codigo": "PEN", "simbolo": "S/", "tasaRefUSD": 3.75, "pagos": "Soles en efectivo para mercados y taxi; tarjeta en restaurantes y hoteles. Se aceptan dólares en zonas turísticas." },
+    "Ecuador": { "codigo": "USD", "simbolo": "$", "tasaRefUSD": 1, "pagos": "Usa dólar estadounidense. Llevar billetes pequeños; muchos comercios no aceptan de 50 o 100." },
+    "Chile": { "codigo": "CLP", "simbolo": "$", "tasaRefUSD": 950, "pagos": "Tarjeta muy aceptada; efectivo para ferias y propinas." },
+    "Argentina": { "codigo": "ARS", "simbolo": "$", "tasaRefUSD": 1000, "pagos": "Tarjeta con cotización turista suele convenir; revisar recargos y llevar algo de efectivo." },
+    "Brasil": { "codigo": "BRL", "simbolo": "R$", "tasaRefUSD": 5.4, "pagos": "Pix para locales; tarjeta en ciudades. Avisar al banco." },
+    "Panamá": { "codigo": "PAB", "simbolo": "B/.", "tasaRefUSD": 1, "pagos": "Balboa a la par del dólar; circula el dólar. Tarjeta aceptada ampliamente." },
+    "Costa Rica": { "codigo": "CRC", "simbolo": "₡", "tasaRefUSD": 520, "pagos": "Colones y dólares conviven; tarjeta en casi todo." },
+    "Guatemala": { "codigo": "GTQ", "simbolo": "Q", "tasaRefUSD": 7.8, "pagos": "Quetzales en efectivo para transporte y mercados." },
+    "República Dominicana": { "codigo": "DOP", "simbolo": "RD$", "tasaRefUSD": 60, "pagos": "Pesos dominicanos; dólares aceptados en zonas turísticas." },
+    "México": { "codigo": "MXN", "simbolo": "$", "tasaRefUSD": 18.5, "pagos": "Pesos mexicanos; tarjeta en ciudades, efectivo en pueblo y transporte." },
+    "Estados Unidos": { "codigo": "USD", "simbolo": "$", "tasaRefUSD": 1, "pagos": "Tarjeta; propina 15–20% en restaurantes. Llevar identificación." },
+    "Canadá": { "codigo": "CAD", "simbolo": "C$", "tasaRefUSD": 1.38, "pagos": "Tarjeta sin contacto; propina 15–20%." },
+    "España": { "codigo": "EUR", "simbolo": "€", "tasaRefUSD": 0.92, "pagos": "Tarjeta sin contacto; efectivo para bares pequeños." },
+    "Francia": { "codigo": "EUR", "simbolo": "€", "tasaRefUSD": 0.92, "pagos": "Tarjeta en casi todo; propina de servicio incluida." },
+    "Italia": { "codigo": "EUR", "simbolo": "€", "tasaRefUSD": 0.92, "pagos": "Tarjeta; 'coperto' por persona en restaurantes." },
+    "Portugal": { "codigo": "EUR", "simbolo": "€", "tasaRefUSD": 0.92, "pagos": "Tarjeta; Multibanco para efectivo." },
+    "Grecia": { "codigo": "EUR", "simbolo": "€", "tasaRefUSD": 0.92, "pagos": "Efectivo en islas pequeñas; tarjeta en Atenas y hoteles." }
+  },
+  "regiones": [
+    {
+      "region": "Sudamérica",
+      "paises": [
+        {
+          "pais": "Colombia",
+          "capital": "Bogotá",
+          "moneda": "Peso colombiano (COP)",
+          "mejorEpoca": "Diciembre a marzo (seco en Caribe y Andes); julio y agosto también son altas.",
+          "destinos": ["Cartagena", "Medellín", "San Andrés", "Santa Marta y Tayrona", "Eje Cafetero", "Bogotá"],
+          "requisitos": "Documento de identidad para colombianos; viajeros extranjeros revisan visa según país.",
+          "presupuestoDiarioUSD": "45–90",
+          "notas": "Diciembre es temporada alta en el Caribe: reservar con antelación y ojo con tarifas de fin de año."
+        },
+        {
+          "pais": "Perú",
+          "capital": "Lima",
+          "moneda": "Sol peruano (PEN)",
+          "mejorEpoca": "Mayo a septiembre para sierra y Cusco (seco); diciembre a marzo temporada de lluvias en la sierra, buena para Lima y la costa.",
+          "destinos": ["Lima", "Cusco", "Machu Picchu", "Arequipa y Cañón del Colca", "Ica y Huacachina", "Puno y Lago Titicaca", "Trujillo"],
+          "requisitos": "Colombianos entran con cédula vigente (Comunidad Andina), sin visa, hasta 90 días. Pasaporte también válido.",
+          "presupuestoDiarioUSD": "40–80",
+          "notas": "Para Machu Picchu se compra entrada con fecha y hora; el tren a Aguas Calientes se agota en temporada alta.",
+          "monedaDetalle": "Soles; aceptan tarjeta en hoteles y restaurantes turísticos."
+        },
+        {
+          "pais": "Ecuador",
+          "capital": "Quito",
+          "moneda": "Dólar estadounidense (USD)",
+          "mejorEpoca": "Junio a septiembre y diciembre a enero (seco en sierra); Galápagos todo el año.",
+          "destinos": ["Quito", "Cuenca", "Galápagos", "Baños", "Guayaquil", "Montañita"],
+          "requisitos": "Colombianos con cédula; sin visa para turismo.",
+          "presupuestoDiarioUSD": "40–75",
+          "notas": "Galápagos exige tasa de ingreso y control de equipaje; reservar tour con anticipación."
+        },
+        {
+          "pais": "Chile",
+          "capital": "Santiago",
+          "moneda": "Peso chileno (CLP)",
+          "mejorEpoca": "Diciembre a marzo (verano austral) para Patagonia y Torres del Paine.",
+          "destinos": ["Santiago", "Valparaíso", "Atacama", "Torres del Paine", "Chiloé"],
+          "requisitos": "Colombianos con cédula o pasaporte; sin visa para turismo.",
+          "presupuestoDiarioUSD": "60–110",
+          "notas": "Patagonia es caro y exige reservas; llevar ropa en capas incluso en verano."
+        },
+        {
+          "pais": "Argentina",
+          "capital": "Buenos Aires",
+          "moneda": "Peso argentino (ARS)",
+          "mejorEpoca": "Diciembre a marzo para Patagonia; todo el año para Buenos Aires.",
+          "destinos": ["Buenos Aires", "Bariloche", "Mendoza", "El Calafate", "Salta", "Iguazú"],
+          "requisitos": "Colombianos con cédula o pasaporte; sin visa para turismo.",
+          "presupuestoDiarioUSD": "45–90",
+          "notas": "Revisar tipo de cambio antes de pagar; tarjeta suele tener buena cotización."
+        },
+        {
+          "pais": "Brasil",
+          "capital": "Brasilia",
+          "moneda": "Real brasileño (BRL)",
+          "mejorEpoca": "Diciembre a marzo para playas; junio a septiembre para el Amazonas.",
+          "destinos": ["Río de Janeiro", "São Paulo", "Salvador", "Florianópolis", "Foz do Iguaçu", "Amazonas"],
+          "requisitos": "Colombianos con cédula o pasaporte; sin visa para turismo.",
+          "presupuestoDiarioUSD": "55–100",
+          "notas": "Diciembre y Carnaval son temporada alta; reservar hospedaje con meses de anticipación."
+        }
+      ]
+    },
+    {
+      "region": "Centroamérica y Caribe",
+      "paises": [
+        {
+          "pais": "Panamá",
+          "capital": "Ciudad de Panamá",
+          "moneda": "Balboa (PAB) y dólar (USD)",
+          "mejorEpoca": "Diciembre a abril (seco).",
+          "destinos": ["Ciudad de Panamá", "Bocas del Toro", "San Blas", "Boquete"],
+          "requisitos": "Colombianos con cédula o pasaporte; sin visa para turismo.",
+          "presupuestoDiarioUSD": "60–110",
+          "notas": "Hub de conexiones: muchas rutas a Centroamérica y el Caribe pasan por Panamá."
+        },
+        {
+          "pais": "Costa Rica",
+          "capital": "San José",
+          "moneda": "Colón costarricense (CRC)",
+          "mejorEpoca": "Diciembre a abril (seco).",
+          "destinos": ["San José", "La Fortuna y Arenal", "Monteverde", "Manuel Antonio", "Tamarindo"],
+          "requisitos": "Colombianos con pasaporte vigente; revisar requisitos de visa según perfil.",
+          "presupuestoDiarioUSD": "80–140",
+          "notas": "Destino de naturaleza y aventura; alquiler de auto facilita el recorrido."
+        },
+        {
+          "pais": "Guatemala",
+          "capital": "Ciudad de Guatemala",
+          "moneda": "Quetzal (GTQ)",
+          "mejorEpoca": "Noviembre a abril (seco).",
+          "destinos": ["Antigua Guatemala", "Lago Atitlán", "Tikal", "Flores"],
+          "requisitos": "Colombianos con pasaporte vigente; revisar visa según perfil.",
+          "presupuestoDiarioUSD": "40–75",
+          "notas": "Antigua y Atitlán son la combinación clásica de cultura y volcanes."
+        },
+        {
+          "pais": "República Dominicana",
+          "capital": "Santo Domingo",
+          "moneda": "Peso dominicano (DOP)",
+          "mejorEpoca": "Diciembre a abril.",
+          "destinos": ["Punta Cana", "Santo Domingo", "Samana", "Puerto Plata"],
+          "requisitos": "Colombianos con pasaporte vigente; turismo sin visa con tarjeta de turista.",
+          "presupuestoDiarioUSD": "70–130",
+          "notas": "Todo incluido es la modalidad más común en Punta Cana."
+        }
+      ]
+    },
+    {
+      "region": "Norteamérica",
+      "paises": [
+        {
+          "pais": "México",
+          "capital": "Ciudad de México",
+          "moneda": "Peso mexicano (MXN)",
+          "mejorEpoca": "Diciembre a abril para playa y ciudad; evitar temporada de huracanes (junio–noviembre) en Caribe.",
+          "destinos": ["Cancún", "Riviera Maya", "Ciudad de México", "Oaxaca", "Los Cabos", "Guadalajara"],
+          "requisitos": "Colombianos con pasaporte vigente; revisar visa y Forma Migratoria según perfil.",
+          "presupuestoDiarioUSD": "60–120",
+          "notas": "Diciembre es temporada alta en Cancún; los paquetes todo incluido suelen compensar."
+        },
+        {
+          "pais": "Estados Unidos",
+          "capital": "Washington D. C.",
+          "moneda": "Dólar estadounidense (USD)",
+          "mejorEpoca": "Todo el año según región; diciembre es temporada alta por festividades.",
+          "destinos": ["Miami", "Nueva York", "Orlando", "Los Ángeles", "Las Vegas"],
+          "requisitos": "Colombianos necesitan visa B1/B2 vigente y pasaporte.",
+          "presupuestoDiarioUSD": "120–220",
+          "notas": "Propinas obligatorias en restaurantes y taxis; presupuesto más alto que en Latinoamérica."
+        },
+        {
+          "pais": "Canadá",
+          "capital": "Ottawa",
+          "moneda": "Dólar canadiense (CAD)",
+          "mejorEpoca": "Junio a septiembre para verano; diciembre a marzo para nieve.",
+          "destinos": ["Toronto", "Vancouver", "Montreal", "Quebec", "Banff"],
+          "requisitos": "Colombianos necesitan visa o autorización electrónica según perfil; revisar requisitos vigentes.",
+          "presupuestoDiarioUSD": "110–200",
+          "notas": "En invierno, ropa térmica y calzado impermeable son indispensables."
+        }
+      ]
+    },
+    {
+      "region": "Europa",
+      "paises": [
+        {
+          "pais": "España",
+          "capital": "Madrid",
+          "moneda": "Euro (EUR)",
+          "mejorEpoca": "Abril a junio y septiembre a octubre; diciembre es frío pero festivo.",
+          "destinos": ["Madrid", "Barcelona", "Sevilla", "Granada", "Valencia", "Islas Baleares"],
+          "requisitos": "Colombianos con pasaporte; visa Schengen según perfil y duración.",
+          "presupuestoDiarioUSD": "90–160",
+          "notas": "Trenes de alta velocidad conectan Madrid, Barcelona y Sevilla; comprar con antelación."
+        },
+        {
+          "pais": "Francia",
+          "capital": "París",
+          "moneda": "Euro (EUR)",
+          "mejorEpoca": "Abril a junio y septiembre a octubre.",
+          "destinos": ["París", "Niza", "Lyon", "Burdeos", "Provenza"],
+          "requisitos": "Colombianos con pasaporte; visa Schengen según perfil.",
+          "presupuestoDiarioUSD": "110–190",
+          "notas": "Reservar museos con hora; el transporte urbano tiene pases semanales."
+        },
+        {
+          "pais": "Italia",
+          "capital": "Roma",
+          "moneda": "Euro (EUR)",
+          "mejorEpoca": "Abril a junio y septiembre a octubre.",
+          "destinos": ["Roma", "Florencia", "Venecia", "Milán", "Nápoles y Costa Amalfitana", "Sicilia"],
+          "requisitos": "Colombianos con pasaporte; visa Schengen según perfil.",
+          "presupuestoDiarioUSD": "95–170",
+          "notas": "Trenes regionales económicos; validar el billete antes de subir."
+        },
+        {
+          "pais": "Portugal",
+          "capital": "Lisboa",
+          "moneda": "Euro (EUR)",
+          "mejorEpoca": "Marzo a junio y septiembre a octubre.",
+          "destinos": ["Lisboa", "Oporto", "Algarve", "Madeira", "Sintra"],
+          "requisitos": "Colombianos con pasaporte; visa Schengen según perfil.",
+          "presupuestoDiarioUSD": "80–140",
+          "notas": "Buena relación calidad-precio dentro de Europa occidental."
+        },
+        {
+          "pais": "Grecia",
+          "capital": "Atenas",
+          "moneda": "Euro (EUR)",
+          "mejorEpoca": "Mayo a septiembre; diciembre es temporada baja en islas.",
+          "destinos": ["Atenas", "Santorini", "Mykonos", "Creta", "Tesalónica"],
+          "requisitos": "Colombianos con pasaporte; visa Schengen según perfil.",
+          "presupuestoDiarioUSD": "85–150",
+          "notas": "Ferris entre islas se cancelan con viento fuerte; dejar margen antes del vuelo de regreso."
+        }
+      ]
+    }
+  ],
+  "vuelosPeru": {
+    "origen": "Medellín (MDE) - Aeropuerto José María Córdova",
+    "resumen": "Perú es el destino más fácil para un colombiano: se entra con cédula, sin visa, hasta 90 días. Hay vuelos directos a Lima de ~3 h 05 min.",
+    "rutas": [
+      {
+        "ruta": "Medellín (MDE) → Lima (LIM)",
+        "tipo": "Directo",
+        "aerolineas": ["LATAM Airlines", "JetSMART", "Avianca"],
+        "duracion": "3 h 05 min a 3 h 15 min",
+        "frecuencia": "Entre 16 y 40 salidas semanales según temporada",
+        "precioReferencia": "USD 150–260 por tramo en temporada baja; más alto en diciembre y Semana Santa",
+        "destino": "Lima"
+      },
+      {
+        "ruta": "Medellín (MDE) → Cusco (CUZ)",
+        "tipo": "Con conexión (Lima o Bogotá)",
+        "aerolineas": ["LATAM Airlines", "Avianca", "JetSMART"],
+        "duracion": "6 h a 10 h según escala",
+        "frecuencia": "Diaria con conexión",
+        "precioReferencia": "USD 260–480 ida y vuelta",
+        "destino": "Cusco"
+      },
+      {
+        "ruta": "Medellín (MDE) → Arequipa (AQP)",
+        "tipo": "Con conexión (Lima)",
+        "aerolineas": ["LATAM Airlines", "Sky Airline Perú"],
+        "duracion": "7 h a 11 h según escala",
+        "frecuencia": "Diaria con conexión",
+        "precioReferencia": "USD 280–520 ida y vuelta",
+        "destino": "Arequipa"
+      },
+      {
+        "ruta": "Medellín (MDE) → Iquitos (IQT)",
+        "tipo": "Con conexión (Lima)",
+        "aerolineas": ["LATAM Airlines", "Sky Airline Perú"],
+        "duracion": "8 h a 12 h según escala",
+        "frecuencia": "Diaria con conexión",
+        "precioReferencia": "USD 320–560 ida y vuelta",
+        "destino": "Iquitos"
+      }
+    ],
+    "consejos": [
+      "Para Machu Picchu: volar a Cusco y dormir en Cusco o Aguas Calientes; el tren a Aguas Calientes se agota en temporada alta.",
+      "Diciembre es temporada de lluvias en la sierra: llevar impermeable y dejar días de margen.",
+      "Lima funciona todo el año; diciembre es buen momento para la costa.",
+      "Los colombianos no pagan visa, pero sí deben llevar cédula vigente y seguro médico de viaje recomendado."
+    ]
+  },
+  "enlaces": {
+    "vuelos": "https://search.hotellook.com/flights/?origin=MDE&destination={destino}&marker=729418",
+    "vuelosWayAway": "https://wayaway.io/search?marker=729418&query={consulta}",
+    "hoteles": "https://search.hotellook.com/?destination={destino}&marker=729418",
+    "tienda": "https://www.amazon.com/s?k={producto}&tag=idarthur-20",
+    "peru": "/peru"
+  }
+}

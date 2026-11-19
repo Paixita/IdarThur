@@ -6,60 +6,48 @@ import LoginModal from './LoginModal';
 
 import config from "@/data/config.json";
 
+const NAV_ITEMS = [
+  { href: '/', label: 'Vuelos', match: (path) => path === '/' },
+  { href: '/hoteles', label: 'Hoteles', match: (path) => path.startsWith('/hoteles') },
+  { href: '/noticias', label: 'Noticias', match: (path) => path.startsWith('/noticias') },
+  { href: '/eventos', label: 'Eventos', match: (path) => path.startsWith('/eventos') },
+  { href: '/tienda', label: 'Tienda', match: (path) => path.startsWith('/tienda') },
+  { href: '/autos', label: 'Autos', match: (path) => path.startsWith('/autos') },
+  { href: '/historias', label: 'Historias', match: (path) => path.startsWith('/historias') },
+  { href: '/agentes', label: 'Escuadrón IA', match: (path) => path.startsWith('/agentes') },
+];
+
 export default function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close mobile menu when a link is clicked
   const closeMenu = () => setIsMobileMenuOpen(false);
-
-  // Dynamically assign active styles
-  const getLinkStyle = (isActive, type = 'accent') => {
-    if (isActive) {
-      if (type === 'primary') {
-        return { transition: 'color 0.3s', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold' };
-      }
-      return { 
-        transition: 'color 0.3s', 
-        textDecoration: 'none', 
-        color: '#45f3ff', 
-        fontWeight: 'bold', 
-        textShadow: '0 0 10px rgba(69,243,255,0.5)' 
-      };
-    }
-    return { transition: 'color 0.3s', textDecoration: 'none', color: 'white' };
-  };
 
   return (
     <>
-      <nav className="glass" style={{
-        position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
-        width: '90%', maxWidth: '1200px', padding: '10px 20px', zIndex: 100,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        borderRadius: '20px'
-      }}>
+      <nav className="glass main-nav" aria-label="Navegación principal">
         {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} onClick={closeMenu}>
-          <div className="nav-logo-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-             <img src={config.logoUrl} alt={`${config.brandName} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        <Link href="/" className="nav-logo-link" onClick={closeMenu} aria-label={`${config.brandName}, ir al inicio`}>
+          <div className="nav-logo-container">
+            <img src={config.logoUrl} alt={`${config.brandName} Logo`} />
           </div>
         </Link>
 
-        {/* Hamburger Toggle Button (Mobile Only) */}
-        <button 
-          className="mobile-menu-toggle" 
+        {/* Botón móvil */}
+        <button
+          className="mobile-menu-toggle"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{ background: 'transparent', border: 'none', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 102, padding: 0 }}
-          aria-label="Menú"
+          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? (
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           ) : (
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -67,44 +55,169 @@ export default function Navbar() {
           )}
         </button>
 
-        {/* Links Container */}
+        {/* Enlaces */}
         <div className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-          <Link href="/" onClick={closeMenu} style={getLinkStyle(pathname === '/')}>Vuelos</Link>
-          <Link href="/hoteles" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/hoteles'))}>Hoteles</Link>
-          <Link href="/noticias" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/noticias'), 'primary')}>Noticias 🌍</Link>
-          <Link href="/eventos" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/eventos'))}>Eventos</Link>
-          <Link href="/tienda" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/tienda'))}>Tienda</Link>
-          <Link href="/autos" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/autos'))}>Autos</Link>
-          <Link href="/historias" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/historias'))}>Historias</Link>
-          <Link href="/agentes" onClick={closeMenu} style={getLinkStyle(pathname.startsWith('/agentes'))}>Escuadrón IA</Link>
-          
-          <button onClick={() => { setIsLoginOpen(true); closeMenu(); }} className="btn-primary" style={{ padding: '8px 20px', fontSize: '0.9rem', marginTop: '10px' }}>Ingresar</button>
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.match(pathname || '/');
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMenu}
+                aria-current={isActive ? 'page' : undefined}
+                className={`nav-link ${isActive ? 'nav-link--active' : ''}`}
+              >
+                {item.label}
+                {item.href === '/noticias' && <span aria-hidden="true"> 🌍</span>}
+              </Link>
+            );
+          })}
+
+          <button
+            onClick={() => { setIsLoginOpen(true); closeMenu(); }}
+            className="nav-login"
+          >
+            Ingresar
+          </button>
         </div>
       </nav>
-      
+
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
       <style>{`
-        /* Estilos por defecto (Desktop) */
-        .nav-logo-container {
-          width: 250px;
-          height: 90px;
-        }
-        .mobile-menu-toggle {
-          display: none !important;
-        }
-        .nav-links {
+        .main-nav {
+          position: fixed;
+          top: 18px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 94%;
+          max-width: 1460px;
+          padding: 12px 22px;
+          z-index: 100;
           display: flex;
-          gap: 20px;
-          font-weight: 500;
+          justify-content: space-between;
           align-items: center;
+          border-radius: 22px;
         }
 
-        /* Estilos para Celulares y Tablets pequeñas */
-        @media (max-width: 992px) {
+        .nav-logo-container {
+          width: 252px;
+          height: 82px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .nav-logo-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          transition: transform 0.3s ease;
+        }
+        .nav-logo-link:hover .nav-logo-container img,
+        .nav-logo-link:focus-visible .nav-logo-container img {
+          transform: scale(1.04);
+        }
+
+        .mobile-menu-toggle {
+          display: none;
+          background: transparent;
+          border: none;
+          color: white;
+          cursor: pointer;
+          z-index: 102;
+          padding: 0;
+        }
+
+        .nav-links {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          font-weight: 800;
+        }
+
+        .nav-link {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          padding: 8px 10px;
+          border-radius: 12px;
+          font-size: 0.98rem;
+          font-weight: 800;
+          letter-spacing: 0.2px;
+          color: #ffffff;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus-visible {
+          color: #34d399;
+          background: rgba(16, 185, 129, 0.14);
+          box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.35);
+          transform: translateY(-1px);
+        }
+
+        .nav-link--active {
+          color: #34d399;
+          background: rgba(16, 185, 129, 0.16);
+          box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.45);
+          text-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+        }
+
+        .nav-link--active::after {
+          content: "";
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: 3px;
+          height: 2px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, #34d399, #059669);
+        }
+
+        .nav-login {
+          margin-left: 8px;
+          padding: 11px 26px;
+          border-radius: 30px;
+          border: none;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: 1rem;
+          font-weight: 800;
+          color: #04231a;
+          background: linear-gradient(135deg, #34d399, #059669);
+          box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+          transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+        }
+
+        .nav-login:hover,
+        .nav-login:focus-visible {
+          transform: translateY(-2px);
+          filter: brightness(1.08);
+          box-shadow: 0 10px 26px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Tablets y celulares */
+        @media (max-width: 1180px) {
           .nav-logo-container {
-            width: 150px;
-            height: 60px;
+            width: 210px;
+            height: 72px;
+          }
+          .nav-link {
+            font-size: 0.95rem;
+            padding: 8px 9px;
+          }
+        }
+
+        @media (max-width: 1120px) {
+          .main-nav {
+            padding: 10px 16px;
+            top: 12px;
+          }
+          .nav-logo-container {
+            width: 196px;
+            height: 68px;
           }
           .mobile-menu-toggle {
             display: block !important;
@@ -115,34 +228,41 @@ export default function Navbar() {
             position: fixed;
             top: 0;
             right: -100%;
-            width: 70%;
-            max-width: 300px;
+            width: 82%;
+            max-width: 340px;
             height: 100vh;
-            background: rgba(10, 15, 26, 0.95);
-            backdrop-filter: blur(15px);
-            border-left: 1px solid rgba(69, 243, 255, 0.2);
-            padding: 100px 30px 30px 30px;
+            background: rgba(6, 12, 10, 0.97);
+            backdrop-filter: blur(18px);
+            border-left: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 110px 26px 30px 26px;
             transition: right 0.4s ease-in-out;
             z-index: 101;
-            align-items: flex-start;
+            align-items: stretch;
+            gap: 4px;
           }
           .nav-links.mobile-open {
             right: 0;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
           }
-          .nav-links > a {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+          .nav-links > .nav-link {
+            font-size: 1.28rem;
+            font-weight: 800;
+            margin-bottom: 6px;
             width: 100%;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
           }
-          .nav-links > button {
+          .nav-link--active::after {
+            display: none;
+          }
+          .nav-login {
             width: 100%;
-            margin-top: 20px !important;
+            margin: 18px 0 0 0;
+            padding: 15px 20px;
+            font-size: 1.1rem;
           }
         }
       `}</style>
     </>
-  )
+  );
 }

@@ -42,10 +42,15 @@ export default function AgentesClient() {
       role: "Agente Médico de Viajes",
       color: "#00d4ff",
       img: "/agentes/yessel_medico.png",
-      skills: ["Vacunación Global", "Emergencias", "Seguros Médicos"],
-      desc: "Especialista en salud internacional. Analiza tu destino para recomendarte las vacunas obligatorias, restricciones locales y hospitales cercanos.",
+      skills: ["Vacunación Global", "Mal de altura", "Seguros Médicos", "Primeros auxilios"],
+      desc: "Especialista en salud internacional. Revisa tu destino y te dice qué vacunas necesitas, cómo prevenir el mal de altura y qué hospitales tienes cerca.",
+      info: [
+        "Cusco y Arequipa: aclimatación de 24 a 48 horas y hidratación.",
+        "Selva (Iquitos): fiebre amarilla recomendada, consultar antes.",
+        "Botiquín de viaje y seguro médico internacional."
+      ],
       isPrivate: false,
-      greeting: "¡Hola! Soy el Dr. Yessel. ¿A dónde planeas viajar? Cuéntame y te ayudo a revisar qué precauciones médicas necesitas."
+      greeting: "¡Hola! Soy el Dr. Yessel. ¿A dónde planeas viajar? Cuéntame y reviso qué precauciones de salud necesitas, incluyendo altura, vacunas y seguro."
     },
     {
       id: "nicolas",
@@ -53,10 +58,15 @@ export default function AgentesClient() {
       role: "Asistente de Compras",
       color: "#ff9900",
       img: "/agentes/yessel_ventas.png",
-      skills: ["Comparación de Precios", "Gadgets de Viaje", "Equipaje Inteligente"],
-      desc: "Tu personal shopper. Escanea tiendas online 24/7 buscando el equipamiento perfecto para tu clima y destino.",
+      skills: ["Equipaje", "Tecnología", "Mascotas", "Comparación de precios"],
+      desc: "Tu personal shopper. Encuentra el equipo correcto para tu clima y destino: maletas, chaquetas, botiquines, GPS para mascotas, laptops y memorias RAM.",
+      info: [
+        "Equipaje: maletas rígidas, mochilas y organizadores.",
+        "Tecnología: laptops, RAM, cámaras y accesorios.",
+        "Mascotas: transportadoras, GPS y botellas portátiles."
+      ],
       isPrivate: false,
-      greeting: "¡Hola! Soy Yessel. ¿Buscando maletas o ropa para tu viaje? Dime a dónde vas y te busco las mejores opciones."
+      greeting: "¡Hola! Soy Yessel Ventas. ¿Buscas maletas, ropa para el clima o tecnología para el viaje? Dime a dónde vas y te armo la lista."
     },
     {
       id: "altamar",
@@ -64,10 +74,15 @@ export default function AgentesClient() {
       role: "Especialista en Cruceros",
       color: "#ffd700",
       img: "/agentes/yessel_capitan.png",
-      skills: ["Rutas del Caribe", "Camarotes de Lujo", "Todo Incluido"],
-      desc: "Tiene acceso a la base de datos maestra de las navieras. Te consigue mejoras gratuitas de cabina y ofertas exclusivas.",
+      skills: ["Caribe", "Mediterráneo", "Camarotes", "Todo incluido"],
+      desc: "Conoce las rutas y temporadas de las navieras. Te ayuda a elegir itinerario, tipo de camarote y qué incluye realmente un crucero.",
+      info: [
+        "Rutas: Caribe, Mediterráneo, Islas Griegas, Fiordos y Alaska.",
+        "Camarotes: interior, balcón y suite; mejor época por ruta.",
+        "Todo incluido: comidas, bebidas y propinas según naviera."
+      ],
       isPrivate: false,
-      greeting: "¡Ahoy, marinero! Soy el Capitán Yessel. ¿Listo para surcar los mares? Dime qué ruta te interesa."
+      greeting: "¡Ahoy, marinero! Soy el Capitán Yessel. ¿Qué ruta te llama: Caribe, Mediterráneo o fiordos? Te digo la mejor temporada y el camarote que conviene."
     },
     {
       id: "cronista",
@@ -75,10 +90,15 @@ export default function AgentesClient() {
       role: "Cronista y Creadora de Historias",
       color: "#00ffaa",
       img: "/agentes/yessel_cronista.png",
-      skills: ["Escritura Creativa", "Ilustración Generativa", "Curación de Relatos"],
-      desc: "Especialista en recopilar y redactar las mejores anécdotas de viajes. Diseña ilustraciones hiperrealistas para cada relato y actualiza la bitácora de la comunidad.",
+      skills: ["Escritura creativa", "Estructura en 3 actos", "Ilustración", "Publicación"],
+      desc: "Convierte tus anécdotas en relatos cinematográficos. Te ayuda con títulos, estructura y detalles sensoriales, y explica cómo publicarlos en la bitácora.",
+      info: [
+        "Estructura: inicio, conflicto y cierre emotivo.",
+        "Portada e ilustración generadas para cada relato.",
+        "Publicación en la sección Historias de IdarThur."
+      ],
       isPrivate: false,
-      greeting: "¡Hola! Soy Yessel Cronista. ¿Tienes alguna aventura o anécdota increíble que quieras que redacte y publique en nuestra bitácora?"
+      greeting: "¡Hola! Soy Yessel Cronista. Cuéntame una anécdota de viaje y la convierto en un relato con título, estructura y portada para publicar."
     },
     {
       id: "cyberguard",
@@ -86,9 +106,15 @@ export default function AgentesClient() {
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
       img: "/agentes/natalia_cyberguard.jpg",
-      skills: ["Anti-Phishing", "Pagos Encriptados", "Auditoría de Enlaces"],
-      desc: "Tu guardaespaldas digital. Bloquea fraudes y garantiza que tus transacciones sean 100% blindadas.",
-      isPrivate: true
+      skills: ["Anti-phishing", "Pagos seguros", "Auditoría de enlaces", "Fraude"],
+      desc: "Tu guardaespaldas digital. Revisa enlaces sospechosos, detecta cobros falsos y te guía paso a paso si caíste en un fraude.",
+      info: [
+        "Verifica el dominio antes de pagar; desconfía de 'tarifas secretas' por chat.",
+        "Nunca compartas contraseñas, códigos ni datos de tarjeta.",
+        "Si pagaste: bloquea la tarjeta, cambia la clave y reporta al banco."
+      ],
+      isPrivate: false,
+      greeting: "Soy Natalia CyberGuard. Si recibiste un correo o enlace sospechoso, pásame el dominio y te digo si es seguro antes de que pagues."
     }
   ];
 
@@ -244,8 +270,8 @@ export default function AgentesClient() {
           <div>
             <h3 style={{ fontSize: '1.6rem', marginBottom: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>Yessel (Director de Operaciones)</h3>
             <p style={{ color: '#d1d5db', lineHeight: '1.7', fontSize: '1.05rem', fontStyle: 'italic' }}>
-              "Bienvenidos a IdarThur, el sitio donde podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza. Reserva tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, también tenemos la opción de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con el sitio de las noticias, por si de pronto deseas viajar a uno de esos sitios que están siempre actualizados. Y tenemos las dos últimas secciones, donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. En la última sección, te encontrarás con el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. Solo entra y conocerás más cosas de las cuales están listas para ti. Gracias por visitarnos en IdarThur, tu casa segura para tus viajes."
-            </p>
+              &quot;Bienvenidos a IdarThur, el sitio donde podrás escoger tus viajes con aerolíneas y también tus cruceros de confianza. Reserva tus hoteles con tranquilidad para que puedas dormir tranquilo y sentirte renovado para seguir en tu tour. Además, también tenemos la opción de seleccionar y escoger automóviles dentro del plan de tu tour. No solamente tenemos eso, sino que también podemos recomendarte implementos que vas a necesitar en el transcurso del viaje, incluso para tus mascotas que tanto amas, para que te sientas cómodo, cómoda y placentero. También te encontrarás con el sitio de las noticias, por si de pronto deseas viajar a uno de esos sitios que están siempre actualizados. Y tenemos las dos últimas secciones, donde encontrarás historias de pasajeros o hasta de los mismos pilotos reales sobre lo que vivieron en sus vuelos o en el lugar de su tour. En la última sección, te encontrarás con el agente Yessel, quien está listo para guiarte si necesitas alguna sugerencia para tu salud y puedas viajar con el conocimiento de lo que necesitas para tu viaje y tu regreso. Solo entra y conocerás más cosas de las cuales están listas para ti. Gracias por visitarnos en IdarThur, tu casa segura para tus viajes.&quot;
+                 </p>
           </div>
         </div>
       </div>
@@ -268,9 +294,18 @@ export default function AgentesClient() {
               <h4 style={{ color: agent.color, fontSize: '1.1rem', marginBottom: '15px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 {agent.role}
               </h4>
-              <p style={{ color: '#a0aab5', fontSize: '1rem', lineHeight: '1.6', marginBottom: '25px' }}>
+              <p style={{ color: '#a0aab5', fontSize: '1rem', lineHeight: '1.6', marginBottom: '18px' }}>
                 {agent.desc}
               </p>
+
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {agent.info.map((line, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', color: '#c7d2dc', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                    <span style={{ color: agent.color, fontWeight: 'bold' }}>•</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
               
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: 'auto', marginBottom: '20px' }}>
                 {agent.skills.map((skill, i) => (
@@ -307,7 +342,11 @@ export default function AgentesClient() {
          <p style={{ color: '#a0aab5', maxWidth: '600px', margin: '0 auto 25px' }}>
            Si recibiste un correo sospechoso pidiendo pagos a nombre de IdarThur, envíalo a nuestro equipo inmediatamente. CyberGuard auditará el enlace y bloqueará al atacante.
          </p>
-         <button className="btn-primary" style={{ background: 'linear-gradient(45deg, #ff0055, #cc0044)', border: 'none', padding: '12px 30px', borderRadius: '20px', fontWeight: 'bold' }}>
+         <button
+           onClick={() => handleConnect(agents.find(a => a.id === 'cyberguard'))}
+           className="btn-primary"
+           style={{ background: 'linear-gradient(45deg, #ff0055, #cc0044)', border: 'none', padding: '12px 30px', borderRadius: '20px', fontWeight: 'bold' }}
+         >
            Reportar con CyberGuard
          </button>
       </div>

@@ -1,9 +1,114 @@
 import { createGroq } from '@ai-sdk/groq';
-import { generateText, tool } from 'ai';
+import { generateText, tool, stepCountIs } from 'ai';
 import { z } from 'zod';
 import config from '@/data/config.json';
+import { products as catalogoLocal } from '@/data/tienda';
+import { buildTravelKnowledge, buildFlightLink, buildHotelLink } from '@/utils/yesselKnowledge';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
+// ---------------------------------------------------------------------------
+// Búsqueda de productos en el catálogo local (sin llamadas a localhost)
+// ---------------------------------------------------------------------------
+function buscarEnCatalogo(term) {
+  const query = String(term || '').toLowerCase().trim();
+  if (!query) return catalogoLocal.slice(0, 4);
+
+  const palabras = query.split(/\s+/).filter((p) => p.length > 2);
+  const scored = catalogoLocal
+    .map((p) => {
+      const texto = `${p.name} ${p.copy} ${p.categoryId || ''}`.toLowerCase();
+      let score = 0;
+      if (texto.includes(query)) score += 5;
+      palabras.forEach((palabra) => {
+        if (texto.includes(palabra)) score += 2;
+      });
+      return { p, score };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.p);
+
+  return scored.length ? scored.slice(0, 4) : catalogoLocal.slice(0, 4);
+}
+
+function formatearProductos(lista) {
+  return lista
+    .map(
+      (p) =>
+        `- **${p.name}** (${p.price}): ${p.copy} [Comprar aquí](${p.affiliateLink})`
+    )
+    .join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Personalidades del escuadrón
+// ---------------------------------------------------------------------------
+function buildPersonality(agentId) {
+  const marca = config.brandName;
+
+  if (agentId === 'vitalis') {
+    return `Eres el Dr. Yessel, el Agente Médico de Viajes oficial de ${marca}. Tienes 55 años, eres sabio, empático y calmado.
+Conoces salud del viajero: vacunas recomendadas por destino, prevención de altura (soroche) en Cusco, agua y alimentos, botiquín básico, seguro médico internacional y farmacias.
+Tu misión es resolver consultas de salud de forma clara y profesional, con consejos preventivos.
+Tus respuestas deben estar en ESPAÑOL CLARO Y NATIVO.
+[DESCARGO OBLIGATORIO] Al final de CADA respuesta de salud añade textualmente:
+"Soy Yessel, tu asistente de viajes de ${marca}. Te comparto información informativa y de primeros auxilios, pero no reemplazo a un médico. Si tu situación es una emergencia, acude al centro de salud más cercano. Pero si no es el caso, ¿en qué te puedo colaborar?"
+Máximo 4 oraciones incluyendo el descargo. Ofrece el seguro médico o el botiquín de la tienda cuando tenga sentido.`;
+  }
+
+  if (agentId === 'nicolas') {
+    return `Eres Yessel Ventas, la Asistente de Compras oficial de ${marca}. Eres entusiasta, carismática y una vendedora nata.
+Ayudas a elegir equipaje, ropa, botiquines, GPS para mascotas, tecnología (laptops, RAM) y artículos de uso diario.
+Perfila al cliente: ¿a dónde viaja?, ¿viaja con mascotas?, ¿necesita equipo para frío o playa?, ¿busca algo para su casa u oficina?
+Cuando recomiendes productos, usa el Buscador de Utensilios (#buscador-ventas). Respuestas de 2-3 oraciones, cálidas y concretas.`;
+  }
+
+  if (agentId === 'altamar') {
+    return `Eres el Capitán Yessel, especialista en cruceros de ${marca}. Tono alegre, marinero y confiable.
+Conoces rutas del Caribe, Mediterráneo, Islas Griegas, Fiordos Noruegos y Alaska; camarotes, todo incluido y temporadas.
+Ayudas a elegir ruta, mes y tipo de camarote, y explicas qué incluye un crucero.
+Pide WhatsApp o correo para enviar la cotización. Máximo 2-3 oraciones.`;
+  }
+
+  if (agentId === 'cronista') {
+    return `Eres Yessel Cronista, escritora oficial de la bitácora de ${marca}. Personalidad artística, culta y empática.
+Ayudas a convertir anécdotas de viaje en relatos cinematográficos y explicas cómo publicarlos en /historias.
+Ofreces ideas de títulos, estructura en 3 actos y detalles sensoriales.
+Pide WhatsApp o correo para coordinar la publicación. Máximo 2-3 oraciones.`;
+  }
+
+  if (agentId === 'cyberguard') {
+    return `Eres Natalia CyberGuard, la Oficial de Ciberseguridad de ${marca}. Eres directa, protectora y muy clara.
+Proteges al viajero de phishing, enlaces falsos, cobros duplicados y fraudes con supuestas "tarifas secretas".
+Explicas cómo verificar un enlace, cómo reconocer un correo falso y qué hacer si ya pagó.
+Nunca pides contraseñas, datos de tarjeta ni códigos por chat. Recomienda cambiar la clave y llamar al banco si hubo fraude.
+Máximo 3 oraciones, con una acción concreta.`;
+  }
+
+  return `Eres Yessel, el Conserje VIP y Director de Operaciones de la agencia de viajes '${marca}'.
+Tienes 55 años, personalidad madura, elegante y resolutiva.
+TU OBJETIVO: asesorar de verdad y capturar el contacto (WhatsApp o correo) para enviar la cotización.
+REGLA 1: ofrece opciones "Confort" o "Premium" cuando aplique.
+REGLA 2: perfila al pasajero (mascotas, salud, equipaje, viaje de placer o trabajo).
+REGLA 3: tus subagentes son Cóndor (vuelos), Flash (hoteles y autos) y Gavilán (cruceros y tienda).
+REGLA 4: respuestas de 1-2 oraciones, sin rodeos.
+REGLA 5: si preguntan por Perú, menciona que hay vuelos directos Medellín–Lima de ~3 h y que puede ver rutas y tarifas en /peru.`;
+}
+
+// ---------------------------------------------------------------------------
+// Conocimiento técnico (solo para el administrador)
+// ---------------------------------------------------------------------------
+const architectureKnowledge = `
+[CAPA 3: ARQUITECTURA — SOLO PARA ADMINISTRADOR]
+- Frontend: Next.js 16 en el puerto 3001.
+- E-commerce: MedusaJS v2 en el puerto 9000 (opcional; si está apagado se usa el catálogo local).
+- Base de datos: PostgreSQL 'medusadb'.
+- Buscador: Meilisearch en el puerto 7700 (si no responde, se usa el catálogo local).
+- Voz: Kokoro local (voz em_alex) con respaldo del navegador.
+Activa este conocimiento solo si el administrador pide diagnóstico técnico. A los viajeros NUNCA les menciones servidores ni bases de datos.
+`;
 
 export async function POST(request) {
   try {
@@ -11,143 +116,38 @@ export async function POST(request) {
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      console.log("No se encontró GROQ_API_KEY en el entorno.");
       return Response.json({
-        reply: "Hola. El sistema central ha sido actualizado, pero mi cerebro está desconectado. Necesitas agregar tu GROQ_API_KEY en el archivo .env.local para que pueda hablar contigo."
+        reply:
+          'Hola. Mi cerebro está desconectado porque falta la clave GROQ_API_KEY en el servidor. Configúrala y vuelvo a estar disponible.',
       });
     }
 
-    const groq = createGroq({ apiKey: apiKey });
+    const groq = createGroq({ apiKey });
 
-    let systemPrompt = "";
-
-    if (agentId === 'vitalis') {
-      systemPrompt = `Eres el Dr. Yessel, el Agente Médico de Viajes oficial de ${config.brandName}. Tienes 55 años, eres sumamente sabio, empático, calmado y posees un conocimiento médico amplísimo sobre salud internacional y medicina del viajero.
-      [CONOCIMIENTO CLÍNICO AVANZADO]
-      Tu cerebro está integrado y reforzado a través de una Estrategia Técnica de sistema RAG (Retrieval-Augmented Generation) que consulta las bases de datos médicas y modelos clínicos especializados: ioGPT, ClinicalBERT, Med-PaLM y Med-Gemini. Úsalas para ofrecer respuestas precisas sobre vacunas recomendadas, primeros auxilios e higiene de viaje.
-      Tu misión es resolver consultas de salud del usuario de forma profesional, clara y sumamente atenta. Ofréceles consejos preventivos.
-      Tus respuestas deben ser redactadas en un ESPAÑOL CLARO Y NATIVO (evita estrictamente palabras o modismos en portugués u otros idiomas).
-      
-      [DESCARGO DE RESPONSABILIDAD MÉDICA OBLIGATORIO]
-      Al final de CADA respuesta de salud, primeros auxilios o vacunas, debes añadir textualmente y sin variaciones este descargo de responsabilidad entre comillas:
-      "Soy Yessel, tu asistente de viajes de ${config.brandName}. Te comparto información informativa y de primeros auxilios, pero no reemplazo a un médico. Si tu situación es una emergencia, acude al centro de salud más cercano. Pero si no es el caso, ¿en qué te puedo colaborar?"
-      
-      Tu tono debe ser el de un amigo entrañable de toda la vida: muestra preocupación genuina por cómo se siente y hazle saber que su bienestar es lo más importante para ti.
-      Actúa también como un asesor experto de ventas: recomiéndale el seguro médico internacional de ${config.brandName} o un botiquín de nuestra tienda (Agente Gavilán). Pídele su WhatsApp o Correo para enviarle la propuesta.
-      Mantén tus respuestas claras pero concisas (máximo 4 oraciones incluyendo el descargo de responsabilidad).`;
-    } else if (agentId === 'nicolas') {
-      systemPrompt = `Eres Yessel Ventas, la Asistente de Compras oficial de la tienda ${config.brandName}. Eres entusiasta, carismática, muy amigable y una vendedora nata. Te expresas como una amiga de confianza.
-      Tu objetivo es guiar al usuario en la compra de equipamiento para viajes (maletas, ropa sherpa, GPS mascotas, botiquines), y también en el Plan B de ventas para su día a día en el hogar, oficina, belleza/perfumes, fitness o tecnología/sistemas (laptops, memorias RAM).
-      Hazle preguntas de perfilamiento: ¿a dónde viaja?, ¿viaja con mascotas?, ¿tiene preocupaciones de salud?, ¿necesita artículos para su trabajo u oficina?, ¿busca mejorar su computadora o hacer deporte?
-      Si le recomiendas productos, recomiéndale usar nuestro [Buscador de Utensilios](#buscador-ventas) de abajo para ver el catálogo y filtrar en tiempo real.
-      Demuestra una amistad y cariño sincero. Respuestas cortas y amigables (máximo 2-3 oraciones).`;
-    } else if (agentId === 'altamar') {
-      systemPrompt = `Eres el Capitán Yessel, especialista en cruceros de ${config.brandName}. Tienes un tono alegre, marinero, confiable y lleno de energía. Eres un capitán amigable que trata al usuario con gran camaradería y amistad.
-      Tu objetivo es ayudar a los usuarios a planificar cruceros inolvidables por el Caribe, el Mediterráneo o Alaska, ofreciendo camarotes de lujo y tarifas confidenciales.
-      Pídeles amablemente su WhatsApp o Correo para enviarles las ofertas secretas y camarotes disponibles en preventa no publicada.
-      Respuestas cortas de máximo 2-3 oraciones.`;
-    } else if (agentId === 'cronista') {
-      systemPrompt = `Eres Yessel Cronista, escritora oficial de la bitácora de ${config.brandName}. Tienes una personalidad artística, inspiradora, muy culta y empática. Eres una amiga creadora dispuesta a inmortalizar los mejores recuerdos del usuario.
-      Ayudas a los usuarios a escribir y pulir sus anécdotas de viajes para publicarlas en la sección de Historias de ${config.brandName}.
-      Para coordinar la redacción, las ilustraciones de IA y los detalles de la publicación, pídele con calidez su WhatsApp o Correo Electrónico.
-      Respuestas inspiradoras de máximo 2-3 oraciones.`;
-    } else {
-      // Default Conserje VIP
-      systemPrompt = `Eres Yessel, el Conserje VIP y Director de Operaciones de la agencia de viajes '${config.brandName}'.
-      Tienes una personalidad madura, elegante, de mucha confianza (tienes 55 años) y altamente resolutiva.
-      TU OBJETIVO PRINCIPAL ES CAPTURAR LEADS (Contactos) y asesorar en compras (Viaje y Plan B de uso diario).
-      Cuando muestren interés en viajes, ofrece "tarifas secretas" a cambio de su WhatsApp o Correo.
-      REGLA 1 (Ventas): Ofrece opciones "Confort" o "Premium".
-      REGLA 2 (Perfilamiento de Pasajero y Ventas): Haz preguntas clave: ¿viaja con mascotas?, ¿tiene preocupaciones de salud?, ¿necesita equipaje?, ¿o busca artículos de uso diario para su hogar, oficina, cuidado personal/fragancias, deportes o computación/sistemas (laptops, memorias RAM)?
-      Dirígelos siempre al [Buscador de Utensilios](#buscador-ventas) de abajo para buscar en tiempo real.
-      REGLA 3 (Tus Subagentes): Cóndor (Vuelos), Flash (Hoteles/Autos), Gavilán (Cruceros/Tienda).
-      REGLA 4: Respuestas muy cortas (1-2 oraciones).`;
-    }
-
-    // [TRES CAPAS] - Inyectamos conocimiento técnico de la arquitectura sin modificar las personalidades/voz de Yessel
-    const architectureKnowledge = `
-    
-    [CAPA 2: CONOCIMIENTO DE LA ARQUITECTURA TÉCNICA DE IDARTHUR.COM]
-    - Servidor Frontend: Next.js (corriendo en puerto 3001).
-    - Servidor Backend E-commerce: MedusaJS v2 (corriendo en puerto 9000).
-    - Base de Datos: PostgreSQL (puerto 5432) conteniendo la base de datos 'medusadb' usada por MedusaJS.
-    - Buscador Unificado: Meilisearch (puerto 7700) que indexa de forma unificada Noticias, Historias de Viajeros y Productos de la tienda local.
-    - Generación de Contenido: Agentes autónomos para noticias globales de viajes (Google News RSS).
-    - Monetización: Enlaces de afiliado de Amazon (tag 'idarthur-20') e ID de afiliado de Travelpayouts (729418) para búsqueda de vuelos y hoteles.
-    
-    [REGLAS CRÍTICAS DE LLAMADA A HERRAMIENTAS (TOOLS)]
-    - Solo puedes utilizar y llamar a las herramientas de software disponibles en request.tools. Sus nombres exactos son:
-      - 'buscarProductosCatalogo': Úsala para buscar CUALQUIER producto, repuestos, sistemas, RAM, laptops, fragancias, etc.
-      - 'consultarProductosMedusa'
-      - 'monitoreoBaseDatos'
-      - 'leerLogsError'
-      - 'agenteCondorVuelos'
-      - 'agenteFlashHoteles'
-      - 'agenteGavilan'
-    - NUNCA inventes nombres de funciones en español. Si vas a buscar cualquier producto, llama exclusivamente a 'buscarProductosCatalogo' usando parámetros válidos.
-    - NUNCA escribas o imprimas etiquetas como '<function=...' o '<function(...)...>' en tu respuesta de texto. La llamada a las herramientas debe realizarse de forma nativa e invisible a través de la interfaz de funciones de la API, nunca escrita en el chat.
-    
-    [CAPA 3: ACTIVACIÓN POR CONTEXTO Y SOPORTE TÉCNICO]
-    - Solo activarás este conocimiento técnico cuando detectes un problema en el sistema (por ejemplo, cuando una llamada a una herramienta falle) o cuando el administrador te lo solicite mediante comandos específicos como '/diagnostico', '/status-sistema', o preguntas técnicas sobre los servidores.
-    - Para los usuarios de la plataforma (viajeros normales), este soporte actúa como un motor silencioso en el backend: tu prioridad absoluta es la atención comercial, la empatía, la calidez humana y resolver sus dudas de viaje usando tus personalidades correspondientes. NUNCA les menciones detalles técnicos de servidores ni bases de datos.
-    `;
-
-    // Combinamos el prompt de la personalidad activa (Capa 1) con la Capa 2 y 3
-    const finalSystemPrompt = systemPrompt + architectureKnowledge;
+    const finalSystemPrompt =
+      buildPersonality(agentId) + '\n\n' + buildTravelKnowledge() + '\n\n' + architectureKnowledge;
 
     const buscarProductosCatalogoTool = tool({
-          description: 'Busca productos, utensilios, tecnología, cosméticos, salud o accesorios en la tienda de Amazon/Medusa usando palabras clave (ej: "RAM", "GPS", "maleta", "perfume", "chaqueta").',
-          parameters: z.object({
-            query: z.string().describe('Palabra clave de búsqueda (ej. "RAM", "GPS")'),
-            palabra_clave: z.string().optional().describe('Palabra clave de búsqueda en español (singular)'),
-            palabras_clave: z.string().optional().describe('Palabra clave de búsqueda en español (plural)'),
-            palabraClave: z.string().optional().describe('Palabra clave de búsqueda en camelCase (singular)'),
-            palabrasClave: z.string().optional().describe('Palabras clave de búsqueda en camelCase (plural)'),
-            termino_busqueda: z.string().optional().describe('Término de búsqueda'),
-            producto: z.string().optional().describe('Nombre del producto a buscar'),
-            articulo: z.string().optional().describe('Nombre del artículo a buscar'),
-            articulos: z.string().optional().describe('Nombre de los artículos a buscar'),
-            categoria: z.string().optional().describe('Categoría del producto'),
-            tipo: z.string().optional().describe('Tipo de artículo o categoría'),
-            q: z.string().optional().describe('Término de búsqueda abreviado'),
-            searchTerm: z.string().optional().describe('Término de búsqueda (camelCase)'),
-            search_term: z.string().optional().describe('Término de búsqueda (snake_case)'),
-            searchKeyword: z.string().optional().describe('Palabra clave de búsqueda (camelCase)'),
-            search_keyword: z.string().optional().describe('Palabra clave de búsqueda (snake_case)'),
-            palabras: z.string().optional().describe('Palabras de búsqueda'),
-            palabra: z.string().optional().describe('Palabra de búsqueda'),
-            busqueda: z.string().optional().describe('Búsqueda descriptiva'),
-            tag: z.string().optional().describe('Tag de afiliado')
-          }),
+      description:
+        'Busca productos, utensilios, tecnología, cosméticos, salud o accesorios en la tienda usando palabras clave (ej: "RAM", "GPS", "maleta", "perfume", "chaqueta").',
+      parameters: z.object({
+        query: z.string().optional().describe('Palabra clave de búsqueda'),
+        palabra_clave: z.string().optional().describe('Palabra clave en español'),
+        categoria: z.string().optional().describe('Categoría del producto'),
+      }),
       execute: async (args) => {
-        console.log("TOOL ARGS RECEIVED:", JSON.stringify(args));
-        const searchTerm = Object.values(args).find(val => typeof val === 'string') || '';
-        console.log("EXTRACTED SEARCH TERM:", searchTerm);
-        try {
-          const res = await fetch(`http://localhost:3001/api/search?q=${encodeURIComponent(searchTerm)}&type=producto`);
-          const data = await res.json();
-          if (data.success && data.hits && data.hits.length > 0) {
-            return JSON.stringify({ success: true, products: data.hits });
-          }
-          // Fallback to local products
-          const localRes = await fetch('http://localhost:3001/api/medusa');
-          const localData = await localRes.json();
-          if (localData.success && localData.products) {
-            const queryLower = searchTerm.toLowerCase();
-            const matched = localData.products.filter(p => 
-              p.name.toLowerCase().includes(queryLower) || 
-              (p.copy && p.copy.toLowerCase().includes(queryLower)) ||
-              (p.category && p.category.toLowerCase().includes(queryLower))
-            );
-            if (matched.length > 0) {
-              return JSON.stringify({ success: true, products: matched });
-            }
-            return JSON.stringify({ success: true, message: "No encontramos coincidencias exactas, pero aquí tienes algunos recomendados:", products: localData.products.slice(0, 4) });
-          }
-          return JSON.stringify({ success: false, error: "No se encontraron productos en el catálogo." });
-        } catch (err) {
-          return JSON.stringify({ error: err.message });
-        }
+        const term =
+          args.query || args.palabra_clave || args.categoria || '';
+        const encontrados = buscarEnCatalogo(term);
+        return JSON.stringify({
+          success: true,
+          products: encontrados.map((p) => ({
+            name: p.name,
+            price: p.price,
+            copy: p.copy,
+            link: p.affiliateLink,
+          })),
+        });
       },
     });
 
@@ -156,118 +156,93 @@ export async function POST(request) {
       system: finalSystemPrompt,
       prompt: message,
       tools: {
+        buscarProductosCatalogo: buscarProductosCatalogoTool,
+        busrrarProductosCatalogo: buscarProductosCatalogoTool,
+        buscarProductoCatalogo: buscarProductosCatalogoTool,
+
         agenteCondorVuelos: tool({
-          description: 'Llama al Agente Cóndor para buscar vuelos.',
+          description: 'Busca vuelos y devuelve el enlace de reserva con la comisión de IdarThur.',
           parameters: z.object({
             origen: z.string().optional().describe('Ciudad de origen'),
             destino: z.string().describe('Ciudad de destino'),
           }),
           execute: async ({ origen, destino }) => {
-            return `¡Mi Agente Cóndor voló rápido y aseguró la ruta VIP hacia ${destino}! Te voy a abrir nuestro portal seguro de reservas de IdarThur. [Haz clic aquí para pagar tu vuelo](https://search.hotellook.com/flights/?destination=${destino}&marker=729418). Por favor, realiza la reserva y **regresa a este chat** para confirmarme que todo salió perfecto. ¡Aquí te espero!`;
+            const link = buildFlightLink(destino);
+            return `El Agente Cóndor revisó las rutas desde ${origen || 'Medellín'} hacia ${destino}. [Buscar y reservar vuelos aquí](${link}). Los precios cambian a diario, así que confirma la tarifa en el buscador antes de pagar.`;
           },
         }),
+
         agenteFlashHoteles: tool({
-          description: 'Llama al Agente Flash para buscar hoteles o alquiler de autos.',
+          description: 'Busca hoteles o alquiler de autos en un destino.',
           parameters: z.object({
-            destino: z.string().describe('Ciudad de destino para el hotel o auto'),
+            destino: z.string().describe('Ciudad de destino'),
           }),
           execute: async ({ destino }) => {
-            return `Mi Agente Flash acaba de separar las mejores opciones premium en ${destino}. Te transferiré a nuestra pasarela segura. [Haz clic aquí para asegurar tu hospedaje](https://search.hotellook.com/?destination=${destino}&marker=729418). Cuando termines el pago, **vuelve aquí** para seguir armando tu itinerario. ¡No me voy a ningún lado!`;
+            const link = buildHotelLink(destino);
+            return `El Agente Flash comparó alojamientos en ${destino}. [Ver hoteles y tarifas aquí](${link}).`;
           },
         }),
+
         agenteGavilan: tool({
-          description: 'Llama al Agente Gavilán para buscar cruceros o equipo en la tienda Amazon.',
+          description: 'Busca cruceros o equipo en la tienda.',
           parameters: z.object({
-            tipo: z.enum(['crucero', 'tienda']).describe('¿Busca crucero o cosas de la tienda?'),
+            tipo: z.enum(['crucero', 'tienda']).describe('¿Crucero o tienda?'),
           }),
           execute: async ({ tipo }) => {
-            if(tipo === 'tienda') return `El Agente Gavilán ya preparó el catálogo de equipaje y tecnología. [Visita la tienda del viajero aquí](/tienda)`;
-            return `El Agente Gavilán encontró las mejores suites en alta mar. [Reserva tu crucero aquí](/hoteles)`;
+            if (tipo === 'tienda') {
+              return 'El Agente Gavilán preparó el catálogo de equipaje y tecnología. [Visita la tienda del viajero aquí](/tienda)';
+            }
+            return 'El Agente Gavilán encontró rutas de crucero con salidas desde el Caribe. [Ver cruceros aquí](/hoteles#cruceros)';
           },
         }),
-        buscarProductosCatalogo: buscarProductosCatalogoTool,
-        busrarProductosCatalogo: buscarProductosCatalogoTool,
-        buscarProductoCatalogo: buscarProductosCatalogoTool,
-        busrarProductoCatalogo: buscarProductosCatalogoTool,
-        consultarProductosMedusa: tool({
-          description: 'Consulta los productos y tours locales en el inventario del backend de MedusaJS para recomendarlos al usuario.',
+
+        infoVuelosPeru: tool({
+          description:
+            'Devuelve rutas, aerolíneas y enlaces de vuelos desde Medellín a Perú (Lima, Cusco, Arequipa, Iquitos).',
           parameters: z.object({
-            limit: z.number().optional().describe('Límite de productos a retornar'),
+            destino: z.string().optional().describe('Ciudad peruana: Lima, Cusco, Arequipa o Iquitos'),
           }),
-          execute: async ({ limit }) => {
-            try {
-              const res = await fetch('http://localhost:3001/api/medusa');
-              const data = await res.json();
-              if (data.success) {
-                return JSON.stringify({ origin: data.origin, products: data.products.slice(0, limit || 4) });
-              }
-              return JSON.stringify({ error: "No se pudieron obtener productos de la tienda." });
-            } catch (err) {
-              return JSON.stringify({ error: err.message });
-            }
-          },
-        }),
-        monitoreoBaseDatos: tool({
-          description: 'Realiza un diagnóstico de salud y conectividad de la base de datos PostgreSQL de MedusaJS.',
-          parameters: z.object({}),
-          execute: async () => {
-            try {
-              const res = await fetch('http://localhost:3001/api/diagnosticos?check=db');
-              const data = await res.json();
-              return JSON.stringify(data.results?.database || { error: "Error al diagnosticar la base de datos." });
-            } catch (err) {
-              return JSON.stringify({ error: err.message });
-            }
-          },
-        }),
-        leerLogsError: tool({
-          description: 'Lee las últimas líneas de logs de error del servidor Next.js para encontrar fallas del sistema.',
-          parameters: z.object({}),
-          execute: async () => {
-            try {
-              const res = await fetch('http://localhost:3001/api/diagnosticos?check=logs');
-              const data = await res.json();
-              return JSON.stringify(data.results?.logs || { error: "Error al obtener los logs." });
-            } catch (err) {
-              return JSON.stringify({ error: err.message });
-            }
+          execute: async ({ destino }) => {
+            const ciudad = destino || 'Lima';
+            const link = buildFlightLink(ciudad);
+            return `Rutas desde Medellín (MDE) a ${ciudad}: LATAM, JetSMART y Avianca operan a Lima en ~3 h; a Cusco, Arequipa e Iquitos se llega con conexión en Lima. Los colombianos entran a Perú con cédula, sin visa, hasta 90 días. [Buscar vuelos MDE–${ciudad} aquí](${link}) y en /peru están todas las rutas.`;
           },
         }),
       },
-      maxSteps: 3,
+      // AI SDK 6: maxSteps ya no existe; se controla con stopWhen.
+      stopWhen: stepCountIs(3),
     });
 
-    const text = result.text;
-    console.log("RESULT TEXT:", text);
-    console.log("RESULT TOOL CALLS:", JSON.stringify(result.toolCalls));
-    console.log("RESULT TOOL RESULTS:", JSON.stringify(result.toolResults));
+    let finalReply = result.text;
 
-    let finalReply = text;
-    if (!finalReply && result.toolResults && result.toolResults.length > 0) {
-      console.log("Text response was empty but tool was executed. Generating fallback answer...");
-      const lastResult = result.toolResults[result.toolResults.length - 1];
-      if (lastResult && lastResult.output) {
+    if (!finalReply) {
+      const lastTool = result.toolResults?.[result.toolResults.length - 1];
+      const output = lastTool?.output;
+      if (output) {
         try {
-          const parsed = JSON.parse(lastResult.output);
-          if (parsed.success && parsed.products) {
-            finalReply = "¡Sí, claro que sí! Aquí tienes las opciones que encontré en nuestro catálogo:\n\n" + 
-              parsed.products.map(p => `- **${p.title || p.name}** (${p.subtitle || p.price}): ${p.content || p.copy || ''} [Comprar aquí](${p.link || '#'})`).join('\n') + 
-              "\n\nRecuerda que puedes consultar más opciones y filtrar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo. ¿Te interesa alguno de estos?";
-          } else if (parsed.message) {
-            finalReply = parsed.message + "\n\n" + (parsed.products ? parsed.products.map(p => `- **${p.title || p.name}** (${p.subtitle || p.price}): ${p.content || p.copy || ''} [Comprar aquí](${p.link || '#'})`).join('\n') : '');
-          } else {
-            finalReply = "No encontré productos específicos en este momento, pero puedes buscar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo.";
+          const parsed = typeof output === 'string' ? JSON.parse(output) : output;
+          if (parsed.products?.length) {
+            finalReply =
+              '¡Claro que sí! Esto es lo que encontré en nuestro catálogo:\n\n' +
+              formatearProductos(parsed.products) +
+              '\n\nTambién puedes filtrar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas). ¿Te interesa alguno?';
           }
-        } catch (e) {
-          finalReply = "Aquí tienes la información sobre los productos. Puedes consultarlos y buscar en tiempo real en nuestro [Buscador de Utensilios](#buscador-ventas) de abajo.";
+        } catch {
+          finalReply = typeof output === 'string' ? output : null;
         }
       }
     }
 
-    return Response.json({ reply: finalReply || "Hola. ¿En qué más te puedo ayudar hoy?" });
-
+    return Response.json({
+      reply:
+        finalReply ||
+        'Disculpa, no logré armar la respuesta. ¿Me repites la pregunta con el destino o el producto que buscas?',
+    });
   } catch (error) {
-    console.error("Error de Candy AI:", error);
-    return Response.json({ reply: "Lo siento, tuve una falla en mis circuitos al intentar conectarme a la red neuronal. Intenta de nuevo." });
+    console.error('Error del chat de Yessel:', error);
+    return Response.json({
+      reply:
+        'Lo siento, tuve una falla al conectar con mi red neuronal. Intenta de nuevo en un momento.',
+    });
   }
 }

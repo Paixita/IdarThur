@@ -24,7 +24,6 @@ export default function UnifiedSearchBar() {
   // Fetch search results on query or tab change
   useEffect(() => {
     if (query.trim().length === 0) {
-      setResults([]);
       return;
     }
 
@@ -135,6 +134,7 @@ export default function UnifiedSearchBar() {
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
+                if (!e.target.value.trim()) setResults([]);
                 setShowDropdown(true);
               }}
               onFocus={() => setShowDropdown(true)}
@@ -261,7 +261,7 @@ export default function UnifiedSearchBar() {
                   <span style={{ fontSize: "2rem", display: "block", marginBottom: "10px" }}>🧠</span>
                   <p style={{ margin: "0 0 10px 0", fontSize: "1.05rem", fontWeight: "bold", color: "#ff2a5f" }}>¿Sin resultados? ¡Pregúntale a Yessel!</p>
                   <p style={{ margin: 0, fontSize: "0.9rem", color: "#a0aab5", lineHeight: "1.4" }}>
-                    Haz clic aquí para enviar tu consulta <strong>"{query}"</strong> a nuestra Asistente IA. Ella revisará todo el catálogo por ti de inmediato.
+                    Haz clic aquí para enviar tu consulta <strong>&quot;{query}&quot;</strong> a nuestra Asistente IA. Ella revisará todo el catálogo por ti de inmediato.
                   </p>
                 </div>
               ) : (

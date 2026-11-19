@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
     
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +22,9 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       
+      - name: Voice regression tests
+        run: npm run test:voice
+
       - name: Lint Check
         run: npm run lint
       
