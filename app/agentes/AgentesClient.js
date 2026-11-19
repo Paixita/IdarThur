@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import ChatMessage from '@/components/ChatMessage';
 import { useState, useEffect, useRef } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
@@ -153,6 +154,7 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
+          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text })),
           agentId: activeChat.id
         })
       });
@@ -209,6 +211,7 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
+          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text })),
           agentId: 'default'
         })
       });
@@ -391,7 +394,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    {msg.text}
+                    <ChatMessage text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}
@@ -468,7 +471,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    {msg.text}
+                    <ChatMessage text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}

@@ -148,3 +148,22 @@ test('El audio conserva los párrafos y agrupa frases sin perder contenido', () 
   assert.equal(packSpeechText(text).join(' '), text);
   assert.equal(packSpeechText(text).length, 1);
 });
+
+
+test('El botón sigue la respuesta activa y sus estados al cambiar de mensaje', () => {
+  const p = player();
+  p.context.playAlvaroAudio('Primera respuesta.');
+  assert.equal(vm.runInContext('getAlvaroSnapshot()', p.context).status, 'loading');
+  assert.equal(vm.runInContext('getAlvaroSnapshot()', p.context).text, 'Primera respuesta.');
+  p.audios[0].fire('playing');
+  assert.equal(vm.runInContext('getAlvaroSnapshot()', p.context).status, 'playing');
+  p.context.playAlvaroAudio('Segunda respuesta.');
+  assert.equal(vm.runInContext('getAlvaroSnapshot()', p.context).text, 'Segunda respuesta.');
+  assert.equal(p.audios[0].paused, true);
+  p.context.stopAlvaroAudio();
+  assert.equal(vm.runInContext('getAlvaroSnapshot()', p.context).status, 'idle');
+});
+
+test('La conversación se narra sin leer los enlaces de la bibliografía', () => {
+  assert.equal(prepareSpeechText('Una alternativa es Lima.\n\nFuentes consultadas (hoy UTC):\n1. [JetSMART](https://jetsmart.com)'), 'Una alternativa es Lima.');
+});

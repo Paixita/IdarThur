@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
+import ChatMessage from './ChatMessage';
 import PremiumAudioModal from './PremiumAudioModal';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import { useVipAudio } from '@/hooks/useVipAudio';
@@ -28,9 +29,10 @@ export default function YesselFloating() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, messages: [...messages, userMessage].slice(-12) })
       });
       const data = await res.json();
+      if (!res.ok || typeof data.reply !== 'string' || !data.reply.trim()) throw new Error('Respuesta no disponible');
       
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
       if (isAudioPremium) {
@@ -41,7 +43,7 @@ export default function YesselFloating() {
     } finally {
       setIsLoading(false);
     }
-  }, [isAudioPremium]);
+  }, [isAudioPremium, messages]);
 
   // Auto-scroll al fondo
   useEffect(() => {
@@ -114,11 +116,6 @@ export default function YesselFloating() {
       if (ws) ws.close();
     };
   }, [isAudioPremium]);
-
-  const formatMessage = (text) => {
-    const formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #45f3ff; text-decoration: underline; font-weight: bold; background: rgba(69,243,255,0.1); padding: 5px 10px; border-radius: 10px; display: inline-block; margin-top: 5px;">$1</a>');
-    return { __html: formatted };
-  };
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -221,7 +218,7 @@ export default function YesselFloating() {
                 fontSize: '0.95rem', lineHeight: '1.4',
                 borderBottomRightRadius: msg.role === 'user' ? '5px' : '20px',
                 borderTopLeftRadius: msg.role === 'assistant' ? '5px' : '20px',
-              }} dangerouslySetInnerHTML={formatMessage(msg.content)} />
+              }}><ChatMessage text={msg.content} assistant={msg.role === 'assistant'} /></div>
             ))}
             {isLoading && (
               <div style={{ alignSelf: 'flex-start', color: '#45f3ff', fontStyle: 'italic', fontSize: '0.9rem' }}>Yessel está escribiendo...</div>

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { playAlvaroAudio, stopAlvaroAudio } from '@/utils/playAlvaro';
 import config from '@/data/config.json';
+import { buildFlightLink, buildHotelLink } from '@/utils/travelLinks.mjs';
 
 export default function Hero() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -59,12 +60,11 @@ export default function Hero() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTab === 'vuelos') {
-      // Abrir buscador de vuelos oficial de WayAway con marker de afiliado
-      const query = destination ? `vuelos a ${destination}` : '';
-      window.open(`https://wayaway.io/search?marker=729418&query=${encodeURIComponent(query)}`, '_blank');
+      // Abrir el comparador con la ruta y la afiliación
+      window.open(buildFlightLink(destination, origin || 'Medellín'), '_blank', 'noopener,noreferrer');
     } else if (searchTab === 'hoteles') {
-      // Abrir buscador de Hotellook con marker
-      window.open(`https://search.hotellook.com/?destination=${encodeURIComponent(hotelDestination)}&marker=729418`, '_blank');
+      // Abrir el buscador de alojamientos
+      window.open(buildHotelLink(hotelDestination), '_blank', 'noopener,noreferrer');
     } else if (searchTab === 'autos') {
       // Abrir buscador de DiscoverCars con ID de afiliado
       window.open(`https://www.discovercars.com/?a_aid=${config.brandName}`, '_blank');

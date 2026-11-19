@@ -5,6 +5,14 @@ import { prepareSpeechText, packSpeechText } from './speechText.mjs';
 import prerecordedNarrations from '@/data/audio/manifest.json';
 
 let sessionId = 0;
+const idleSnapshot = { status: 'idle', text: '', error: '' };
+let playbackSnapshot = idleSnapshot;
+export const getAlvaroSnapshot = () => playbackSnapshot;
+export const getAlvaroServerSnapshot = () => idleSnapshot;
+function setPlaybackSnapshot(status, text = playbackSnapshot.text, error = '') {
+  playbackSnapshot = { status, text, error };
+  window.dispatchEvent(new CustomEvent('alvaro-tts-change', { detail: null }));
+}
 const preparedAudios = new Map();
 let prerecordedUrl = null;
 let queue = [];
@@ -29,6 +37,7 @@ function finishPlayback(error) {
   playing = false;
   queue = [];
   index = 0;
+  setPlaybackSnapshot(error ? 'error' : 'idle', playbackSnapshot.text, error || '');
   if (error) emit('alvaro-tts-error', { message: error });
   emit('alvaro-tts-end');
 }
@@ -72,6 +81,7 @@ function speakWithBrowser(sentence, session) {
     if (!cancelled && isActive(session)) finishPlayback('No se pudo reproducir la voz.');
   };
   try {
+    setPlaybackSnapshot('playing');
     window.speechSynthesis.speak(utterance);
   } catch {
     finishPlayback('No se pudo iniciar la voz del navegador.');
@@ -115,6 +125,7 @@ function playCurrent(session) {
   };
   handlers.playing = () => {
     if (settled || !isActive(session)) return;
+    setPlaybackSnapshot('playing');
     clearTimeout(loadTimer);
     clearTimeout(stallTimer);
     // Precargar mientras ya se escucha el bloque actual.
@@ -160,6 +171,7 @@ export function playAlvaroAudio(text) {
   playing = true;
   alertSent = false;
   const session = ++sessionId;
+  setPlaybackSnapshot('loading', prepared);
   emit('alvaro-tts-start');
   playCurrent(session);
 }
@@ -176,9 +188,11 @@ export function isAlvaroSpeaking() {
 }
 
 export function subscribeToAlvaro(onChange) {
+  window.addEventListener('alvaro-tts-change', onChange);
   window.addEventListener('alvaro-tts-start', onChange);
   window.addEventListener('alvaro-tts-end', onChange);
   return () => {
+    window.removeEventListener('alvaro-tts-change', onChange);
     window.removeEventListener('alvaro-tts-start', onChange);
     window.removeEventListener('alvaro-tts-end', onChange);
   };

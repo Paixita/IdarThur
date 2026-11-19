@@ -8,6 +8,8 @@ const ENTITIES = {
 export function prepareSpeechText(value, lang = 'es') {
   return String(value ?? '')
     .normalize('NFC')
+    .replace(/\n\nFuentes consultadas \([\s\S]*$/, '')
+    .replace(/[【〖][^】〗]*[】〗]/g, '')
     .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, code) => {
       if (code.startsWith('#')) {
         const point = code[1].toLowerCase() === 'x'
