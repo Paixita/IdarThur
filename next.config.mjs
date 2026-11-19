@@ -7,7 +7,11 @@ const nextConfig = {
   outputFileTracingRoot: fileURLToPath(new URL('.', import.meta.url)),
   turbopack: { root: fileURLToPath(new URL('.', import.meta.url)) },
   outputFileTracingIncludes: {
-    '/api/tts': ['node_modules/kokoro-js/voices/em_alex.bin', 'node_modules/espeak-ng/dist/*.wasm'],
+    '/api/tts': [
+      'node_modules/kokoro-js/voices/em_alex.bin',
+      'node_modules/espeak-ng/dist/*.wasm',
+      'node_modules/onnxruntime-node/bin/napi-v3/linux/x64/*',
+    ],
   },
   outputFileTracingExcludes: {
     '/api/tts': [
