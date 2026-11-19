@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Validate production build
 
 on:
   push:
@@ -31,10 +31,5 @@ jobs:
       - name: Build Project
         run: npm run build
       
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: team_QjbuMHjfw2nXnOJjAmvMQC2v
-          vercel-project-id: prj_1AuAvq1eTYXJkYrauP6OiPp3rmUx
-          vercel-args: '--prod'
+      # Vercel publica main mediante su integración Git y reporta el resultado.
+      # Esta automatización valida el mismo código sin duplicar el despliegue.
