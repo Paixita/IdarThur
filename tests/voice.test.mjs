@@ -167,3 +167,13 @@ test('El botón sigue la respuesta activa y sus estados al cambiar de mensaje', 
 test('La conversación se narra sin leer los enlaces de la bibliografía', () => {
   assert.equal(prepareSpeechText('Una alternativa es Lima.\n\nFuentes consultadas (hoy UTC):\n1. [JetSMART](https://jetsmart.com)'), 'Una alternativa es Lima.');
 });
+
+
+test('La preparación inicial usa su plazo de carga y no se corta como si fuera una interrupción', () => {
+ const p=player(); p.context.playAlvaroAudio('Preparando una respuesta nueva.');
+ p.audios[0].fire('waiting');
+ assert.equal(p.timers.size,1); assert.equal([...p.timers.values()][0].ms,55000);
+ p.audios[0].fire('playing'); p.audios[0].fire('waiting');
+ assert.equal(p.timers.size,1); assert.equal([...p.timers.values()][0].ms,20000);
+ p.context.stopAlvaroAudio(); assert.equal(p.timers.size,0);
+});

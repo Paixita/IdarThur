@@ -100,6 +100,7 @@ function playCurrent(session) {
   preparedAudios.delete(index);
   audio.preload = 'auto';
   let settled = false;
+  let hasPlayed = false;
   let loadTimer;
   let stallTimer;
   const handlers = {};
@@ -125,6 +126,7 @@ function playCurrent(session) {
   };
   handlers.playing = () => {
     if (settled || !isActive(session)) return;
+    hasPlayed = true;
     setPlaybackSnapshot('playing');
     clearTimeout(loadTimer);
     clearTimeout(stallTimer);
@@ -140,7 +142,7 @@ function playCurrent(session) {
     }
   };
   handlers.waiting = () => {
-    if (settled || !isActive(session)) return;
+    if (settled || !isActive(session) || !hasPlayed) return;
     clearTimeout(stallTimer);
     stallTimer = setTimeout(() => fallback('TTS_STALLED'), STALL_TIMEOUT_MS);
   };
