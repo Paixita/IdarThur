@@ -17,7 +17,8 @@ export function prepareSpeechText(value, lang = 'es') {
       return ENTITIES[code.toLowerCase()] ?? ' ';
     })
     .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
-    .replace(/<\/?(?:p|div|br|li|h[1-6])\b[^>]*>/gi, ' ')
+    .replace(/<br\s*\/?\s*>/gi, '\n')
+    .replace(/<\/(?:p|div|li|h[1-6])\s*>/gi, '\n\n')
     .replace(/<[^>]*>/g, '')
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, ' ')
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
@@ -27,7 +28,9 @@ export function prepareSpeechText(value, lang = 'es') {
     .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D]/gu, '')
     .replace(/["“”«»„‟]/g, '')
     .replace(/&/g, lang === 'en' ? ' and ' : ' y ')
-    .replace(/\s+/g, ' ')
+    .replace(/[^\S\n]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
 
@@ -48,4 +51,15 @@ export function splitSpeechText(value, limit = SPEECH_CHUNK_CHARS) {
     if (rest) chunks.push(rest);
   }
   return chunks;
+}
+
+// Mantener varias frases juntas evita una petición nueva en cada punto.
+export function packSpeechText(value, limit = SPEECH_CHUNK_CHARS) {
+  const result = [];
+  for (const sentence of splitSpeechText(value, limit)) {
+    const last = result.length - 1;
+    if (last >= 0 && result[last].length + sentence.length + 1 <= limit) result[last] += ' ' + sentence;
+    else result.push(sentence);
+  }
+  return result;
 }

@@ -20,52 +20,7 @@ export default function TiendaClient() {
   }, []);
 
   const handleProductClick = (product) => {
-    const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, '')) || 10.0;
-    
-    // Enviar evento de añadir al carrito
-    trackTikTokEvent('AddToCart', {
-      contents: [
-        {
-          content_id: String(product.id),
-          content_type: 'product',
-          content_name: product.name,
-          quantity: 1,
-          price: numericPrice
-        }
-      ],
-      value: numericPrice,
-      currency: 'USD'
-    });
-    
-    // Enviar evento de iniciar checkout
-    trackTikTokEvent('InitiateCheckout', {
-      contents: [
-        {
-          content_id: String(product.id),
-          content_type: 'product',
-          content_name: product.name,
-          quantity: 1,
-          price: numericPrice
-        }
-      ],
-      value: numericPrice,
-      currency: 'USD'
-    });
-
-    // Enviar evento de compra simulada (afiliado)
-    trackTikTokEvent('Purchase', {
-      contents: [
-        {
-          content_id: String(product.id),
-          content_type: 'product',
-          content_name: product.name,
-          quantity: 1,
-          price: numericPrice
-        }
-      ],
-      value: numericPrice,
-      currency: 'USD'
-    });
+    trackTikTokEvent('ClickButton', { content_id: String(product.id), content_name: product.name, destination: 'amazon' });
   };
 
   const handleImageError = (prod) => {
@@ -77,7 +32,7 @@ export default function TiendaClient() {
   };
 
   // Configuración del Slider de Productos Destacados
-  const featuredIds = [5, 1, 10, 8, 11];
+  const featuredIds = [5, 8, 17];
   const featuredProducts = products.filter(p => featuredIds.includes(p.id));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -95,7 +50,7 @@ export default function TiendaClient() {
     : products.filter(p => p.categoryId === activeCategory);
 
   return (
-    <main style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }} className="container">
+    <main style={{ paddingTop: '155px', minHeight: '100vh', paddingBottom: '100px' }} className="container">
       
       {/* HEADER DE LA TIENDA */}
       <div style={{ textAlign: 'center', marginBottom: '50px' }}>
@@ -103,9 +58,16 @@ export default function TiendaClient() {
           La Gran Tienda <span className="text-gradient">IdarThur</span>
         </h1>
         <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
-          Todo lo que necesitas para tu próxima aventura, probado en batalla y garantizado por las reseñas de miles de viajeros. Compra directo y seguro en Amazon.
+          Encuentra equipaje y accesorios para tu próxima aventura. Los enlaces abren Amazon para comparar opciones, confirmar el modelo y consultar su precio vigente.
         </p>
       </div>
+
+      <section className="shop-editorial" aria-label="Inspiración para equipar tu viaje">
+        <img src="/renovacion/tienda-editorial.webp" alt="Ilustración de equipaje y accesorios de viaje en una terminal" fetchPriority="high" />
+        <div><span>LISTOS PARA SALIR</span><h2>Tu próxima aventura<br />empieza con buen equipo.</h2><p>Explora la selección de viaje y encuentra opciones en Amazon.</p><a href="#catalogo" className="btn-primary">Explorar la tienda ↓</a></div>
+        <small>Imagen editorial creada con IA</small>
+      </section>
+      <p className="shop-disclosure">Las imágenes son referenciales. Los botones de búsqueda abren opciones de la misma categoría; confirma en Amazon la foto, el modelo, el precio y la disponibilidad. Como afiliado de Amazon, IdarThur puede recibir una comisión por compras que cumplan los requisitos.</p>
 
       {/* BUSCADOR UNIFICADO Y ASESORÍA */}
       <div style={{ marginBottom: '50px' }}>
@@ -114,7 +76,7 @@ export default function TiendaClient() {
 
       {/* SLIDER DE PRODUCTOS DESTACADOS */}
       <div 
-        className="glass" 
+        className="glass shop-featured" 
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         style={{ 
@@ -137,7 +99,7 @@ export default function TiendaClient() {
           transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
         }}>
           {featuredProducts.map(prod => (
-            <div key={prod.id} style={{ 
+            <div key={prod.id} className="shop-slide" style={{ 
               width: `${100 / featuredProducts.length}%`, 
               height: '100%', 
               display: 'flex',
@@ -148,7 +110,7 @@ export default function TiendaClient() {
               position: 'relative'
             }}>
               {/* Left Side: Info */}
-              <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+              <div className="shop-slide-info" style={{ flex: 1.2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
                 <span style={{ 
                   background: 'linear-gradient(45deg, var(--primary), var(--accent))', 
                   color: 'white', 
@@ -171,14 +133,14 @@ export default function TiendaClient() {
                   {prod.copy}
                 </p>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '25px', marginTop: '10px' }}>
-                  <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#00d4ff' }}>
+                <div className="shop-slide-actions" style={{ display: 'flex', alignItems: 'center', gap: '25px', marginTop: '10px' }}>
+                  <span style={{ fontSize: '1rem', fontWeight: 'bold', color: '#00d4ff' }}>
                     {prod.price}
                   </span>
                   <a 
                     href={prod.affiliateLink} 
                     target="_blank" 
-                    rel="noopener noreferrer" 
+                    rel="noopener noreferrer sponsored" 
                     onClick={() => handleProductClick(prod)}
                     className="btn-amazon-slider"
                     style={{ 
@@ -195,13 +157,13 @@ export default function TiendaClient() {
                       transition: 'all 0.3s'
                     }}
                   >
-                    Comprar en Amazon 🛒
+                    {prod.amazonLinkType === 'search' ? 'Ver opciones en Amazon ↗' : 'Ver producto en Amazon ↗'}
                   </a>
                 </div>
               </div>
 
               {/* Right Side: Image */}
-              <div style={{ flex: 0.8, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="shop-slide-visual" style={{ flex: 0.8, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ 
                   width: '100%', 
                   height: '320px', 
@@ -295,14 +257,14 @@ export default function TiendaClient() {
       </div>
 
       {/* GRID DE PRODUCTOS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '40px' }}>
+      <div id="catalogo" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '30px' }}>
         {filteredProducts.map(product => (
           <div key={product.id} className="glass product-card" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s, box-shadow 0.3s' }}>
             
             <a 
               href={product.affiliateLink} 
               target="_blank" 
-              rel="noopener noreferrer" 
+              rel="noopener noreferrer sponsored" 
               onClick={() => handleProductClick(product)}
               style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
             >
@@ -322,13 +284,13 @@ export default function TiendaClient() {
                 <span style={{ color: '#a0aab5', fontSize: '0.9rem', marginBottom: '10px' }}>
                   {categories.find(c => c.id === product.categoryId)?.icon} {categories.find(c => c.id === product.categoryId)?.name}
                 </span>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '15px', lineHeight: '1.3' }}>{product.name}</h3>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '15px', lineHeight: '1.3' }}>{product.name}</h3><span style={{ color: '#9bafa5', fontSize: '0.78rem', marginBottom: '14px' }}>Imagen referencial · {product.amazonLinkType === 'search' ? 'Compara opciones de esta categoría' : 'Consulta el producto en Amazon'}</span>
                 <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
                   {product.copy}
                 </p>
                 
                 <div className="btn-amazon" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem', background: '#ff9900', color: '#111', textAlign: 'center', transition: 'background 0.3s' }}>
-                  Comprar en Amazon 🛒
+                  {product.amazonLinkType === 'search' ? 'Ver opciones en Amazon ↗' : 'Ver producto en Amazon ↗'}
                 </div>
               </div>
             </a>
@@ -338,6 +300,10 @@ export default function TiendaClient() {
       </div>
 
       <style>{`
+        .shop-editorial{position:relative;overflow:hidden;border-radius:28px;min-height:360px;margin:25px 0 16px;background:#d8d3ca}.shop-editorial>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.shop-editorial>div{position:relative;z-index:1;max-width:620px;padding:55px 42px;background:linear-gradient(90deg,rgba(246,242,232,.96),rgba(246,242,232,.5),transparent);color:#123d31}.shop-editorial span{font-size:.78rem;font-weight:900;letter-spacing:.16em}.shop-editorial h2{font-size:clamp(1.7rem,3vw,2.7rem);line-height:1.15;margin:15px 0}.shop-editorial p{line-height:1.6;max-width:310px;margin-bottom:25px}.shop-editorial small{position:absolute;bottom:12px;right:15px;color:white;background:#15271ebf;padding:5px 9px;border-radius:10px;font-size:.68rem}.shop-disclosure{font-size:.83rem;line-height:1.7;color:#a0b3aa;max-width:1050px;margin:0 auto 38px}.product-img{object-fit:contain!important;background:#f4f0e8}@media(max-width:600px){.shop-editorial>div{padding:35px 24px;max-width:100%;background:rgba(246,242,232,.85)}.shop-editorial>img{object-position:65% center}}
+
+        .shop-slide{flex-shrink:0;min-width:0}.shop-slide-info,.shop-slide-visual{min-width:0}.shop-slide-actions{flex-wrap:wrap}
+        @media(max-width:768px){.shop-featured{height:680px!important}.shop-slide{flex-direction:column!important;padding:28px 32px!important;gap:24px!important}.shop-slide-info{flex:none!important;width:100%;height:auto!important}.shop-slide-visual{flex:none!important;width:100%;height:230px!important}.shop-slide-visual>div{height:100%!important}.shop-slide h2{font-size:1.65rem!important}.shop-slide .btn-amazon-slider{padding:10px 14px!important;font-size:.9rem!important}.shop-slide-actions{gap:10px!important}}
         .product-card:hover {
           transform: translateY(-10px);
           box-shadow: 0 15px 40px rgba(0, 212, 255, 0.15);

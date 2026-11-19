@@ -1,156 +1,31 @@
 "use client";
 import Link from 'next/link';
-
+const flightLink = (destination) => 'https://wayaway.io/search?' + new URLSearchParams({ marker: '729418', query: 'vuelos desde Medellín a ' + destination });
+const destinations = [
+  { id: 'lima', city: 'Lima', badge: 'Gastronomía y Pacífico', image: '/renovacion/lima.webp', title: 'Lima: la puerta de entrada a Perú',
+    description: 'Recorre Miraflores y Barranco, descubre el centro histórico y organiza una escapada alrededor de la cocina peruana. Una llegada a Lima también permite planear conexiones hacia otros destinos del país.',
+    route: 'Medellín (MDE) → Lima (LIM)', flight: 'LATAM y JetSMART publican opciones para la ruta Medellín–Lima. Compara las fechas, el equipaje incluido y las condiciones antes de reservar.',
+    source: 'https://www.peru.travel/es/destinos/lima', airline: 'https://jetsmart.com/ofertas/es-co/vuelos-desde-medellin-a-lima' },
+  { id: 'cusco', city: 'Cusco', badge: 'Cultura andina', image: '/renovacion/cusco.webp', title: 'Cusco: historia, plazas y la Fiesta del Sol',
+    description: 'Explora el centro histórico y el Valle Sagrado. El Inti Raymi se celebra cada 24 de junio: consulta el programa oficial de la edición que vas a visitar y organiza tu alojamiento con anticipación.',
+    route: 'Medellín → Lima → Cusco (CUZ)', flight: 'Al comparar vuelos a Cusco, revisa las conexiones y el tiempo entre trayectos. Consulta las condiciones de cada reserva y deja margen para organizar tu llegada.',
+    source: 'https://www.peru.travel/es/eventos/inti-raymi', airline: 'https://www.latamairlines.com/co/es' },
+];
 export default function EventosClient() {
-  return (
-    <main className="container" style={{ paddingTop: '120px', minHeight: '100vh', paddingBottom: '100px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-        <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', marginBottom: '15px' }}>
-          Eventos <span className="text-gradient">Globales</span>
-        </h1>
-        <p style={{ fontSize: '1.2rem', color: '#a0aab5', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
-          Vive las mejores festividades del mundo. Reserva ahora vuelos y alojamiento con nuestros aliados oficiales.
-        </p>
+  return <main className="container events-page">
+    <header className="events-intro"><span className="events-eyebrow">INSPIRACIÓN PARA TU PRÓXIMA ESCAPADA</span><h1>Eventos, cultura <span className="text-gradient">y vuelos a Perú</span></h1><p>Nuevos paisajes, encuentros culturales y rutas para preparar tu viaje con IdarThur.</p></header>
+    <section className="events-grid" aria-label="Destinos destacados en Perú">{destinations.map((destination) => <article key={destination.id} className="glass destination-card">
+      <div className="destination-media"><img src={destination.image} alt={'Ilustración de viaje de ' + destination.city + ', Perú'} loading="lazy" /><span>{destination.badge}</span></div>
+      <div className="destination-body"><p className="destination-location">PERÚ · {destination.city.toUpperCase()}</p><h2>{destination.title}</h2><p>{destination.description}</p><div className="flight-review"><strong>✈ {destination.route}</strong><p>{destination.flight}</p></div>
+        <div className="destination-actions"><a className="btn-primary" href={flightLink(destination.city)} target="_blank" rel="noopener noreferrer sponsored">Comparar vuelos a {destination.city} ↗</a><Link href="/peru">Ver guía de vuelos a Perú →</Link></div>
+        <div className="destination-sources"><a href={destination.source} target="_blank" rel="noopener noreferrer">Información de Perú Travel ↗</a><a href={destination.airline} target="_blank" rel="noopener noreferrer">Consultar aerolínea ↗</a></div>
       </div>
-
-      {/* Promoción de Cruceros */}
-      <div className="glass" style={{ borderRadius: '30px', padding: '40px', marginBottom: '60px', border: '1px solid rgba(255, 215, 0, 0.3)', background: 'linear-gradient(135deg, rgba(10,15,25,0.95) 0%, rgba(255, 215, 0, 0.05) 100%)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>Promoción <span style={{ color: '#ffd700' }}>Cruceros de Lujo</span></h2>
-          <p style={{ color: '#a0aab5', fontSize: '1.1rem', marginTop: '10px' }}>Descubre la experiencia IdarThur sobre el mar. (Asegúrate de encender el sonido 🔊)</p>
-        </div>
-        <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', border: '2px solid rgba(255, 215, 0, 0.2)' }}>
-          <video 
-            src="/video_crucero.mp4" 
-            controls 
-            autoPlay 
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-          />
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <button onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '15px 40px', fontSize: '1.2rem', borderRadius: '30px', background: 'linear-gradient(45deg, #d4af37, #ffd700)', color: 'black', fontWeight: 'bold' }}>
-            🛳️ Cotizar Crucero Ahora
-          </button>
-        </div>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
-        
-        {/* Feria de las Flores */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Feria de las Flores, Medellín" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Agosto</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Feria de las Flores</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Medellín, Colombia</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              La fiesta cultural más importante de Antioquia. Disfruta del desfile de silleteros, trovas, conciertos y la eterna primavera paisa.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a Medellín</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Carnaval de Barranquilla */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Carnaval de Barranquilla" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Febrero / Marzo</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Carnaval de Barranquilla</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Barranquilla, Colombia</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              Quien lo vive, es quien lo goza. Sumérgete en el segundo carnaval más grande del mundo lleno de color, cumbia y alegría caribeña.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a Barranquilla</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Festival Sakura */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sakura en Japón" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Marzo / Abril</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Sakura (Cerezos)</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Tokio / Kioto, Japón</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              El espectáculo natural más hermoso de Asia. Viaja a Japón durante el florecimiento de los cerezos para una experiencia mágica e inolvidable.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a Japón</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Tomorrowland */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tomorrowland Bélgica" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Julio</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Tomorrowland</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Boom, Bélgica</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              El festival de música electrónica más grande y famoso del mundo. Una experiencia visual y sonora que cambia la vida.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a Bélgica</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-        {/* La Tomatina */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="La Tomatina España" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Agosto</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>La Tomatina</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Buñol, España</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              La batalla de comida más grande y épica de Europa. Toneladas de tomates y pura diversión en las calles de Valencia.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a España</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Inti Raymi */}
-        <div className="glass" style={{ borderRadius: '25px', overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.3s', cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-          <div style={{ height: '250px', position: 'relative' }}>
-            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Inti Raymi Perú" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'black', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem' }}>Junio</div>
-          </div>
-          <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Festival Inti Raymi</h3>
-            <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginBottom: '15px' }}>📍 Cusco, Perú</p>
-            <p style={{ color: '#d1d5db', lineHeight: '1.6', marginBottom: '25px', flex: 1 }}>
-              La antigua ceremonia religiosa inca en honor al sol. Disfruta de la magia ancestral en las ruinas de Sacsayhuamán.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-              <button onClick={() => window.open('https://wayaway.io/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '1rem' }}>✈️ Vuelos a Perú</button>
-              <button onClick={() => window.open('https://sp.booking.com/genius.es.html?label=affnetTP_399989189573503', '_blank')} style={{ padding: '12px', borderRadius: '15px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.2)'} onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}>🏨 Hoteles Cerca</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </main>
-  );
+    </article>)}</section>
+    <section className="glass cultural-calendar"><span className="events-eyebrow">AGENDA CULTURAL PARA PLANEAR</span><h2>Dos celebraciones que invitan a viajar</h2><div className="calendar-grid"><article><strong>24 de junio · Cusco</strong><h3>Inti Raymi, la Fiesta del Sol</h3><p>Una celebración anual de la cultura inca. Confirma el programa y las entradas con la organización de cada edición.</p><a href="https://www.peru.travel/es/eventos/inti-raymi" target="_blank" rel="noopener noreferrer">Conocer la celebración ↗</a></article><article><strong>15 de agosto · Arequipa</strong><h3>Aniversario de la Ciudad Blanca</h3><p>Tradición, gastronomía y actividades culturales. Compara vuelos a Arequipa y revisa las conexiones disponibles para tus fechas.</p><a href="https://www.peru.travel/es/eventos/fundacion-de-arequipa-cuna-de-ilustres-peruanos" target="_blank" rel="noopener noreferrer">Consultar Perú Travel ↗</a><a href={flightLink('Arequipa')} target="_blank" rel="noopener noreferrer sponsored">Comparar vuelos a Arequipa ↗</a></article></div></section>
+    <section className="glass events-cruise"><div><span className="events-eyebrow">TAMBIÉN SOBRE EL MAR</span><h2>Descubre los cruceros de IdarThur</h2><p>Inspírate con nuestra presentación y consulta a Yessel para organizar la experiencia que buscas.</p><Link href="/hoteles#cruceros" className="btn-primary">Explorar cruceros →</Link></div><video src="/video_crucero.mp4" controls preload="metadata" aria-label="Presentación de cruceros de IdarThur" /></section>
+    <p className="events-note">Las imágenes de Lima y Cusco son ilustraciones de destino creadas con IA. Los vuelos, tarifas y programas culturales dependen de la fecha y del operador; consulta los enlaces oficiales antes de reservar.</p>
+    <style>{`
+      .events-page{padding-top:155px;padding-bottom:70px}.events-intro{text-align:center;max-width:900px;margin:0 auto 42px}.events-eyebrow{color:#6ee7b7;font-size:.8rem;font-weight:800;letter-spacing:.15em}.events-intro h1{font-size:clamp(2.5rem,5vw,4.2rem);line-height:1.12;margin:16px 0}.events-intro>p{color:#afbdc6;font-size:1.2rem;line-height:1.6}.events-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.destination-card{border-radius:28px;overflow:hidden;display:flex;flex-direction:column}.destination-media{height:300px;position:relative}.destination-media img{height:100%;width:100%;object-fit:cover}.destination-media>span{position:absolute;bottom:18px;left:20px;background:#04352ddf;border:1px solid #65d9ad;padding:8px 14px;border-radius:20px;font-weight:800;color:#b8ffe2}.destination-body{padding:30px;display:flex;flex-direction:column;flex:1}.destination-location{color:#6ee7b7;font-size:.8rem;font-weight:800;letter-spacing:.15em}.destination-body h2{font-size:1.8rem;line-height:1.25;margin:12px 0 18px}.destination-body p{line-height:1.75;color:#b7c3cc}.flight-review{margin:22px 0;padding:20px;background:#102720;border-radius:16px}.flight-review strong{color:#8debc1}.flight-review p{margin:10px 0 0;font-size:.95rem}.destination-actions{display:flex;flex-direction:column;gap:16px;margin-top:auto}.destination-actions>a{text-align:center}.destination-sources{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;font-size:.8rem;color:#a0b9ad}.cultural-calendar{padding:32px;border-radius:26px;margin:35px 0}.cultural-calendar h2{font-size:2rem;margin:12px 0 25px}.calendar-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}.calendar-grid strong{color:#6ee7b7}.calendar-grid h3{font-size:1.3rem;margin:14px 0}.calendar-grid p{color:#afbdc6;line-height:1.7}.calendar-grid a{display:block;color:#8debc1;margin-top:14px}.events-cruise{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding:32px;border-radius:26px}.events-cruise h2{font-size:2rem;margin:14px 0}.events-cruise p{color:#b3c0c8;line-height:1.7;margin-bottom:24px}.events-cruise video{width:100%;border-radius:18px}.events-note{color:#91a59c;font-size:.85rem;line-height:1.7;margin:28px 0}@media(max-width:760px){.events-page{padding-top:125px}.events-grid,.calendar-grid,.events-cruise{grid-template-columns:1fr}.destination-media{height:250px}.destination-body{padding:24px}.cultural-calendar,.events-cruise{padding:24px}}
+    `}</style>
+  </main>;
 }

@@ -1,53 +1,14 @@
 "use client";
 import Link from 'next/link';
+import { products, categories } from '@/data/tienda';
 import config from '@/data/config.json';
 
 const TAG = config.defaultAffiliateTag;
 
-const PRODUCTOS = [
-  {
-    id: 1,
-    name: 'Cámara Blink Mini 2K+',
-    price: '$44.99',
-    category: 'Seguridad del hogar',
-    img: '/tienda/camara_seguridad.jpg',
-    affiliateLink: 'https://amzn.to/4ulMw3w',
-    badge: 'Más vendida',
-  },
-  {
-    id: 2,
-    name: 'Chaqueta Cotrasen para Hombre',
-    price: '$119.99',
-    category: 'Ropa de invierno',
-    img: '/tienda/chaqueta_hombre.jpg',
-    affiliateLink: 'https://www.amazon.com/s?k=Cotrasen+Chaqueta+de+trabajo+para+hombre',
-  },
-  {
-    id: 3,
-    name: 'Botiquín CTIME Organizador XL',
-    price: '$29.99',
-    category: 'Salud de viaje',
-    img: '/tienda/botiquin_viaje.jpg',
-    affiliateLink: 'https://www.amazon.com/s?k=CTIME+Botiquin+Organizador+XL',
-  },
-  {
-    id: 4,
-    name: 'Set de Maletas Rígidas Premium',
-    price: '$159.00',
-    category: 'Equipaje',
-    img: '/tienda/equipaje_premium.jpg',
-    affiliateLink: 'https://www.amazon.com/s?k=Hard+Shell+Luggage+Set',
-    badge: 'Favorita',
-  },
-  {
-    id: 5,
-    name: 'Kit de Viaje para Mascotas',
-    price: '$34.90',
-    category: 'Viajar con mascotas',
-    img: '/tienda/mascotas_amigos.jpg',
-    affiliateLink: 'https://www.amazon.com/s?k=Travel+Pet+Kit',
-  },
-];
+const PRODUCTOS = [5, 8, 17].map((id) => {
+  const product = products.find((p) => p.id === id);
+  return { ...product, category: categories.find((c) => c.id === product.categoryId)?.name };
+});
 
 const withTag = (url) => {
   if (!url) return '#';
@@ -63,7 +24,7 @@ export default function EcommerceHighlights() {
         <h2>
           Equípate con <span className="text-gradient-emerald">{config.brandName}</span>
         </h2>
-        <p>Productos reales, probados por viajeros. Cada compra se completa de forma segura en Amazon.</p>
+        <p>Ideas para equipar tu viaje. Compara modelos y consulta el precio vigente directamente en Amazon.</p>
       </div>
 
       <div className="tienda-grid">
@@ -76,15 +37,15 @@ export default function EcommerceHighlights() {
               className="producto-media"
               aria-label={`Comprar ${p.name} en Amazon`}
             >
-              <img src={p.img} alt={p.name} loading="lazy" />
+              <img src={p.img} alt={p.name + ", imagen ilustrativa"} loading="lazy" />
               {p.badge && <span className="producto-badge">{p.badge}</span>}
             </a>
 
             <div className="producto-body">
               <span className="producto-cat">{p.category}</span>
-              <h3>{p.name}</h3>
+              <h3>{p.name}</h3><p style={{ fontSize: '0.78rem', color: '#a4b2ad', marginBottom: '14px' }}>Imagen ilustrativa · Compara modelos en Amazon</p>
               <div className="producto-bottom">
-                <strong>{p.price}</strong>
+                <strong style={{ fontSize: '0.85rem' }}>{p.price}</strong>
                 <a
                   href={withTag(p.affiliateLink)}
                   target="_blank"

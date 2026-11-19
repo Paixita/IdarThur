@@ -140,6 +140,7 @@ export default function UnifiedSearchBar() {
               onFocus={() => setShowDropdown(true)}
               style={{
                 flex: 1,
+                minWidth: 0,
                 background: "transparent",
                 border: "none",
                 color: "white",

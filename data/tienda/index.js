@@ -9,7 +9,7 @@ export const categories = [
   { id: "fitness", name: "Fitness y Gimnasio", icon: "🏋️" }
 ];
 
-export const products = [
+const catalogProducts = [
   {
     id: 1,
     categoryId: "ropa",
@@ -55,7 +55,7 @@ export const products = [
     categoryId: "equipaje",
     name: "Maleta de Viaje Premium",
     price: "$149.99",
-    img: "/tienda/equipaje_premium.png",
+    img: "/renovacion/maleta.webp",
     affiliateLink: "https://www.amazon.com/s?k=Premium+Polycarbonate+Luggage+Travel+Suitcase&tag=idarthur-20",
     copy: "Elegancia, resistencia y capacidad. Diseñada con tecnología de policarbonato ultraligero y candado TSA integrado. El equipaje perfecto para recorrer el mundo con estilo.",
     bestseller: true
@@ -85,7 +85,7 @@ export const products = [
     categoryId: "mascotas",
     name: "Mochila Cápsula Astronauta",
     price: "$55.99",
-    img: "/tienda/mochila_mascota.png",
+    img: "/renovacion/transportadora.webp",
     affiliateLink: "https://www.amazon.com/s?k=Cat+Backpack+Carrier+Bubble&tag=idarthur-20",
     copy: "Mochila transportadora transparente panorámica. Tu gato o perro pequeño viajará súper cómodo y disfrutará del paisaje en cabina o de paseo contigo.",
     bestseller: true
@@ -175,7 +175,7 @@ export const products = [
     categoryId: "fitness",
     name: "Set de Bandas de Resistencia Elasticas",
     price: "$18.50",
-    img: "/tienda/bandas_resistencia.jpg",
+    img: "/renovacion/bandas.webp",
     affiliateLink: "https://www.amazon.com/s?k=Resistance+Bands+Workout+Set&tag=idarthur-20",
     copy: "Tu gimnasio portátil favorito. 5 bandas de diferentes intensidades, anclaje de puerta y correas para tobillos. Entrena fuerza en cualquier habitación de hotel o casa.",
     bestseller: false
@@ -191,3 +191,12 @@ export const products = [
     bestseller: false
   }
 ];
+
+// Los precios y el modelo definitivo se consultan en la ficha de Amazon.
+export const products = catalogProducts.map((product) => ({
+  ...product,
+  price: 'Ver precio en Amazon',
+  bestseller: false,
+  imageIsIllustrative: true,
+  amazonLinkType: product.affiliateLink.includes('/s?') ? 'search' : 'listing',
+}));

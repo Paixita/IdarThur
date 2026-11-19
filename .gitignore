@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Modelo generado durante la instalación (no publicar pesos en Git).
+/assets/kokoro-model/

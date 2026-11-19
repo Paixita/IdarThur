@@ -1,8 +1,12 @@
 // Reproductor compartido: conserva el diálogo; prepara solo su representación sonora.
 import { sendLogisticsAlert } from './alerts';
-import { prepareSpeechText, splitSpeechText } from './speechText.mjs';
+import { prepareSpeechText, packSpeechText } from './speechText.mjs';
+
+import prerecordedNarrations from '@/data/audio/manifest.json';
 
 let sessionId = 0;
+const preparedAudios = new Map();
+let prerecordedUrl = null;
 let queue = [];
 let index = 0;
 let playing = false;
@@ -17,6 +21,11 @@ const isActive = (session) => playing && session === sessionId;
 function finishPlayback(error) {
   cancelCurrent?.();
   cancelCurrent = null;
+  for (const audio of preparedAudios.values()) {
+    audio.pause(); audio.removeAttribute('src'); audio.load();
+  }
+  preparedAudios.clear();
+  prerecordedUrl = null;
   playing = false;
   queue = [];
   index = 0;
@@ -76,7 +85,9 @@ function playCurrent(session) {
     return;
   }
   const sentence = queue[index];
-  const audio = new Audio('/api/tts?text=' + encodeURIComponent(sentence) + '&lang=es&v=2');
+  const url = prerecordedUrl || '/api/tts?text=' + encodeURIComponent(sentence) + '&lang=es&v=3';
+  const audio = preparedAudios.get(index) || new Audio(url);
+  preparedAudios.delete(index);
   audio.preload = 'auto';
   let settled = false;
   let loadTimer;
@@ -106,6 +117,16 @@ function playCurrent(session) {
     if (settled || !isActive(session)) return;
     clearTimeout(loadTimer);
     clearTimeout(stallTimer);
+    // Precargar mientras ya se escucha el bloque actual.
+    if (!prerecordedUrl) {
+      for (let ahead = index + 1; ahead <= Math.min(index + 2, queue.length - 1); ahead += 1) {
+        if (preparedAudios.has(ahead)) continue;
+        const next = new Audio('/api/tts?text=' + encodeURIComponent(queue[ahead]) + '&lang=es&v=3');
+        next.preload = 'auto';
+        next.load();
+        preparedAudios.set(ahead, next);
+      }
+    }
   };
   handlers.waiting = () => {
     if (settled || !isActive(session)) return;
@@ -131,7 +152,9 @@ function playCurrent(session) {
 export function playAlvaroAudio(text) {
   if (typeof window === 'undefined') return;
   stopAlvaroAudio();
-  queue = splitSpeechText(prepareSpeechText(text));
+  const prepared = prepareSpeechText(text);
+  prerecordedUrl = prerecordedNarrations[prepared] || null;
+  queue = prerecordedUrl ? [prepared] : packSpeechText(prepared);
   if (!queue.length) return;
   index = 0;
   playing = true;

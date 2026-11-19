@@ -132,7 +132,7 @@ export default function Navbar() {
           display: flex;
           gap: 4px;
           align-items: center;
-          font-weight: 800;
+          font-weight: 900;
         }
 
         .nav-link {
@@ -141,8 +141,8 @@ export default function Navbar() {
           align-items: center;
           padding: 8px 10px;
           border-radius: 12px;
-          font-size: 0.98rem;
-          font-weight: 800;
+          font-size: 1.18rem;
+          font-weight: 900;
           letter-spacing: 0.2px;
           color: #ffffff;
           text-decoration: none;
@@ -184,7 +184,7 @@ export default function Navbar() {
           cursor: pointer;
           font-family: inherit;
           font-size: 1rem;
-          font-weight: 800;
+          font-weight: 900;
           color: #04231a;
           background: linear-gradient(135deg, #34d399, #059669);
           box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
@@ -205,12 +205,12 @@ export default function Navbar() {
             height: 72px;
           }
           .nav-link {
-            font-size: 0.95rem;
+            font-size: 1.12rem;
             padding: 8px 9px;
           }
         }
 
-        @media (max-width: 1120px) {
+        @media (max-width: 1340px) {
           .main-nav {
             padding: 10px 16px;
             top: 12px;
@@ -245,8 +245,8 @@ export default function Navbar() {
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
           }
           .nav-links > .nav-link {
-            font-size: 1.28rem;
-            font-weight: 800;
+            font-size: 1.4rem;
+            font-weight: 900;
             margin-bottom: 6px;
             width: 100%;
             padding: 12px 10px;

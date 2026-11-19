@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 import ESpeakNg from 'espeak-ng';
-import { prepareSpeechText, splitSpeechText } from '../utils/speechText.mjs';
+import { prepareSpeechText, splitSpeechText, packSpeechText } from '../utils/speechText.mjs';
 
 test('El formato se limpia solo para audio y conserva el mensaje y los acentos', () => {
   const original = '<p>¡Aquí tenemos <strong>los mejores viajes</strong>! &quot;Aerolíneas&quot;, Perú y [hoteles](https://idarthur.com).</p>';
@@ -21,19 +21,19 @@ test('Los bloques largos no pierden palabras aunque no tengan comas ni puntos', 
 });
 
 test('La fonemización real usa UTF-8 y no convierte acentos ni signos en sus nombres', async () => {
-  const source = readFileSync(new URL('../app/api/tts/route.js', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../utils/kokoroEngine.mjs', import.meta.url), 'utf8');
   const start = source.indexOf('let phonemeCounter = 0;');
   const end = source.indexOf('// Utilidades de audio', start);
   const context = { ESpeakNg, process, Date };
   vm.createContext(context);
-  vm.runInContext(source.slice(start, end), context);
+  vm.runInContext(source.slice(start, end).replace(/export /g, ''), context);
   const phonemes = await context.phonemize('Aquí, aerolíneas, Perú. ¡Hola! ¿Qué tal?', 'es');
   assert.match(phonemes, /akˈi/);
   assert.match(phonemes, /peɾˈu/);
   assert.doesNotMatch(phonemes, /tˈilðe|pˈunto|θiɾkum|kˈopir|komˈi/);
 });
 
-function player() {
+function player(prerecordedNarrations = {}) {
   const audios = [], spoken = [], alerts = [], timers = new Map(), events = [];
   let nextId = 0;
   class Audio {
@@ -47,7 +47,7 @@ function player() {
     fire(name) { this.handlers.get(name)?.(); }
   }
   const context = {
-    Audio, prepareSpeechText, splitSpeechText,
+    Audio, prepareSpeechText, packSpeechText, prerecordedNarrations,
     sendLogisticsAlert: (...args) => alerts.push(args),
     setTimeout: (fn, ms) => { timers.set(++nextId, { fn, ms }); return nextId; },
     clearTimeout: (id) => timers.delete(id),
@@ -115,4 +115,36 @@ test('La voz de respaldo también se cancela y no avanza después de detener', (
   assert.equal(p.audios.length, 1);
   assert.equal(p.timers.size, 0);
   assert.equal(p.context.isAlvaroSpeaking(), false);
+});
+
+test('Las narraciones preparadas se reproducen completas en un archivo, sin llamadas TTS entre frases', () => {
+  const text = 'Aquí comienza el viaje. Seguimos hablando sin esperas.';
+  const p = player({ [prepareSpeechText(text)]: '/audio/narraciones/prueba.mp3' });
+  p.context.playAlvaroAudio(text);
+  assert.equal(p.audios[0].src, '/audio/narraciones/prueba.mp3');
+  p.audios[0].fire('playing');
+  assert.equal(p.audios.length, 1);
+  p.audios[0].fire('ended');
+  assert.equal(p.context.isAlvaroSpeaking(), false);
+});
+
+test('Las respuestas nuevas precargan los bloques siguientes y reutilizan su audio', () => {
+  const p = player();
+  p.context.playAlvaroAudio(('Una nueva frase que continúa el relato. ').repeat(40));
+  p.audios[0].fire('playing');
+  assert.equal(p.audios.length, 3);
+  const ready = p.audios[1];
+  p.audios[0].fire('ended');
+  assert.equal(p.audios.length, 3);
+  assert.equal(ready.handlers.has('ended'), true);
+  p.context.stopAlvaroAudio();
+  assert.equal(p.timers.size, 0);
+  assert.equal(p.audios[2].paused, true);
+});
+
+test('El audio conserva los párrafos y agrupa frases sin perder contenido', () => {
+  assert.equal(prepareSpeechText('<p>Primero.</p><p>Después.</p>'), 'Primero.\n\nDespués.');
+  const text = 'Una frase. Otra frase. Y seguimos.';
+  assert.equal(packSpeechText(text).join(' '), text);
+  assert.equal(packSpeechText(text).length, 1);
 });

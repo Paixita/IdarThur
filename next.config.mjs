@@ -8,6 +8,7 @@ const nextConfig = {
   turbopack: { root: fileURLToPath(new URL('.', import.meta.url)) },
   outputFileTracingIncludes: {
     '/api/tts': [
+      'assets/kokoro-model/**',
       'node_modules/kokoro-js/voices/em_alex.bin',
       'node_modules/espeak-ng/dist/*.wasm',
       'node_modules/onnxruntime-node/bin/napi-v3/linux/x64/*',

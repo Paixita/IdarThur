@@ -23,8 +23,7 @@ export default function StoryAudioPlayer({ htmlText }) {
     }
 
     // Limpiar etiquetas HTML para que el motor lea solo texto
-    const plainText = htmlText.replace(/<[^>]+>/g, ' ');
-    playAlvaroAudio(plainText);
+    playAlvaroAudio(htmlText);
   };
 
   return (
