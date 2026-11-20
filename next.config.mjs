@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 const nextConfig = {
   // Configuración básica para desarrollo local y despliegue estándar
   output: 'standalone',
+  async redirects() {
+    return [{ source: '/historias/el-viaje-que-no-estaba-en-el-mapa', destination: '/historias/la-noche-en-que-el-cielo-guardo-silencio', permanent: true }];
+  },
   outputFileTracingRoot: fileURLToPath(new URL('.', import.meta.url)),
   turbopack: { root: fileURLToPath(new URL('.', import.meta.url)) },
   outputFileTracingIncludes: {

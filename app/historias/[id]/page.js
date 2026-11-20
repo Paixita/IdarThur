@@ -52,17 +52,17 @@ export default async function HistoriaDetalle({ params }) {
   return (
     <main style={{ minHeight: '100vh', paddingBottom: '100px' }}>
       {/* Header Imagen */}
-      <div style={{ width: '100%', height: '60vh', position: 'relative', overflow: 'hidden' }}>
-        <img src={story.imagen} alt={story.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }} />
-        <div style={{ position: 'absolute', bottom: '0', left: '0', right: '0', padding: '50px 20px', background: 'linear-gradient(transparent, #0b1120)' }}>
+      <div style={{ width: '100%', minHeight: '60vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'flex-end', paddingTop: '110px' }}>
+        <img src={story.imagen} alt={story.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }} />
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', padding: 'clamp(28px, 5vw, 50px) 20px', background: 'linear-gradient(transparent, #0b1120)' }}>
           <div className="container">
             <Link href="/historias" style={{ color: '#a0aab5', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
               ← Volver
             </Link>
-            <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 'bold', color: 'white', marginBottom: '10px' }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: 1.12, fontWeight: 'bold', color: 'white', marginBottom: '10px' }}>
               {story.titulo}
             </h1>
-            <p style={{ fontSize: '1.5rem', color: '#00d4ff' }}>{story.subtitulo}</p>
+            <p style={{ fontSize: 'clamp(1rem, 2.3vw, 1.5rem)', lineHeight: 1.5, color: '#00d4ff' }}>{story.subtitulo}</p>
           </div>
         </div>
       </div>
