@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import { getAgentVoiceGender } from '@/utils/agentVoice.mjs';
 import ChatMessage from '@/components/ChatMessage';
 import { useState, useEffect, useRef } from 'react';
 import PremiumAudioModal from '@/components/PremiumAudioModal';
@@ -88,7 +89,7 @@ export default function AgentesClient() {
     {
       id: "cronista",
       name: "Yessel Cronista",
-      role: "Cronista y Creadora de Historias",
+      role: "Cronista y Creador de Historias",
       color: "#00ffaa",
       img: "/agentes/yessel_cronista.png",
       skills: ["Escritura creativa", "Estructura en 3 actos", "Ilustración", "Publicación"],
@@ -107,24 +108,24 @@ export default function AgentesClient() {
       role: "Oficial de Ciberseguridad",
       color: "#ff0055",
       img: "/agentes/natalia_cyberguard.jpg",
-      skills: ["Anti-phishing", "Pagos seguros", "Auditoría de enlaces", "Fraude"],
-      desc: "Tu guardaespaldas digital. Revisa enlaces sospechosos, detecta cobros falsos y te guía paso a paso si caíste en un fraude.",
+      skills: ["Anti-phishing", "Cuentas y MFA", "Seguridad web", "Incidentes"],
+      desc: "Tu guía de ciberseguridad: cuentas, dispositivos, privacidad, desarrollo seguro y respuesta a incidentes. Explica riesgos y medidas con fuentes oficiales cuando necesita verificar información actual.",
       info: [
         "Verifica el dominio antes de pagar; desconfía de 'tarifas secretas' por chat.",
         "Nunca compartas contraseñas, códigos ni datos de tarjeta.",
         "Si pagaste: bloquea la tarjeta, cambia la clave y reporta al banco."
       ],
       isPrivate: false,
-      greeting: "Soy Natalia CyberGuard. Si recibiste un correo o enlace sospechoso, pásame el dominio y te digo si es seguro antes de que pagues."
+      greeting: "Soy Natalia CyberGuard. Cuéntame qué ocurrió y qué dispositivo o cuenta está afectado. Puedo ayudarte a identificar señales de fraude y preparar pasos de protección; no compartas contraseñas ni códigos."
     }
   ];
 
   const handleConnect = (agent) => {
     if (agent.isPrivate) return;
     setActiveChat(agent);
-    setMessages([{ text: agent.greeting, sender: 'ai' }]);
+    setMessages([{ text: agent.greeting, sender: 'ai', language: 'es', voiceGender: getAgentVoiceGender(agent.id) }]);
     if (isAudioPremium) {
-      playAlvaroAudio(agent.greeting);
+      playAlvaroAudio(agent.greeting, { language:'es', voiceGender:getAgentVoiceGender(agent.id) });
     }
   };
 
@@ -167,8 +168,8 @@ export default function AgentesClient() {
       const data = await response.json();
       const reply = data.reply || "Lo siento, no pude obtener respuesta.";
 
-      setMessages([...newMessages, { text: reply, sender: 'ai', language: data.language }]);
-      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language });
+      setMessages([...newMessages, { text: reply, sender: 'ai', language: data.language, voiceGender: data.voiceGender || getAgentVoiceGender(activeChat.id) }]);
+      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language, voiceGender: data.voiceGender || getAgentVoiceGender(activeChat?.id) });
     } catch (error) {
       console.error("Error calling Chat API:", error);
       setMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
@@ -225,8 +226,8 @@ export default function AgentesClient() {
       const data = await response.json();
       const reply = data.reply || "Lo siento, no pude obtener respuesta.";
 
-      setCandyMessages([...newMessages, { text: reply, sender: 'ai', language: data.language }]);
-      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language });
+      setCandyMessages([...newMessages, { text: reply, sender: 'ai', language: data.language, voiceGender: 'male' }]);
+      if (isAudioPremium) playAlvaroAudio(reply, { language: data.language, voiceGender: 'male' });
     } catch (error) {
       console.error("Error calling Chat API:", error);
       setCandyMessages([...newMessages, { text: "Lo siento, tuve un problema al conectarme con mi cerebro. Intenta de nuevo.", sender: 'ai' }]);
@@ -345,7 +346,7 @@ export default function AgentesClient() {
       <div style={{ textAlign: 'center', marginTop: '80px', padding: '40px', background: 'rgba(255,0,85,0.05)', borderRadius: '20px', border: '1px dashed #ff005550' }}>
          <h3 style={{ fontSize: '1.8rem', color: 'white', marginBottom: '15px' }}>¿Intento de Fraude?</h3>
          <p style={{ color: '#a0aab5', maxWidth: '600px', margin: '0 auto 25px' }}>
-           Si recibiste un correo sospechoso pidiendo pagos a nombre de IdarThur, envíalo a nuestro equipo inmediatamente. CyberGuard auditará el enlace y bloqueará al atacante.
+           Si recibiste un correo sospechoso pidiendo pagos a nombre de IdarThur, envíalo a nuestro equipo inmediatamente. Natalia CyberGuard te ayudará a reconocer señales de riesgo y a preparar los pasos de protección y reporte.
          </p>
          <button
            onClick={() => handleConnect(agents.find(a => a.id === 'cyberguard'))}
@@ -372,7 +373,7 @@ export default function AgentesClient() {
                 <button 
                   type="button"
                   onClick={() => {
-                    if (isAudioPremium) playAlvaroAudio(`Hola, mi voz VIP está activada como ${activeChat.name}. Dime en qué te ayudo.`);
+                    if (isAudioPremium) playAlvaroAudio(`Hola, mi voz VIP está activada como ${activeChat.name}. Dime en qué te ayudo.`, {voiceGender:getAgentVoiceGender(activeChat.id)});
                     else setIsAudioModalOpen(true);
                   }} 
                   style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? activeChat.color : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? activeChat.color : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -396,7 +397,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    <ChatMessage language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
+                    <ChatMessage voiceGender={msg.voiceGender || getAgentVoiceGender(activeChat?.id)} language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}
@@ -444,7 +445,7 @@ export default function AgentesClient() {
               <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div style={{ flexGrow: 1 }}>
                 <h3 style={{ color: 'white', fontSize: '1.2rem', margin: 0 }}>Yessel</h3>
-                <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Directora de Operaciones</span>
+                <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Director de Operaciones</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                 <button 
@@ -473,7 +474,7 @@ export default function AgentesClient() {
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
                   }}>
-                    <ChatMessage language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
+                    <ChatMessage voiceGender={'male'} language={msg.language} text={msg.text} assistant={msg.sender !== 'user'} />
                   </div>
                 </div>
               ))}

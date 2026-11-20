@@ -11,7 +11,7 @@
     "test:voice": "node --test tests/voice.test.mjs",
     "prebuild": "node scripts/build-narrations.mjs",
     "test:news": "node --test tests/news.test.mjs",
-    "test:chat": "node --test tests/chat-links.test.mjs tests/travel-research.test.mjs tests/language.test.mjs"
+    "test:chat": "node --test tests/chat-links.test.mjs tests/travel-research.test.mjs tests/language.test.mjs tests/security-research.test.mjs"
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.39",

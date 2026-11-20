@@ -13,6 +13,10 @@ const nextConfig = {
     '/api/tts': [
       'assets/kokoro-model/**',
       'node_modules/kokoro-js/voices/em_alex.bin',
+      'node_modules/kokoro-js/voices/ef_dora.bin',
+      'node_modules/kokoro-js/voices/af_heart.bin',
+      'node_modules/kokoro-js/voices/if_sara.bin',
+      'node_modules/kokoro-js/voices/pf_dora.bin',
       'node_modules/kokoro-js/voices/am_michael.bin',
       'node_modules/kokoro-js/voices/ff_siwis.bin',
       'node_modules/kokoro-js/voices/im_nicola.bin',

@@ -7,15 +7,36 @@ export function normalizeLanguage(value) {
 export const NEURAL_VOICES = {
   es:{voice:'em_alex',phonemes:'es',locale:'es-ES'},
   en:{voice:'am_michael',phonemes:'en-us',locale:'en-US'},
-  fr:{voice:'ff_siwis',phonemes:'fr-fr',locale:'fr-FR'},
+  // Kokoro solo distribuye una voz francesa femenina. El perfil masculino conserva
+  // el timbre masculino de Alex, con fonemas franceses del mismo modelo multilingüe.
+  fr:{voice:'em_alex',phonemes:'fr-fr',locale:'fr-FR',crossLanguageStyle:true},
   it:{voice:'im_nicola',phonemes:'it',locale:'it-IT'},
   pt:{voice:'pm_alex',phonemes:'pt-br',locale:'pt-BR'},
 };
-export const getNeuralVoice = lang => NEURAL_VOICES[normalizeLanguage(lang)] || null;
-export function chooseBrowserVoice(voices, language) {
-  const lang = normalizeLanguage(language);
-  if (!lang) return null;
-  return voices.find(v => v.lang?.toLowerCase() === NEURAL_VOICES[lang]?.locale.toLowerCase()) || voices.find(v => normalizeLanguage(v.lang) === lang) || null;
+export const FEMALE_NEURAL_VOICES = {
+  es:{voice:'ef_dora',phonemes:'es',locale:'es-ES'},
+  en:{voice:'af_heart',phonemes:'en-us',locale:'en-US'},
+  fr:{voice:'ff_siwis',phonemes:'fr-fr',locale:'fr-FR'},
+  it:{voice:'if_sara',phonemes:'it',locale:'it-IT'},
+  pt:{voice:'pf_dora',phonemes:'pt-br',locale:'pt-BR'},
+};
+export const normalizeVoiceGender = value => value === 'female' ? 'female' : 'male';
+export const getNeuralVoice = (lang, gender='male') => (normalizeVoiceGender(gender)==='female'?FEMALE_NEURAL_VOICES:NEURAL_VOICES)[normalizeLanguage(lang)] || null;
+export function browserVoiceGender(voice) {
+  if (voice.gender === 'male' || voice.gender === 'female') return voice.gender;
+  const name=String(voice.name || '')+' '+String(voice.voiceURI || '');
+  if (/\b(female|feminin|feminine|mujer|woman|femenin[oa]|weiblich)\b/i.test(name))return 'female';
+  if (/\b(male|masculin|masculine|hombre|man|masculin[oa]|mannlich|männlich)\b/i.test(name))return 'male';
+  if (/\b(denise|hortense|julie|amelie|amélie|virginie|siwis|elvira|helena|sabina|monica|mónica|paulina|dalia|zira|jenny|aria|sara|isabella|elsa|francesca|maria|hel[oó]isa|francisca|raquel)\b/i.test(name))return 'female';
+  if (/\b(henri|mathieu|thomas|paul|claude|alain|antoine|jean|jorge|diego|[áa]lvaro|pablo|enrique|carlos|gonzalo|ra[uú]l|david|mark|guy|ryan|daniel|george|james|michael|nicola|cosimo|diego|antonio|duarte|ricardo)\b/i.test(name))return 'male';
+  return null;
+}
+export function chooseBrowserVoice(voices, language, gender) {
+  const lang=normalizeLanguage(language);
+  if(!lang)return null;
+  const matching=voices.filter(v=>normalizeLanguage(v.lang)===lang && (gender===undefined || browserVoiceGender(v)===normalizeVoiceGender(gender)));
+  const locale=getNeuralVoice(lang,gender)?.locale.toLowerCase();
+  return matching.find(v=>v.lang?.toLowerCase()===locale) || matching[0] || null;
 }
 const copies = {
  es:['Escuchar','Detener','Preparando voz…','Fuentes consultadas','Esto pude comprobar para tu viaje:','Las tarifas y la disponibilidad requieren confirmación; esto es un presupuesto orientativo, no una reserva. Podemos continuar aquí.','No pude verificar la información actual. Podemos seguir organizando tu viaje aquí; no inventaré tarifas ni disponibilidad.','No hay una voz compatible con este idioma en el navegador. El texto sigue disponible.'],

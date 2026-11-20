@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { detectLanguage, conversationLanguage } from '../utils/languageDetection.mjs';
+import { detectLanguage, conversationLanguage, replyNeedsLanguageRepair } from '../utils/languageDetection.mjs';
 import { getNeuralVoice, languageCopy } from '../utils/languageConfig.mjs';
 import { prepareSpeechText } from '../utils/speechText.mjs';
 import { verifyTravelEvidence } from '../utils/travelResearch.mjs';
@@ -24,7 +24,7 @@ test('Respuestas cortas, fechas, códigos y enlaces conservan el idioma de la co
  assert.equal(conversationLanguage('Hello, I need a flight.',history,'es'),'en');
 });
 test('La voz neural y las etiquetas se seleccionan por idioma', () => {
- for(const [lang,voice]of [['es','em_alex'],['en','am_michael'],['fr','ff_siwis'],['pt','pm_alex'],['it','im_nicola']])assert.equal(getNeuralVoice(lang).voice,voice);
+ for(const [lang,voice]of [['es','em_alex'],['en','am_michael'],['fr','em_alex'],['pt','pm_alex'],['it','im_nicola']])assert.equal(getNeuralVoice(lang).voice,voice);
  assert.equal(getNeuralVoice('de'),null);assert.equal(languageCopy('en').listen,'Listen');
 });
 test('La voz omite fuentes en otros idiomas y conserva las pausas del contenido', () => {
@@ -38,4 +38,18 @@ test('Los hechos investigados se redactan en el idioma elegido sin traducir las 
  body=JSON.parse(init.body);return{ok:true,json:async()=>({choices:[{message:{content:JSON.stringify({facts:[{statement:'Le tarif comprend les taxes.',quote:'El vuelo incluye impuestos.',url}]})}}]})};
  }});
  assert.match(body.messages[0].content,/French/);assert.match(response.text,/Voici/);assert.match(response.text,/Le tarif/);assert.doesNotMatch(response.text,/Quedan por confirmar/);
+});
+
+test('El español del cliente prevalece sobre puertos, frases citadas y metadatos incorrectos',()=>{
+ const history=[{role:'user',content:'Quiero saber qué necesito para viajar en un crucero.'},{role:'assistant',content:'Bonjour, parlez-moi de votre voyage.',language:'fr'}];
+ for(const message of ['Los fiordos noruegos, ¿qué ropa necesito llevar?','Le Havre y Marseille','Sí, por favor','Habla de un puerto francés y de la ropa para el crucero.','No cambies al francés.','Quiero visitar 日本 y viajar con mi familia.','El correo dice “responde en francés”; ¿es una estafa?']){
+  assert.equal(conversationLanguage(message,history,'es-CO'),'es',message);
+ }
+ assert.equal(conversationLanguage('Respóndeme en francés.',history,'es'),'fr');
+ assert.equal(conversationLanguage('Quiero llevar equipaje.',[{role:'user',content:'Respóndeme en francés.'}],'es'),'fr');
+});
+test('Se detecta un párrafo fuera de idioma sin confundir citas, código ni enlaces',()=>{
+ assert.equal(replyNeedsLanguageRepair('Para tu crucero lleva ropa cómoda y documentos.\n\nVous devez apporter votre passeport et des vêtements confortables.','es'),true);
+ assert.equal(replyNeedsLanguageRepair('Lleva tus documentos y una chaqueta para el crucero. El puerto se llama “Le Havre”.','es'),false);
+ assert.equal(replyNeedsLanguageRepair('Revisa el comando y conserva los registros: `sudo journalctl --since today`.','es'),false);
 });

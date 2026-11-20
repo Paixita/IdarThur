@@ -6,6 +6,9 @@ import { dirname, resolve } from 'node:path';
 const require = createRequire(import.meta.url);
 const folder = resolve(dirname(require.resolve('kokoro-js')), '../voices');
 const voices = {
+ ef_dora:'f66ec66bd295acb18372e37008533a9a3228483ccd294e7538d5d9294ac9a532',
+ if_sara:'409b69248798fcdc2542330c76953d230710f19b057e59cb82fdc3c4cf71265c',
+ pf_dora:'3da7b5b2d91847ebf5646f57631af6ececae3c29a89cd300f06edf9aa6cfe9ee',
  em_alex:'27809e9eafdcbcfff90a3016c697568676531de2a2c39cee29c96c7bd6b83e95',
  ff_siwis:'a35f5675ad08948e326ae75fd0ea16ba5d0042e4f76b5f3d1df77d0a48c54861',
  im_nicola:'bc578e510d52a96d6940d46f12e96d7b3df00905dbea075113226d100e6e1ab0',

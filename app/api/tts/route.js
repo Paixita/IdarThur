@@ -1,6 +1,6 @@
 import { prepareSpeechText } from '@/utils/speechText.mjs';
 import { synthesizeSpeech } from '@/utils/kokoroEngine.mjs';
-import { normalizeLanguage, getNeuralVoice } from '@/utils/languageConfig.mjs';
+import { normalizeLanguage, getNeuralVoice, normalizeVoiceGender } from '@/utils/languageConfig.mjs';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -71,7 +71,9 @@ async function withTimeout(promise, ms) {
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const lang = normalizeLanguage(searchParams.get('lang') || 'es');
-  if (!getNeuralVoice(lang)) return Response.json({ error: 'Use a matching browser voice for this language.' }, { status: 422, headers: { 'X-TTS-Fallback':'browser', 'Cache-Control':'no-store' } });
+  const gender = normalizeVoiceGender(searchParams.get('gender'));
+  const profile = getNeuralVoice(lang, gender);
+  if (!profile) return Response.json({ error: 'Use a matching browser voice for this language.' }, { status: 422, headers: { 'X-TTS-Fallback':'browser', 'Cache-Control':'no-store' } });
   const text = prepareSpeechText(searchParams.get('text'), lang);
 
   if (!text) {
@@ -85,7 +87,7 @@ export async function GET(request) {
     return Response.json({ success: false, error: 'Divide el texto en bloques de hasta 12000 caracteres.' }, { status: 413 });
   }
 
-  const cacheKey = `multilingual-v4::${lang}::${text}`;
+  const cacheKey = `multilingual-v5::${lang}::${gender}::${text}`;
   const cached = getCached(cacheKey);
   if (cached) {
     return new Response(cached, {
@@ -94,7 +96,9 @@ export async function GET(request) {
         'Content-Length': String(cached.length),
         'Cache-Control': 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
-        'X-TTS-Version': 'multilingual-v4',
+        'X-TTS-Version': 'multilingual-v5',
+        'X-TTS-Voice': profile.voice,
+        'X-TTS-Gender': gender,
         'X-TTS-Cache': 'hit',
       },
     });
@@ -104,7 +108,7 @@ export async function GET(request) {
   try {
     const startedAt = Date.now();
     const { wav, voice, duration } = await withTimeout(
-      synthesizeSpeech(text, lang).finally(releaseSlot),
+      synthesizeSpeech(text, lang, gender).finally(releaseSlot),
       GENERATION_TIMEOUT_MS
     );
 
@@ -120,8 +124,9 @@ export async function GET(request) {
         'Content-Length': String(wav.length),
         'Cache-Control': 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
-        'X-TTS-Version': 'multilingual-v4',
+        'X-TTS-Version': 'multilingual-v5',
         'X-TTS-Voice': voice,
+        'X-TTS-Gender': gender,
         'X-TTS-Cache': 'miss',
       },
     });

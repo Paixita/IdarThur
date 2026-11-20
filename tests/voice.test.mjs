@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 import ESpeakNg from 'espeak-ng';
 import { detectLanguage } from '../utils/languageDetection.mjs';
-import { getNeuralVoice, normalizeLanguage, chooseBrowserVoice, languageCopy } from '../utils/languageConfig.mjs';
+import { getNeuralVoice, normalizeLanguage, normalizeVoiceGender, chooseBrowserVoice, languageCopy } from '../utils/languageConfig.mjs';
 import { prepareSpeechText, splitSpeechText, packSpeechText } from '../utils/speechText.mjs';
 
 test('El formato se limpia solo para audio y conserva el mensaje y los acentos', () => {
@@ -35,7 +35,7 @@ test('La fonemización real usa UTF-8 y no convierte acentos ni signos en sus no
   assert.doesNotMatch(phonemes, /tˈilðe|pˈunto|θiɾkum|kˈopir|komˈi/);
 });
 
-function player(prerecordedNarrations = {}, voices = [{name:'Spanish',lang:'es-ES'},{name:'English',lang:'en-US'}]) {
+function player(prerecordedNarrations = {}, voices = [{name:'Spanish',lang:'es-ES',gender:'male'},{name:'English',lang:'en-US',gender:'male'}]) {
   const audios = [], spoken = [], alerts = [], timers = new Map(), events = [], voiceEvents = new Map();
   let nextId = 0;
   class Audio {
@@ -49,7 +49,7 @@ function player(prerecordedNarrations = {}, voices = [{name:'Spanish',lang:'es-E
     fire(name) { this.handlers.get(name)?.(); }
   }
   const context = {
-    Audio, prepareSpeechText, packSpeechText, prerecordedNarrations, detectLanguage, normalizeLanguage, getNeuralVoice, chooseBrowserVoice, languageCopy,
+    Audio, prepareSpeechText, packSpeechText, prerecordedNarrations, femaleNarrations:{}, normalizeVoiceGender, detectLanguage, normalizeLanguage, getNeuralVoice, chooseBrowserVoice, languageCopy,
     sendLogisticsAlert: (...args) => alerts.push(args),
     setTimeout: (fn, ms) => { timers.set(++nextId, { fn, ms }); return nextId; },
     clearTimeout: (id) => timers.delete(id),
@@ -193,12 +193,12 @@ test('El respaldo inglés elige una voz inglesa, sin cambiar a español', () => 
  assert.equal(p.spoken[0].lang,'en-US');assert.equal(p.spoken[0].voice.lang,'en-US');p.context.stopAlvaroAudio();
 });
 test('Un idioma sin Kokoro usa directamente su voz de navegador y puede detenerse', () => {
- const p=player({},[{name:'German',lang:'de-DE'}]);p.context.playAlvaroAudio('Ihre Reise wird vorbereitet.',{language:'de'});
+ const p=player({},[{name:'German',lang:'de-DE',gender:'male'}]);p.context.playAlvaroAudio('Ihre Reise wird vorbereitet.',{language:'de'});
  assert.equal(p.audios.length,0);assert.equal(p.spoken[0].lang,'de-DE');p.context.stopAlvaroAudio();
  assert.equal(p.context.isAlvaroSpeaking(),false);
 });
 test('No se usa una voz española cuando falta la voz del idioma solicitado', () => {
- const p=player({},[{name:'Spanish',lang:'es-ES'}]);p.context.playAlvaroAudio('こんにちは',{language:'ja'});
+ const p=player({},[{name:'Spanish',lang:'es-ES',gender:'male'}]);p.context.playAlvaroAudio('こんにちは',{language:'ja'});
  for(const t of [...p.timers.values()])t.fn();
  assert.equal(p.audios.length,0);assert.equal(p.spoken.length,0);
  assert.equal(vm.runInContext('getAlvaroSnapshot()',p.context).status,'error');
@@ -206,6 +206,28 @@ test('No se usa una voz española cuando falta la voz del idioma solicitado', ()
 });
 test('Las voces cargadas tarde respetan el idioma y no reviven una sesión cancelada', () => {
  const voices=[];const p=player({},voices);p.context.playAlvaroAudio('Guten Tag',{language:'de'});
- voices.push({name:'German',lang:'de-DE'});p.voiceEvents.get('voiceschanged')();assert.equal(p.spoken[0].lang,'de-DE');p.context.stopAlvaroAudio();
+ voices.push({name:'German',lang:'de-DE',gender:'male'});p.voiceEvents.get('voiceschanged')();assert.equal(p.spoken[0].lang,'de-DE');p.context.stopAlvaroAudio();
  const q=player({},[]);q.context.playAlvaroAudio('こんにちは',{language:'ja'});const stale=[...q.timers.values()][0].fn;q.context.stopAlvaroAudio();stale();assert.equal(q.spoken.length,0);
+});
+
+test('Natalia usa voz femenina sin reutilizar el audio masculino ni su precarga',()=>{
+ const text='Este es un saludo de protección de cuentas.';
+ const p=player({[text]:'/audio/saludo-masculino.mp3'});
+ p.context.playAlvaroAudio(text,{language:'es',voiceGender:'female'});
+ assert.match(p.audios[0].src,/gender=female/);
+ assert.equal(vm.runInContext('getAlvaroSnapshot().voiceGender',p.context),'female');
+ p.audios[0].fire('error');
+ assert.equal(p.spoken.length,0,'No sustituye a Natalia por una voz masculina');
+});
+test('Los perfiles mantienen género y fonemas del idioma, incluido el francés masculino',()=>{
+ for(const lang of ['es','en','fr','it','pt']){
+  assert.notEqual(getNeuralVoice(lang,'male').voice,getNeuralVoice(lang,'female').voice);
+ }
+ assert.equal(getNeuralVoice('fr','male').phonemes,'fr-fr');
+ assert.equal(getNeuralVoice('fr','male').voice,'em_alex');
+ assert.equal(getNeuralVoice('fr','female').voice,'ff_siwis');
+ const voices=[{name:'Microsoft Denise',lang:'fr-FR'},{name:'Microsoft Henri',lang:'fr-FR'}];
+ assert.equal(chooseBrowserVoice(voices,'fr','male').name,'Microsoft Henri');
+ assert.equal(chooseBrowserVoice(voices,'fr','female').name,'Microsoft Denise');
+ assert.equal(chooseBrowserVoice([{name:'Inconnue',lang:'fr-FR'}],'fr','male'),null);
 });

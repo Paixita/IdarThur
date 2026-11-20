@@ -3,17 +3,19 @@ import { sendLogisticsAlert } from './alerts';
 import { prepareSpeechText, packSpeechText } from './speechText.mjs';
 
 import prerecordedNarrations from '@/data/audio/manifest.json';
+import femaleNarrations from '@/data/audio/female-manifest.json';
 import { detectLanguage } from './languageDetection.mjs';
-import { normalizeLanguage, getNeuralVoice, chooseBrowserVoice, languageCopy } from './languageConfig.mjs';
+import { normalizeLanguage, normalizeVoiceGender, getNeuralVoice, chooseBrowserVoice, languageCopy } from './languageConfig.mjs';
 
 let sessionId = 0;
 let speechLanguage = 'es';
-const idleSnapshot = { status: 'idle', text: '', error: '', language: 'es' };
+let speechVoiceGender = 'male';
+const idleSnapshot = { status: 'idle', text: '', error: '', language: 'es', voiceGender: 'male' };
 let playbackSnapshot = idleSnapshot;
 export const getAlvaroSnapshot = () => playbackSnapshot;
 export const getAlvaroServerSnapshot = () => idleSnapshot;
 function setPlaybackSnapshot(status, text = playbackSnapshot.text, error = '') {
-  playbackSnapshot = { status, text, error, language: speechLanguage };
+  playbackSnapshot = { status, text, error, language: speechLanguage, voiceGender: speechVoiceGender };
   window.dispatchEvent(new CustomEvent('alvaro-tts-change', { detail: null }));
 }
 const preparedAudios = new Map();
@@ -60,7 +62,7 @@ function speakWithBrowser(sentence, session, waited = false) {
     return;
   }
   const synth = window.speechSynthesis;
-  const voice = chooseBrowserVoice(synth.getVoices(), speechLanguage);
+  const voice = chooseBrowserVoice(synth.getVoices(), speechLanguage, speechVoiceGender);
   if (!voice) {
     if (waited || !synth.addEventListener) {
       finishPlayback(languageCopy(speechLanguage).noVoice);
@@ -69,7 +71,7 @@ function speakWithBrowser(sentence, session, waited = false) {
     let timer;
     const cleanup = () => { clearTimeout(timer); synth.removeEventListener('voiceschanged', onVoices); };
     const retry = () => { cleanup(); if (isActive(session)) { cancelCurrent = null; speakWithBrowser(sentence, session, true); } };
-    const onVoices = () => { if (chooseBrowserVoice(synth.getVoices(), speechLanguage)) retry(); };
+    const onVoices = () => { if (chooseBrowserVoice(synth.getVoices(), speechLanguage, speechVoiceGender)) retry(); };
     synth.addEventListener('voiceschanged', onVoices);
     timer = setTimeout(retry, 2000);
     cancelCurrent = cleanup;
@@ -79,7 +81,7 @@ function speakWithBrowser(sentence, session, waited = false) {
   utterance.voice = voice;
   utterance.lang = voice.lang;
   utterance.rate = 0.98;
-  utterance.pitch = 0.9;
+  utterance.pitch = speechVoiceGender === 'female' ? 1 : 0.9;
   let cancelled = false;
   const timer = setTimeout(() => {
     if (!cancelled && isActive(session)) finishPlayback(languageCopy(speechLanguage).voiceError);
@@ -112,8 +114,8 @@ function playCurrent(session) {
     return;
   }
   const sentence = queue[index];
-  if (!getNeuralVoice(speechLanguage)) { speakWithBrowser(sentence, session); return; }
-  const url = prerecordedUrl || '/api/tts?text=' + encodeURIComponent(sentence) + '&lang=' + speechLanguage + '&v=4';
+  if (!getNeuralVoice(speechLanguage, speechVoiceGender)) { speakWithBrowser(sentence, session); return; }
+  const url = prerecordedUrl || '/api/tts?text=' + encodeURIComponent(sentence) + '&lang=' + speechLanguage + '&gender=' + speechVoiceGender + '&v=5';
   const audio = preparedAudios.get(index) || new Audio(url);
   preparedAudios.delete(index);
   audio.preload = 'auto';
@@ -152,7 +154,7 @@ function playCurrent(session) {
     if (!prerecordedUrl) {
       for (let ahead = index + 1; ahead <= Math.min(index + 2, queue.length - 1); ahead += 1) {
         if (preparedAudios.has(ahead)) continue;
-        const next = new Audio('/api/tts?text=' + encodeURIComponent(queue[ahead]) + '&lang=' + speechLanguage + '&v=4');
+        const next = new Audio('/api/tts?text=' + encodeURIComponent(queue[ahead]) + '&lang=' + speechLanguage + '&gender=' + speechVoiceGender + '&v=5');
         next.preload = 'auto';
         next.load();
         preparedAudios.set(ahead, next);
@@ -183,9 +185,10 @@ function playCurrent(session) {
 export function playAlvaroAudio(text, options = {}) {
   if (typeof window === 'undefined') return;
   stopAlvaroAudio();
+  speechVoiceGender = normalizeVoiceGender(options.voiceGender);
   speechLanguage = normalizeLanguage(options.language) || detectLanguage(text, 'es');
   const prepared = prepareSpeechText(text, speechLanguage);
-  prerecordedUrl = speechLanguage === 'es' ? prerecordedNarrations[prepared] || null : null;
+  prerecordedUrl = speechLanguage === 'es' ? (speechVoiceGender === 'female' ? femaleNarrations : prerecordedNarrations)[prepared] || null : null;
   queue = prerecordedUrl ? [prepared] : packSpeechText(prepared);
   if (!queue.length) return;
   index = 0;

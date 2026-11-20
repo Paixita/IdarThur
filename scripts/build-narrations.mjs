@@ -6,6 +6,7 @@ import { prepareSpeechText } from '../utils/speechText.mjs';
 const config = JSON.parse(await readFile('data/config.json', 'utf8'));
 const sourceFiles = ['components/Hero.jsx', 'components/VoicePlayer.jsx', 'components/YesselFloating.jsx', 'app/agentes/AgentesClient.js', 'app/autos/AutosClient.js', 'app/hoteles/HotelesClient.js', 'app/historias/HistoriasClient.js'];
 const texts = new Set();
+const femaleTexts = new Set();
 const add = (value) => { const text = prepareSpeechText(value); if (text) texts.add(text); };
 function literal(node) {
   if (node?.type === 'StringLiteral') return node.value;
@@ -20,6 +21,10 @@ function literal(node) {
 }
 function walk(node) {
   if (!node || typeof node !== 'object') return;
+  if (node.type === 'ObjectExpression' && node.properties?.some(p=>p.key?.name==='id' && literal(p.value)==='cyberguard')) {
+    const greeting=node.properties.find(p=>p.key?.name==='greeting');
+    if(greeting)femaleTexts.add(prepareSpeechText(literal(greeting.value)));
+  }
   if (node.type === 'CallExpression' && node.callee.name === 'playAlvaroAudio') add(literal(node.arguments[0]));
   if (node.type === 'ObjectProperty' && ['greeting', 'content', 'text'].includes(node.key.name)) add(literal(node.value));
   if (node.type === 'VariableDeclarator' && node.id.name === 'speech') add(literal(node.init));
@@ -32,6 +37,7 @@ for (const file of sourceFiles) walk(parse(await readFile(file, 'utf8'), { sourc
 for (const story of JSON.parse(await readFile('data/historias/stories.json', 'utf8'))) add(story.narrativa);
 await mkdir('public/audio/narraciones', { recursive: true });
 const exists = async (file) => { try { await access(file); return true; } catch { return false; } };
+for(const text of femaleTexts)texts.delete(text);
 const manifest = {};
 let engine;
 for (const text of texts) {
@@ -48,6 +54,21 @@ for (const text of texts) {
   }
   manifest[text] = '/audio/narraciones/' + id + extension;
 }
+const femaleManifest = {};
+for(const text of femaleTexts){
+ const id=createHash('sha256').update('multilingual-v5:female:'+text).digest('hex').slice(0,24);
+ const stem='public/audio/narraciones/'+id;
+ if(!await exists(stem+'.mp3')){
+  engine ??= await import('../utils/kokoroEngine.mjs');
+  const {wav}=await engine.synthesizeSpeech(text,'es','female');
+  await writeFile(stem+'.wav',wav);
+  const result=spawnSync('ffmpeg',['-hide_banner','-loglevel','error','-y','-i',stem+'.wav','-codec:a','libmp3lame','-b:a','96k',stem+'.mp3']);
+  if(result.status!==0)throw new Error('No se pudo preparar el saludo femenino');
+  await unlink(stem+'.wav');
+ }
+ femaleManifest[text]='/audio/narraciones/'+id+'.mp3';
+}
+await writeFile('data/audio/female-manifest.json',JSON.stringify(femaleManifest,null,2)+'\n');
 await mkdir('data/audio', { recursive: true });
 await writeFile('data/audio/manifest.json', JSON.stringify(manifest, null, 2) + '\n');
 console.log('Narraciones completas y listas para CDN:', Object.keys(manifest).length);

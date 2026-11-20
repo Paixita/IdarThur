@@ -85,8 +85,8 @@ export function encodeWavPcm16(samples, sampleRate = 24000) {
 }
 
 
-export async function synthesizeSpeech(text, lang = 'es') {
-  const voice = getNeuralVoice(lang)?.voice;
+export async function synthesizeSpeech(text, lang = 'es', voiceGender = 'male') {
+  const voice = getNeuralVoice(lang, voiceGender)?.voice;
   if (!voice) throw new Error('No hay voz Kokoro instalada para este idioma.');
   const tts = await getSpeechModel();
   const pieces = [];
