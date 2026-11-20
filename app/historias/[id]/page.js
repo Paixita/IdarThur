@@ -53,7 +53,7 @@ export default async function HistoriaDetalle({ params }) {
     <main style={{ minHeight: '100vh', paddingBottom: '100px' }}>
       {/* Header Imagen */}
       <div style={{ width: '100%', minHeight: '60vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'flex-end', paddingTop: '110px' }}>
-        <img src={story.imagen} alt={story.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.6)' }} />
+        <img src={story.imagen} alt={story.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: story.imagenPosicion || 'center', filter: 'brightness(0.6)' }} />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', padding: 'clamp(28px, 5vw, 50px) 20px', background: 'linear-gradient(transparent, #0b1120)' }}>
           <div className="container">
             <Link href="/historias" style={{ color: '#a0aab5', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
