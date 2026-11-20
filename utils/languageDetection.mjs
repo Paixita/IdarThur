@@ -30,7 +30,7 @@ const markers = {
  es:'la de del es una un te tu se soy estoy ayuda lluvia chaqueta prenda proteger protegerte puede pueden el los las para con necesito quiero que como puedo viajar llevar ropa crucero por me mi deberia quisiera cuantos donde pasaporte equipaje configurar configuro proteger seguridad cuenta',
  en:'the need want please what how where with which would cruise travel can my flight clothes should from your you flights configure do',
  fr:'la de du qui ce cette pluie veste impermeable protegera je veux voudrais pour pourquoi comment est avec vous votre croisiere besoin souhaite des une merci bonjour le les sont voyage',
- pt:'quero preciso gostaria voce viagem bagagem cruzeiro obrigado obrigada uma seu quais sao',
+ pt:'de para quero preciso gostaria voce viagem bagagem cruzeiro obrigado obrigada uma seu quais sao',
  it:'vorrei voglio viaggio crociera bagaglio grazie come quale sono partenza devo vestiti volo',
  de:'ich mochte brauche welche wie kreuzfahrt gepack bitte reisen nach fur und',
  nl:'ik wil graag welke hoe reizen bagage alsjeblieft het een zijn voor naar met',
