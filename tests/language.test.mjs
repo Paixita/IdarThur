@@ -53,3 +53,9 @@ test('Se detecta un párrafo fuera de idioma sin confundir citas, código ni enl
  assert.equal(replyNeedsLanguageRepair('Lleva tus documentos y una chaqueta para el crucero. El puerto se llama “Le Havre”.','es'),false);
  assert.equal(replyNeedsLanguageRepair('Revisa el comando y conserva los registros: `sudo journalctl --since today`.','es'),false);
 });
+
+test('La corrección detecta respuestas cortas en español aunque se haya solicitado francés',()=>{
+ assert.equal(replyNeedsLanguageRepair('La prenda que te protege de la lluvia es la chaqueta impermeable y cortaviento.','fr'),true);
+ assert.equal(replyNeedsLanguageRepair('Une veste imperméable vous protégera de la pluie.','fr'),false);
+ assert.equal(replyNeedsLanguageRepair('Une veste imperméable vous protégera de la pluie.','es'),true);
+});
