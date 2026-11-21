@@ -1,4 +1,4 @@
-IdarThur Android 1.1.5 (7)
+IdarThur Android 1.1.6 (8)
 Flutter 3.44.6 / Dart 3.12.2. Android min SDK 24.
 flutter pub get
 flutter analyze

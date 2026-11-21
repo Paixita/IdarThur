@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "versionCode": 7,
-  "versionName": "1.1.5",
+  "versionCode": 8,
+  "versionName": "1.1.6",
   "apiOrigin": "https://idarthur-mobile-api.vercel.app",
   "independentDeployment": true,
-  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.5.apk",
-  "sha256": "3c0ba46751baed7a6292c5454d61be30254592aa9026c5be6d1f9fb689f9e1b3",
-  "sizeBytes": 73020131,
+  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.6.apk",
+  "sha256": "d1b2c35622c424890103762887ddb784e0f825df2f080b035daabeb3494d4e3b",
+  "sizeBytes": 73227071,
   "ready": true,
-  "releaseNotes": "Noticias de viajes: carga de titulares, fechas de publicación y acceso a la fuente.",
+  "releaseNotes": "Bienvenida original de la web, retratos del escuadrón y reproducción de respuestas por frases.",
   "minSdk": 24,
   "packageName": "com.idarthur.idarthur_app"
 }

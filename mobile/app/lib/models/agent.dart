@@ -16,6 +16,10 @@ class Agent {
   final String trustNote;
   final String greeting;
 
+  static String portrait(String id) => id == 'yessel'
+      ? 'assets/brand/yessel_avatar.png'
+      : 'assets/images/$id.webp';
+
   const Agent({
     required this.id,
     required this.name,

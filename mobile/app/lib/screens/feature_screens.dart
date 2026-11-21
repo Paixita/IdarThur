@@ -295,7 +295,7 @@ class AgentSquadScreen extends StatelessWidget {
               leading: CircleAvatar(
                 radius: 28,
                 backgroundColor: agent.color.withValues(alpha: 0.16),
-                child: Text(agent.emoji, style: const TextStyle(fontSize: 27)),
+                backgroundImage: AssetImage(Agent.portrait(agent.id)),
               ),
               title: Text(
                 agent.name,

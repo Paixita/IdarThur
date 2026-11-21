@@ -335,27 +335,12 @@ class _YesselChatViewState extends State<YesselChatView> {
                 width: 2,
               ),
             ),
-            child: widget.agentId == AgentsData.yessel.id
-                ? ClipOval(
-                    child: Image.network(
-                      AppConfig.yesselImageUrl,
-                      width: 44,
-                      height: 44,
-                      fit: BoxFit.cover,
-                      cacheWidth: 132,
-                      cacheHeight: 132,
-                      errorBuilder: (_, _, _) => const Icon(
-                        Icons.record_voice_over_rounded,
-                        color: AppColors.foreground,
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: Text(
-                      widget.avatarEmoji,
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                  ),
+            child: ClipOval(
+              child: Image.asset(
+                Agent.portrait(widget.agentId),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(

@@ -46,6 +46,14 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(26),
+            image: const DecorationImage(
+              image: AssetImage('assets/images/portada.webp'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Color(0xD909161E),
+                BlendMode.srcOver,
+              ),
+            ),
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -56,55 +64,40 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'TU PRÓXIMA HISTORIA EMPIEZA AQUÍ',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.2,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'El mundo te espera.',
-                style: TextStyle(
-                  fontSize: 33,
-                  height: 1.12,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Vuelos, hoteles, autos y equipaje. Organiza tu viaje con Yessel, tu asistente de IA.',
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                  color: Color(0xFFCCDEE1),
-                ),
-              ),
-              const SizedBox(height: 22),
-              for (final audio in const [
-                (
-                  title: 'Escuchar la invitación de Yessel',
-                  asset: 'voz/invitacion.mp3',
-                ),
-                (
-                  title: 'Escuchar los servicios de IdarThur',
-                  asset: 'voz/servicios.mp3',
-                ),
-              ])
-                TextButton.icon(
-                  onPressed: () => showModalBottomSheet<void>(
-                    context: context,
-                    builder: (_) => YesselPresentation(
-                      title: audio.title,
-                      asset: audio.asset,
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 35,
+                    backgroundImage: AssetImage(
+                      'assets/brand/yessel_avatar.png',
                     ),
                   ),
-                  icon: const Icon(Icons.volume_up_rounded),
-                  label: Text(audio.title),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      'Bienvenidos a IdarThur',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              const Text(
+                'Soy Yessel. Te invito a descubrir nuestros vuelos, cruceros, hoteles y todo lo que encontrarás para tu viaje.',
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => showModalBottomSheet<void>(
+                  context: context,
+                  builder: (_) => const YesselPresentation(
+                    title: 'Bienvenida de Yessel',
+                    asset: 'voz/servicios.mp3',
+                  ),
                 ),
+                icon: const Icon(Icons.play_arrow_rounded),
+                label: const Text('Escuchar mi bienvenida · 1:09'),
+              ),
               FilledButton.icon(
                 onPressed: onOpenYessel,
                 icon: const Icon(Icons.record_voice_over_rounded),
@@ -233,7 +226,18 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(item.icon, size: 30, color: item.color),
+                              if (item.title == 'Cruceros')
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    'assets/images/ruta-2.webp',
+                                    width: double.infinity,
+                                    height: 58,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              else
+                                Icon(item.icon, size: 30, color: item.color),
                               const SizedBox(height: 14),
                               Text(
                                 item.title,

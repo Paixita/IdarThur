@@ -33,11 +33,17 @@ class SpeechService {
     final result = <String>[];
     var part = '';
     for (final word in words) {
-      if (part.length + word.length > 340 && part.isNotEmpty) {
+      final limit = result.isEmpty ? 75 : 195;
+      if (part.isNotEmpty && part.length + word.length + 1 > limit) {
         result.add(part);
         part = '';
       }
       part = part.isEmpty ? word : '$part $word';
+      if (part.length >= (result.isEmpty ? 20 : 80) &&
+          RegExp(r'[.!?…]$').hasMatch(word)) {
+        result.add(part);
+        part = '';
+      }
     }
     if (part.isNotEmpty) result.add(part);
     return result;
