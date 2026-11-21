@@ -414,6 +414,10 @@
         [
           "Disponibilidad y actualizaciones",
           "La app puede mostrar contenido guardado cuando falta conexión. Los resultados nuevos, la IA, noticias y reservas dependen de internet y de proveedores externos. La descarga de Android mantiene una dirección estable, pero el código nativo requiere nuevas versiones firmadas. La instalación y permisos se confirman en Android; no hay actualizaciones silenciosas ni garantía de funcionamiento eterno."
+        ],
+        [
+          "Sugerencias para la web y la aplicación",
+          "Puedes proponer mejoras en las funciones, la accesibilidad y el contenido de IdarThur. El equipo revisará su viabilidad y decidirá si procede incorporarlas. Enviar una propuesta no garantiza su implementación. Para cambios de reservas, devoluciones o garantías, utiliza el canal del proveedor identificado en tu confirmación o factura. Para ejercer derechos sobre tus datos, consulta el aviso de privacidad."
         ]
       ]
     },
