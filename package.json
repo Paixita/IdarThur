@@ -9,7 +9,7 @@
     "lint": "eslint",
     "postinstall": "node scripts/prepare-kokoro.mjs && node scripts/install-speech-model.mjs",
     "test:voice": "node --test tests/voice.test.mjs",
-    "prebuild": "node scripts/build-narrations.mjs && node scripts/export-mobile-content.mjs",
+    "prebuild": "node scripts/build-narrations.mjs && node scripts/export-mobile-content.mjs && node scripts/check-mobile-release.mjs",
     "test:news": "node --test tests/news.test.mjs",
     "test:chat": "node --test tests/chat-links.test.mjs tests/travel-research.test.mjs tests/language.test.mjs tests/security-research.test.mjs tests/platform.test.mjs"
   },
