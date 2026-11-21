@@ -31,18 +31,27 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
       _error = null;
     });
 
-    final result = await NewsService.fetchNews();
+    try {
+      final result = await NewsService.fetchNews();
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _loading = false;
-      if (result.isSuccess) {
-        _articles = result.data;
-      } else {
-        _error = result.error;
+      setState(() {
+        _loading = false;
+        if (result.isSuccess) {
+          _articles = result.data;
+        } else {
+          _error = result.error;
+        }
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _error = 'No pudimos cargar las noticias. Vuelve a intentarlo.';
+        });
       }
-    });
+    }
   }
 
   @override
@@ -94,7 +103,7 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
               ),
               const SizedBox(width: 6),
               const Text(
-                'Auditado por la IA Yessel en tiempo real',
+                'Actualidad de viajes · Google Noticias',
                 style: TextStyle(fontSize: 12.5, color: AppColors.mutedText),
               ),
             ],
@@ -117,9 +126,9 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
 
     final articles = _articles ?? const [];
     if (articles.isEmpty) {
-      return const ErrorState(
+      return ErrorState(
         message: 'No hay noticias disponibles en este momento.',
-        onRetry: _noop,
+        onRetry: _load,
       );
     }
 
@@ -128,12 +137,11 @@ class _NoticiasScreenState extends State<NoticiasScreen> {
       backgroundColor: AppColors.surface,
       onRefresh: _load,
       child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 40),
         itemCount: articles.length,
         itemBuilder: (context, index) => NewsCard(article: articles[index]),
       ),
     );
   }
-
-  static void _noop() {}
 }

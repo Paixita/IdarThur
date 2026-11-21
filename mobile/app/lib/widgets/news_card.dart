@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../services/provider_link.dart';
 import '../config/app_config.dart';
 import '../models/news_article.dart';
 import 'glass_card.dart';
@@ -10,20 +10,13 @@ class NewsCard extends StatelessWidget {
 
   const NewsCard({super.key, required this.article});
 
-  Future<void> _openLink() async {
-    final uri = Uri.parse(article.link);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GlassCard(
       margin: const EdgeInsets.only(bottom: 14),
       borderRadius: 16,
       padding: const EdgeInsets.all(16),
-      onTap: _openLink,
+      onTap: () => openProvider(context, article.link),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

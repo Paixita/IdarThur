@@ -4,7 +4,7 @@ import '../config/app_config.dart';
 /// Artículo de noticias tal como lo devuelve la API de IdarThur
 /// en `/api/noticias` (agregada desde Google News RSS).
 class NewsArticle {
-  final int id;
+  final String id;
   final String category; // 'clima' | 'eventos'
   final String agent;
   final String title;
@@ -26,12 +26,15 @@ class NewsArticle {
 
   factory NewsArticle.fromJson(Map<String, dynamic> json) {
     return NewsArticle(
-      id: (json['id'] as num?)?.toInt() ?? 0,
+      id: (json['id'] ?? json['link'] ?? '').toString(),
       category: (json['category'] as String?) ?? 'clima',
       agent: (json['agent'] as String?) ?? 'Yessel 🌤️',
       title: (json['title'] as String?) ?? 'Sin título',
       desc: (json['desc'] as String?) ?? '',
-      date: (json['date'] as String?) ?? '',
+      date:
+          (json['publishedAt'] as String?)?.split('T').first ??
+          json['date'] as String? ??
+          '',
       severity: (json['severity'] as String?) ?? 'baja',
       link: (json['link'] as String?) ?? '',
     );
