@@ -4,7 +4,8 @@ import config from '@/data/config.json';
 
 const EXPLORAR = [
   { href: '/', label: 'Vuelos' },
-  { href: '/hoteles', label: 'Hoteles y Cruceros' },
+  { href: '/hoteles', label: 'Hoteles' },
+  { href: '/cruceros', label: 'Cruceros desde Colombia' },
   { href: '/peru', label: 'Perú: vuelos y rutas' },
   { href: '/noticias', label: 'Noticias de Viaje' },
   { href: '/eventos', label: 'Eventos Mundiales' },
