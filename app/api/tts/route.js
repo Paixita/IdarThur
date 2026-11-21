@@ -69,9 +69,26 @@ async function withTimeout(promise, ms) {
   }
 }
 
-export async function GET(request) {
+export function GET(request) {
+  return respond(request, false);
+}
+
+export function POST(request) {
+  return respond(request, true);
+}
+
+async function respond(request, privateAudio) {
   const limited=requestGate(request,{scope:'tts',limit:100});if(limited)return limited;
-  const { searchParams } = new URL(request.url);
+  let { searchParams } = new URL(request.url);
+  if (privateAudio) {
+    try {
+      const body = await request.json();
+      if (typeof body?.text !== 'string') throw new Error();
+      searchParams = new URLSearchParams({text:body.text, lang:body.lang || 'es', gender:body.gender || 'male'});
+    } catch {
+      return Response.json({error:'Solicitud de voz inválida.'}, {status:400});
+    }
+  }
   const lang = normalizeLanguage(searchParams.get('lang') || 'es');
   const gender = normalizeVoiceGender(searchParams.get('gender'));
   const profile = getNeuralVoice(lang, gender);
@@ -90,13 +107,13 @@ export async function GET(request) {
   }
 
   const cacheKey = `multilingual-v5::${lang}::${gender}::${text}`;
-  const cached = getCached(cacheKey);
+  const cached = !privateAudio && getCached(cacheKey);
   if (cached) {
     return new Response(cached, {
       headers: {
         'Content-Type': 'audio/wav',
         'Content-Length': String(cached.length),
-        'Cache-Control': 'public, max-age=86400',
+        'Cache-Control': privateAudio ? 'private, no-store' : 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
         'X-TTS-Version': 'multilingual-v5',
         'X-TTS-Voice': profile.voice,
@@ -115,7 +132,7 @@ export async function GET(request) {
       GENERATION_TIMEOUT_MS
     );
 
-    setCached(cacheKey, wav);
+    if (!privateAudio) setCached(cacheKey, wav);
     console.log(
       `[TTS Kokoro] voz=${voice} dur=${duration.toFixed(2)}s ` +
       `bytes=${wav.length} ms=${Date.now() - startedAt}`
@@ -125,7 +142,7 @@ export async function GET(request) {
       headers: {
         'Content-Type': 'audio/wav',
         'Content-Length': String(wav.length),
-        'Cache-Control': 'public, max-age=86400',
+        'Cache-Control': privateAudio ? 'private, no-store' : 'public, max-age=86400',
         'X-TTS-Engine': 'kokoro',
         'X-TTS-Version': 'multilingual-v5',
         'X-TTS-Voice': voice,
