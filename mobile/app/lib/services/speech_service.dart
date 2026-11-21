@@ -1,3 +1,4 @@
+import '../models/agent.dart';
 import 'content_service.dart';
 import 'dart:async';
 import 'dart:io';
@@ -53,7 +54,10 @@ class SpeechService {
     final recordings = rows
         .where((v) => v['narrativaTexto'] == text && v['audio'] is String)
         .toList();
-    if (recordings.isNotEmpty && language == 'es' && voiceGender == 'male') {
+    final greeting = text == AgentsData.yessel.greeting;
+    if ((greeting || recordings.isNotEmpty) &&
+        language == 'es' &&
+        voiceGender == 'male') {
       final completion = Completer<void>();
       _completion = completion;
       final sub = _player.onPlayerComplete.listen((_) {
@@ -61,7 +65,11 @@ class SpeechService {
       });
       try {
         await _player.play(
-          UrlSource('${AppConfig.apiBaseUrl}${recordings.first['audio']}'),
+          greeting
+              ? AssetSource('voz/invitacion.mp3')
+              : UrlSource(
+                  '${AppConfig.apiBaseUrl}${recordings.first['audio']}',
+                ),
         );
         await completion.future;
         return;

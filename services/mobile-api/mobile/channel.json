@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "versionCode": 5,
-  "versionName": "1.1.3",
+  "versionCode": 6,
+  "versionName": "1.1.4",
   "apiOrigin": "https://idarthur-mobile-api.vercel.app",
   "independentDeployment": true,
-  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.3.apk",
-  "sha256": "41a760b0f5ab8fa13d83b358d6aca3bd24401bdc956d3547597c19e61b168ef9",
-  "sizeBytes": 72017302,
+  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.4.apk",
+  "sha256": "f8b7627b83e43ab66f79d316eca2a0f737b6d7cc0751d8c8d1ac06e84c0c46b6",
+  "sizeBytes": 73020127,
   "ready": true,
-  "releaseNotes": "Reproducción de voz Kokoro, enlaces a socios y acceso visible a privacidad y controles de IA.",
+  "releaseNotes": "Invitación y presentación de servicios de Yessel con audio incluido para escuchar sin conexión.",
   "minSdk": 24,
   "packageName": "com.idarthur.idarthur_app"
 }

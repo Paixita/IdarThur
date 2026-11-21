@@ -1,3 +1,4 @@
+import '../widgets/yessel_presentation.dart';
 import 'cruceros_screen.dart';
 import 'package:flutter/material.dart';
 import '../config/app_config.dart';
@@ -83,6 +84,27 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 22),
+              for (final audio in const [
+                (
+                  title: 'Escuchar la invitación de Yessel',
+                  asset: 'voz/invitacion.mp3',
+                ),
+                (
+                  title: 'Escuchar los servicios de IdarThur',
+                  asset: 'voz/servicios.mp3',
+                ),
+              ])
+                TextButton.icon(
+                  onPressed: () => showModalBottomSheet<void>(
+                    context: context,
+                    builder: (_) => YesselPresentation(
+                      title: audio.title,
+                      asset: audio.asset,
+                    ),
+                  ),
+                  icon: const Icon(Icons.volume_up_rounded),
+                  label: Text(audio.title),
+                ),
               FilledButton.icon(
                 onPressed: onOpenYessel,
                 icon: const Icon(Icons.record_voice_over_rounded),
