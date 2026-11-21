@@ -5,4 +5,4 @@ Framework: Next.js. Node.js 22. Install: npm ci. Build: npm run build.
 Required environment: GROQ_API_KEY (server-side secret; configure in Vercel without exposing it to the APK).
 No calls to www.idarthur.com are required for chat, TTS, news or the bundled catalog.
 After the independent public domain is deployed, set apiOrigin in mobile/channel.json to that HTTPS domain and set independentDeployment=true. Copy the current release metadata and APK into this project before deploying updates. The installed app refreshes the channel from GitHub and remembers the last valid origin.
-The current channel uses the website origin as a temporary fallback until the separate project is connected and verified. Do not claim production independence before that change.
+Production API is deployed and verified at https://idarthur-mobile-api.vercel.app. The APK embeds this origin and ignores legacy website origins in saved settings and remote configuration.

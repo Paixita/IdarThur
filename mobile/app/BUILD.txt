@@ -1,4 +1,4 @@
-IdarThur Android 1.1.0 (2)
+IdarThur Android 1.1.1 (3)
 Flutter 3.44.6 / Dart 3.12.2. Android min SDK 24.
 flutter pub get
 flutter analyze
@@ -6,3 +6,5 @@ flutter test
 flutter build apk --release
 Release signing is loaded from android/key.properties (ignored). Keep the existing signing key private and backed up securely. The source folder on this PC is /home/paicita/Escritorio/IdarThur App. The private signing configuration is outside the repository. Do not add it to GitHub or to the APK.
 Old debug-signed builds cannot be updated directly with the production key; they require a one-time reinstall.
+
+Default API origin: https://idarthur-mobile-api.vercel.app

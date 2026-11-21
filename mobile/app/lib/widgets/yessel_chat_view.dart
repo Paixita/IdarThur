@@ -1,3 +1,4 @@
+import '../services/dictation_locale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/settings_screen.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -147,10 +148,31 @@ class _YesselChatViewState extends State<YesselChatView> {
     if (accepted != true || !mounted) return;
     final ready = await _recognizer.initialize();
     if (ready && mounted) {
+      final language = _messages
+          .lastWhere(
+            (m) => !m.isUser,
+            orElse: () => const ChatMessage(text: '', sender: 'ai'),
+          )
+          .language;
+      final locales = await _recognizer.locales();
+      final locale = selectDictationLocale(
+        language,
+        locales.map((v) => v.localeId).toList(),
+        WidgetsBinding.instance.platformDispatcher.locale.toLanguageTag(),
+      );
+      if (!mounted) return;
+      if (locale == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'El dispositivo no ofrece dictado para este idioma. Puedes escribir el mensaje.',
+            ),
+          ),
+        );
+        return;
+      }
       await _recognizer.listen(
-        listenOptions: SpeechListenOptions(
-          localeId: Localizations.localeOf(context).toLanguageTag(),
-        ),
+        listenOptions: SpeechListenOptions(localeId: locale),
         onResult: (r) {
           if (mounted) _controller.text = r.recognizedWords;
         },

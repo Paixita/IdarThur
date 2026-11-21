@@ -1,3 +1,5 @@
+import 'package:idarthur_app/services/dictation_locale.dart';
+import 'package:idarthur_app/config/app_config.dart';
 import 'package:idarthur_app/services/link_service.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -33,6 +35,28 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await ContentService.initialize();
   });
+  test(
+    'El dictado sigue el idioma del diálogo, sin tomar inglés por la interfaz',
+    () {
+      expect(
+        selectDictationLocale('es', ['en_US', 'es_CO', 'es_ES'], 'en-US'),
+        'es_CO',
+      );
+      expect(selectDictationLocale('fr', ['es_CO', 'fr_FR'], 'es-CO'), 'fr_FR');
+      expect(selectDictationLocale('de', ['en_US'], 'en-US'), null);
+    },
+  );
+  test(
+    'Una configuración antigua no vuelve a enlazar la app con la web',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        'mobile:origin': 'https://www.idarthur.com',
+      });
+      AppConfig.apiBaseUrl = 'https://idarthur-mobile-api.vercel.app';
+      await ContentService.initialize();
+      expect(AppConfig.apiBaseUrl, 'https://idarthur-mobile-api.vercel.app');
+    },
+  );
   test(
     'Los enlaces internos del chat abren módulos nativos sin depender de la web',
     () {

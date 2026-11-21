@@ -28,7 +28,9 @@ class ContentService {
       );
     }
     final origin = prefs.getString('mobile:origin');
-    if (origin != null && allowedOrigin(origin)) AppConfig.apiBaseUrl = origin;
+    if (origin != null && origin != AppConfig.webUrl && allowedOrigin(origin)) {
+      AppConfig.apiBaseUrl = origin;
+    }
   }
 
   static bool allowedOrigin(String value) {
@@ -52,7 +54,9 @@ class ContentService {
       if (res.statusCode == 200) {
         final channel = jsonDecode(res.body) as Map<String, dynamic>;
         final origin = channel['apiOrigin'];
-        if (origin is String && allowedOrigin(origin)) {
+        if (origin is String &&
+            origin != AppConfig.webUrl &&
+            allowedOrigin(origin)) {
           AppConfig.apiBaseUrl = origin;
           await prefs.setString('mobile:origin', origin);
         }

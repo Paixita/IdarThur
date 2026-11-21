@@ -17,7 +17,7 @@ class AppConfig {
   static const String webUrl = 'https://www.idarthur.com';
   static String apiBaseUrl = const String.fromEnvironment(
     'MOBILE_API_ORIGIN',
-    defaultValue: 'https://www.idarthur.com',
+    defaultValue: 'https://idarthur-mobile-api.vercel.app',
   );
   static const channelUrl =
       'https://raw.githubusercontent.com/Paixita/IdarThur/main/mobile/channel.json';
