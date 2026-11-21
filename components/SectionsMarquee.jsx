@@ -12,11 +12,19 @@ const SECCIONES = [
   },
   {
     id: 'hoteles',
-    label: 'Hoteles y Cruceros',
+    label: 'Hoteles',
     hint: 'Alojamiento premium',
     icon: '🏨',
     href: '/hoteles',
     img: '/hoteles/hotel_lobby_banner.png',
+  },
+  {
+    id: 'cruceros',
+    label: 'Cruceros',
+    hint: 'Salidas desde Cartagena',
+    icon: '🚢',
+    href: '/cruceros',
+    img: '/cruceros/ruta-2.webp',
   },
   {
     id: 'noticias',
