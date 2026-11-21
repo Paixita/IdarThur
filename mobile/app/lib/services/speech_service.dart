@@ -1,5 +1,8 @@
 import 'content_service.dart';
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
@@ -71,15 +74,14 @@ class SpeechService {
     final parts = chunks(clean(text));
     if (parts.isEmpty) return;
     Future<http.Response> load(String part) => http
-        .get(
-          Uri.parse(AppConfig.apiTts).replace(
-            queryParameters: {
-              'text': part,
-              'lang': language,
-              'gender': voiceGender,
-              'v': '5',
-            },
-          ),
+        .post(
+          Uri.parse(AppConfig.apiTts),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'text': part,
+            'lang': language,
+            'gender': voiceGender,
+          }),
         )
         .timeout(const Duration(seconds: 55));
     Future<http.Response>? pending = load(parts.first);
@@ -100,16 +102,17 @@ class SpeechService {
         final sub = _player.onPlayerComplete.listen((_) {
           if (!done.isCompleted) done.complete();
         });
+        Directory? scratch;
         try {
-          await _player.play(
-            BytesSource(
-              response.bodyBytes,
-              mimeType: response.headers['content-type'],
-            ),
-          );
+          scratch = await (await getTemporaryDirectory()).createTemp('yessel-');
+          final wav = File('${scratch.path}/voz.wav');
+          await wav.writeAsBytes(response.bodyBytes, flush: true);
+          if (session != _session) return;
+          await _player.play(DeviceFileSource(wav.path, mimeType: 'audio/wav'));
           await done.future.timeout(const Duration(minutes: 3));
         } finally {
           await sub.cancel();
+          if (scratch != null) await scratch.delete(recursive: true);
         }
       } catch (e) {
         if (session != _session) return;
@@ -150,6 +153,10 @@ class SpeechService {
     _completion = null;
     if (completion != null && !completion.isCompleted) completion.complete();
     await _player.stop();
-    await _tts.stop();
+    try {
+      await _tts.stop();
+    } on Exception {
+      /* El motor local es opcional. */
+    }
   }
 }

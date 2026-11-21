@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../services/provider_link.dart';
 import '../config/app_config.dart';
 import '../models/agent.dart';
 import 'chat_screen.dart';
@@ -33,19 +33,7 @@ class _FeatureDetailScreenState extends State<FeatureDetailScreen> {
     super.dispose();
   }
 
-  Future<void> open(String value) async {
-    final uri = Uri.parse(value);
-    if (uri.scheme != 'https' ||
-        !await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No se pudo abrir el proveedor. Intenta más tarde.'),
-          ),
-        );
-      }
-    }
-  }
+  Future<void> open(String value) => openProvider(context, value);
 
   Future<void> date(bool back) async {
     final today = DateTime.now();
@@ -115,7 +103,7 @@ class _FeatureDetailScreenState extends State<FeatureDetailScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Planea aquí y confirma precio, disponibilidad y condiciones con el proveedor antes de reservar.',
+            'Planea aquí y confirma precio, disponibilidad y condiciones con el proveedor antes de reservar. IdarThur puede recibir una comisión.',
             style: TextStyle(height: 1.5, color: AppColors.mutedText),
           ),
           const SizedBox(height: 22),
@@ -208,12 +196,12 @@ class _FeatureDetailScreenState extends State<FeatureDetailScreen> {
                         'destination_iata': to,
                       }).toString(),
                     )
-                  : null,
+                  : () => open(AppConfig.partnerAwayUrl),
               icon: const Icon(Icons.open_in_new),
               label: const Text('Comparar vuelos'),
             ),
             const Text(
-              'El comparador abre fuera de la app. Confirma allí fechas, viajeros y equipaje. Si no sabes el código de tu aeropuerto, pregúntale a Yessel.',
+              'Con ambos códigos se envía tu ruta. Sin ellos se abre el buscador general. Confirma allí fechas, viajeros y equipaje. Si no sabes el código de tu aeropuerto, pregúntale a Yessel.',
               style: TextStyle(
                 fontSize: 12,
                 color: AppColors.mutedText,

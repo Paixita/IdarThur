@@ -1,6 +1,6 @@
 import 'package:idarthur_app/widgets/content_image.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../services/provider_link.dart';
 import '../config/app_config.dart';
 import '../models/product.dart';
 import 'glass_card.dart';
@@ -10,13 +10,6 @@ class ProductCard extends StatelessWidget {
   final Product product;
 
   const ProductCard({super.key, required this.product});
-
-  Future<void> _openLink() async {
-    final uri = Uri.parse(product.purchaseUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +123,14 @@ class ProductCard extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 16),
+          const Text(
+            'IdarThur puede recibir una comisión por compras en Amazon.',
+          ),
+          const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: _openLink,
+              onPressed: () => openProvider(context, product.purchaseUrl),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFF9900), // naranja Amazon
                 foregroundColor: const Color(0xFF111111),

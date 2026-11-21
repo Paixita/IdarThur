@@ -1,6 +1,6 @@
 import '../screens/cruceros_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'provider_link.dart';
 import '../config/app_config.dart';
 import '../screens/feature_screens.dart';
 import '../screens/tienda_screen.dart';
@@ -21,7 +21,8 @@ String? nativeRoute(String href) {
     return null;
   }
   final path = uri.path;
-  if (path == '/cruceros' || (path == '/hoteles' && uri.fragment == 'cruceros')) {
+  if (path == '/cruceros' ||
+      (path == '/hoteles' && uri.fragment == 'cruceros')) {
     return '/cruceros';
   }
   if (path == '/peru' ||
@@ -86,6 +87,6 @@ Future<void> openChatLink(BuildContext context, String href) async {
     href.startsWith('/') ? AppConfig.webUrl + href : href,
   );
   if (uri != null && uri.scheme == 'https') {
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    await openProvider(context, uri.toString());
   }
 }

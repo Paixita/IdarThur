@@ -79,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.all(22),
           children: [
             const Text(
-              'Web y app IdarThur · Actualizado: 20 de noviembre de 2026',
+              'Web y app IdarThur · Actualizado: 21 de noviembre de 2026',
               style: TextStyle(color: AppColors.mutedText),
             ),
             for (final row in doc['sections'] as List) ...[
@@ -129,6 +129,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => policy(Map<String, dynamic>.from(value as Map)),
           ),
+        ListTile(
+          leading: const Icon(Icons.chat_outlined),
+          title: const Text('Retirar permiso para el chat de IA'),
+          onTap: () async {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.remove('ai:consent:v1');
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Volveremos a pedir permiso antes de enviar otro mensaje.',
+                  ),
+                ),
+              );
+            }
+          },
+        ),
         ListTile(
           leading: const Icon(Icons.description_outlined),
           title: const Text('Licencias de software'),

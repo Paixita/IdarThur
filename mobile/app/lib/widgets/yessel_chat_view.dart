@@ -100,7 +100,6 @@ class _YesselChatViewState extends State<YesselChatView> {
       return;
     }
 
-    await _speech.stop();
     if (!mounted || requestId != _speechRequestId) return;
     setState(() => _speakingMessageIndex = index);
 

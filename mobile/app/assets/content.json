@@ -380,6 +380,10 @@
         [
           "Seguimiento opcional",
           "La web solo activa medición publicitaria de TikTok si aceptas esa categoría. Rechazarla no impide usar viajes, compras ni chat. La app no incorpora un SDK de TikTok. Al abrir una página externa, sus cookies y condiciones se gestionan allí."
+        ],
+        [
+          "Derechos y reclamaciones",
+          "Según la normativa aplicable puedes solicitar acceso, rectificación, supresión, limitación, oposición o portabilidad, y retirar tu consentimiento para tratamientos futuros. Indica el servicio y la solicitud, sin adjuntar contraseñas ni información de pago. Puedes presentar una reclamación ante la autoridad de protección de datos competente en tu país."
         ]
       ]
     },
@@ -451,7 +455,7 @@
     },
     {
       "id": "ia",
-      "title": "Transparencia y uso seguro de IA",
+      "title": "Privacidad y uso de inteligencia artificial",
       "sections": [
         [
           "Identidad y límites",
@@ -464,6 +468,14 @@
         [
           "Decisiones y contenido",
           "Comprueba la información importante con fuentes oficiales y proveedores. Las historias pueden ser ficción o recreaciones basadas en hechos reales y deben identificarse como tales. No se exige publicar conversaciones privadas ni ceder derechos indiscriminadamente para usar el chat."
+        ],
+        [
+          "Qué recibe cada servicio",
+          "Al enviar un mensaje, la app transmite el texto, el idioma y una parte reciente del diálogo al servidor de IdarThur para responder con Groq. Las consultas que necesitan información actual pueden enviar términos de búsqueda a servicios externos. Al pulsar el parlante, Kokoro recibe texto para sintetizarlo. El dictado utiliza el servicio de reconocimiento que tengas configurado en Android."
+        ],
+        [
+          "Tus controles",
+          "Puedes explorar el catálogo sin conversar. En Privacidad puedes retirar el permiso del chat para futuros envíos. En los ajustes de Android puedes revocar el micrófono. Retirar el permiso no borra los datos que ya se hubieran tratado."
         ]
       ]
     }

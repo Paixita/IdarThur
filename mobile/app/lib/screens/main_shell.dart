@@ -111,8 +111,8 @@ class _MainShellState extends State<MainShell> {
           style: TextStyle(fontSize: 15),
         ),
         actions: [
-          IconButton(
-            tooltip: 'Transparencia y ajustes',
+          TextButton.icon(
+            label: const Text('Privacidad'),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),

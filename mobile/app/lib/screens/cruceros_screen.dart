@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../services/provider_link.dart';
 
 const catalogo =
     'https://www.royalcaribbean.com/lac/es/cruises?country=COL&currency=USD&search=departurePort%3ACTG';
@@ -67,21 +67,7 @@ class CrucerosScreen extends StatelessWidget {
                   child: Text(viaje.ruta),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    final opened = await launchUrl(
-                      Uri.parse(viaje.fuente),
-                      mode: LaunchMode.externalApplication,
-                    );
-                    if (!opened && context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'No se pudo abrir la página de la naviera.',
-                          ),
-                        ),
-                      );
-                    }
-                  },
+                  onPressed: () => openProvider(context, viaje.fuente),
                   child: const Text('Consultar salida en Royal Caribbean'),
                 ),
               ],
