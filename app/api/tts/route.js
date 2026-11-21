@@ -1,3 +1,4 @@
+import {requestGate} from '@/utils/requestGate.mjs';
 import { prepareSpeechText } from '@/utils/speechText.mjs';
 import { synthesizeSpeech } from '@/utils/kokoroEngine.mjs';
 import { normalizeLanguage, getNeuralVoice, normalizeVoiceGender } from '@/utils/languageConfig.mjs';
@@ -69,6 +70,7 @@ async function withTimeout(promise, ms) {
 }
 
 export async function GET(request) {
+  const limited=requestGate(request,{scope:'tts',limit:100});if(limited)return limited;
   const { searchParams } = new URL(request.url);
   const lang = normalizeLanguage(searchParams.get('lang') || 'es');
   const gender = normalizeVoiceGender(searchParams.get('gender'));
@@ -104,6 +106,7 @@ export async function GET(request) {
     });
   }
 
+  if(activeJobs>=MAX_CONCURRENT && waiting.length>=8)return Response.json({error:'Voz ocupada. Intenta nuevamente.'},{status:429,headers:{'Retry-After':'10','Cache-Control':'no-store'}});
   await acquireSlot();
   try {
     const startedAt = Date.now();
@@ -115,7 +118,7 @@ export async function GET(request) {
     setCached(cacheKey, wav);
     console.log(
       `[TTS Kokoro] voz=${voice} dur=${duration.toFixed(2)}s ` +
-      `bytes=${wav.length} ms=${Date.now() - startedAt} :: "${text.slice(0, 60)}"`
+      `bytes=${wav.length} ms=${Date.now() - startedAt}`
     );
 
     return new Response(wav, {

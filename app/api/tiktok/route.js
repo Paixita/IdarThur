@@ -14,6 +14,7 @@ function sha256(value) {
 export async function POST(request) {
   try {
     const body = await request.json();
+    if(body.consent!=='marketing-v1')return Response.json({error:'Consentimiento publicitario requerido.'},{status:400});
     const { event, event_id, user = {}, properties = {}, pageUrl, referrer } = body;
 
     const pixelId = process.env.TIKTOK_PIXEL_ID;

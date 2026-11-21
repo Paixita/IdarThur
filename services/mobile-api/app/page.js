@@ -1,0 +1,1 @@
+export default function Page(){return <main><h1>IdarThur · Servicios de la app</h1><p>Servicio independiente para el catálogo, noticias, chat y voz de la aplicación.</p><p><a style={{color:'#6ee7b7'}} href="/app">Descargar aplicación</a> · <a style={{color:'#6ee7b7'}} href="/privacidad">Privacidad</a> · <a style={{color:'#6ee7b7'}} href="/ia">Transparencia de IA</a></p></main>;}

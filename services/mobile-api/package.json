@@ -1,0 +1,29 @@
+{
+  "name": "idarthur-mobile-api",
+  "private": true,
+  "version": "1.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "node scripts/prepare-kokoro.mjs && node scripts/install-speech-model.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@ai-sdk/groq": "^3.0.45",
+    "ai": "^6.0.214",
+    "espeak-ng": "^1.0.2",
+    "franc-min": "6.2.0",
+    "kokoro-js": "^1.2.1",
+    "next": "16.4.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@babel/parser": "7.29.14"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
+  }
+}

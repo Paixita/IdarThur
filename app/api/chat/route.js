@@ -1,3 +1,4 @@
+import {requestGate} from '@/utils/requestGate.mjs';
 import { generateChatWithFallback } from '@/utils/chatGeneration.mjs';
 import { createGroq } from '@ai-sdk/groq';
 import { generateText, tool, stepCountIs } from 'ai';
@@ -114,6 +115,7 @@ Activa este conocimiento solo si el administrador pide diagnóstico técnico. A 
 `;
 
 export async function POST(request) {
+  const limited=requestGate(request,{scope:'chat',limit:20});if(limited)return limited;
   let responseLanguage = 'es';
   let voiceGender = 'male';
   try {
@@ -348,7 +350,7 @@ export async function POST(request) {
         normalizeReplyLinks(finalReply || copy.unavailable),
     });
   } catch (error) {
-    console.error('Error del chat de Yessel:', error);
+    console.error('Error del chat de Yessel:', {status:error?.statusCode || 500,name:error?.name || 'Error'});
     return Response.json({
       reply:
         languageCopy(responseLanguage).unavailable,

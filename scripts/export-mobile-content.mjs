@@ -1,0 +1,11 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {products,categories} from '../data/tienda/index.js';
+import {prepareSpeechText} from '../utils/speechText.mjs';
+const stories=JSON.parse(await readFile('data/historias/stories.json','utf8'));
+const legal=JSON.parse(await readFile('data/legal/documents.json','utf8'));
+const narrations=JSON.parse(await readFile('data/audio/manifest.json','utf8'));
+const content={schemaVersion:1,updatedAt:new Date().toISOString(),products,categories,stories:stories.map(s=>({...s,narrativa:undefined,narrativaTexto:prepareSpeechText(s.narrativa),audio:narrations[prepareSpeechText(s.narrativa)]||null})),legal};
+await mkdir('public/mobile',{recursive:true});
+await writeFile('data/mobile-content.json',JSON.stringify(content,null,2)+'\n');
+await writeFile('public/mobile/content.json',JSON.stringify(content,null,2)+'\n');
+console.log('Mobile content refreshed:',products.length,'products;',stories.length,'stories.');

@@ -1,10 +1,12 @@
+import {adminAuthorized} from '@/utils/adminAccess.mjs';
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET() {
+export async function GET(request) {
+  if(!adminAuthorized(request))return Response.json({error:'Acceso administrativo requerido.'},{status:401});
   const meiliHost = process.env.MEILISEARCH_HOST || 'http://localhost:7700';
-  const meiliKey = process.env.MEILISEARCH_MASTER_KEY || 'idarthur_meili_master_key_2026';
+  const meiliKey = process.env.MEILISEARCH_MASTER_KEY || '';
   
   try {
     // 1. Fetch News

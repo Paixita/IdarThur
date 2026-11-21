@@ -1,4 +1,5 @@
 "use client";
+import { buildConversation } from '@/utils/chatMessage.mjs';
 import Link from 'next/link';
 import { getAgentVoiceGender } from '@/utils/agentVoice.mjs';
 import ChatMessage from '@/components/ChatMessage';
@@ -155,7 +156,7 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
-          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language })),
+          messages: buildConversation(userMessage,newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language }))),
           browserLanguage: navigator.language,
           agentId: activeChat.id
         })
@@ -213,7 +214,7 @@ export default function AgentesClient() {
         },
         body: JSON.stringify({
           message: userMessage,
-          messages: newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language })),
+          messages: buildConversation(userMessage,newMessages.map((m) => ({ role: m.sender === 'ai' ? 'assistant' : 'user', content: m.text, language: m.language }))),
           browserLanguage: navigator.language,
           agentId: 'default'
         })

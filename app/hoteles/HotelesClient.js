@@ -66,15 +66,15 @@ export default function HotelesClient() {
         <input type="text" placeholder="¿A dónde viajas? (Ej: Roma)" style={{
           flex: '1 1 200px', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem', transition: 'border-color 0.3s'
         }} onFocus={e => e.target.style.borderColor = 'var(--primary)'} onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}/>
-        
+
         <input type="date" style={{
           flex: '1 1 150px', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem'
         }} />
-        
+
         <input type="date" style={{
           flex: '1 1 150px', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem'
         }} />
-        
+
         <select style={{
           flex: '1 1 150px', padding: '15px 20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'white', outline: 'none', fontSize: '1rem'
         }}>
@@ -83,15 +83,15 @@ export default function HotelesClient() {
           <option value="3" style={{color: 'black'}}>3 Huéspedes</option>
           <option value="4" style={{color: 'black'}}>4+ Huéspedes</option>
         </select>
-        
-        <button onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')} className="btn-primary" style={{ padding: '15px 40px', borderRadius: '15px', fontSize: '1.1rem', fontWeight: 'bold' }}>
+
+        <button onClick={() => window.open('https://www.booking.com/searchresults.es.html?label=affnetTP_399989189573503', '_blank')} className="btn-primary" style={{ padding: '15px 40px', borderRadius: '15px', fontSize: '1.1rem', fontWeight: 'bold' }}>
           Buscar Hoteles
         </button>
       </div>
 
       {/* Yessel Recomendación */}
-      <div 
-        className="glass" 
+      <div
+        className="glass"
         style={{ padding: '30px', borderRadius: '25px', marginBottom: '60px', display: 'flex', alignItems: 'center', gap: '25px', background: 'linear-gradient(135deg, rgba(69,243,255,0.05) 0%, rgba(255,0,128,0.05) 100%)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }}
         onMouseEnter={e => {
           e.currentTarget.style.transform = 'translateY(-5px)';
@@ -129,10 +129,10 @@ export default function HotelesClient() {
           { id: 9, city: "Nueva York, EE. UU.", img: "/destinos/nuevayork.png", deals: "920 Ofertas Premium" },
           { id: 10, city: "Cancún, México", img: "/destinos/cancun.png", deals: "430 Resorts Todo Incluido" }
         ].map(dest => (
-          <div key={dest.id} className="glass" style={{ borderRadius: '25px', overflow: 'hidden', position: 'relative', height: '350px', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }} 
+          <div key={dest.id} className="glass" style={{ borderRadius: '25px', overflow: 'hidden', position: 'relative', height: '350px', cursor: 'pointer', transition: 'transform 0.3s, box-shadow 0.3s' }}
                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(69,243,255,0.2)'; }}
                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-               onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')}>
+               onClick={() => window.open('https://www.booking.com/searchresults.es.html?label=affnetTP_399989189573503', '_blank')}>
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
               <img src={dest.img} alt={dest.city} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: '0.82', transition: 'opacity 0.4s' }} />
             </div>
@@ -146,7 +146,7 @@ export default function HotelesClient() {
 
       {/* Sección High Ticket: Paquete Estilo Aviatur */}
       <div style={{ marginTop: '100px', background: 'rgba(10,15,25,0.7)', borderRadius: '30px', padding: '60px 40px', border: '1px solid rgba(69, 243, 255, 0.2)' }}>
-        
+
         <div style={{ marginBottom: '40px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white', marginBottom: '10px' }}>
             Escapada de Lujo a <span style={{ color: 'var(--primary)' }}>Dubai & Maldivas</span>
@@ -166,7 +166,7 @@ export default function HotelesClient() {
 
         {/* Contenido del Paquete y Tarjeta de Reserva */}
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) 350px', gap: '40px', alignItems: 'start' }}>
-          
+
           {/* Detalles Izquierda */}
           <div>
             <div style={{ display: 'flex', gap: '30px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px', marginBottom: '30px', overflowX: 'auto' }}>
@@ -199,10 +199,10 @@ export default function HotelesClient() {
             <h3 style={{ fontSize: '1.2rem', color: '#a0aab5', marginBottom: '10px' }}>Precio desde</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>$1,250 <span style={{ fontSize: '1rem', color: '#a0aab5', fontWeight: 'normal' }}>USD</span></div>
             <p style={{ color: 'var(--primary)', fontSize: '0.9rem', marginBottom: '30px', fontWeight: 'bold' }}>Por persona / 7 Días, 6 Noches</p>
-            
-            <button 
-              onClick={() => window.open('https://search.hotellook.com/?marker=729418', '_blank')} 
-              className="btn-primary" 
+
+            <button
+              onClick={() => window.open('https://www.booking.com/searchresults.es.html?label=affnetTP_399989189573503', '_blank')}
+              className="btn-primary"
               style={{ width: '100%', padding: '18px', fontSize: '1.1rem', fontWeight: 'bold', borderRadius: '15px', marginBottom: '15px', display: 'flex', justifyContent: 'center', gap: '10px', alignItems: 'center' }}>
               Reservar Oferta
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -216,7 +216,7 @@ export default function HotelesClient() {
       {isChatOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(5px)' }}>
           <div style={{ width: '90%', maxWidth: '500px', background: '#0a0f19', borderRadius: '25px', border: `1px solid var(--accent)`, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: `0 0 50px rgba(255, 0, 128, 0.3)` }}>
-            
+
             {/* Chat Header */}
             <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)' }}>
               <img src="/yessel_avatar.png" alt="Yessel" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
@@ -225,12 +225,12 @@ export default function HotelesClient() {
                 <span style={{ color: 'var(--accent)', fontSize: '0.85rem' }}>Especialista en Alojamientos</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <button 
+                <button
                   type="button"
                   onClick={() => {
                     if (isAudioPremium) playAlvaroAudio("Hola, mi voz VIP está activada. Dime en qué te ayudo.");
                     else setIsAudioModalOpen(true);
-                  }} 
+                  }}
                   style={{ background: 'rgba(255,255,255,0.1)', border: `1px solid ${isAudioPremium ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}`, borderRadius: '50%', width: '35px', height: '35px', color: isAudioPremium ? 'var(--primary)' : 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   {isAudioPremium ? '🔊' : '🔈'}
@@ -245,9 +245,9 @@ export default function HotelesClient() {
             <div style={{ padding: '20px', height: '350px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
               {messages.map((msg, i) => (
                 <div key={i} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%' }}>
-                  <div style={{ 
-                    background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.05)', 
-                    color: 'white', padding: '12px 18px', borderRadius: '20px', 
+                  <div style={{
+                    background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                    color: 'white', padding: '12px 18px', borderRadius: '20px',
                     borderBottomRightRadius: msg.sender === 'user' ? '5px' : '20px',
                     borderBottomLeftRadius: msg.sender === 'ai' ? '5px' : '20px',
                     lineHeight: '1.5', fontSize: '0.95rem'
@@ -260,11 +260,11 @@ export default function HotelesClient() {
 
             {/* Chat Input */}
             <form onSubmit={handleSendMessage} style={{ padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', gap: '10px' }}>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={inputMsg}
                 onChange={e => setInputMsg(e.target.value)}
-                placeholder={`Escribe a Yessel...`} 
+                placeholder={`Escribe a Yessel...`}
                 style={{ flexGrow: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 15px', borderRadius: '15px', color: 'white', outline: 'none' }}
               />
               <button type="submit" style={{ background: 'var(--accent)', border: 'none', borderRadius: '15px', padding: '0 20px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>

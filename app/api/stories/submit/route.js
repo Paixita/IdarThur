@@ -1,10 +1,12 @@
+import {adminAuthorized} from '@/utils/adminAccess.mjs';
 import fs from 'fs';
 import path from 'path';
 
 export async function POST(request) {
+  if(!adminAuthorized(request))return Response.json({success:false,error:'La publicación requiere revisión y acceso del administrador. El borrador no se ha publicado.'},{status:401});
   try {
     const story = await request.json();
-    
+
     // Validar campos básicos
     if (!story.titulo || !story.narrativa) {
       return Response.json({ success: false, error: "Datos incompletos" }, { status: 400 });
@@ -17,7 +19,7 @@ export async function POST(request) {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
     }
-    
+
     story.ano = story.ano || new Date().getFullYear().toString();
 
     // 1. Cargar historias actuales
@@ -50,7 +52,7 @@ export async function POST(request) {
     if (token && repo) {
       try {
         const url = `https://api.github.com/repos/${repo}/contents/data/historias/stories.json`;
-        
+
         // A. Obtener SHA del archivo actual en GitHub
         const getRes = await fetch(`${url}?ref=${branch}`, {
           headers: {

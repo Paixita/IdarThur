@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PrivacyPreferencesButton from './PrivacyPreferencesButton';
 import config from '@/data/config.json';
 
 const EXPLORAR = [
@@ -11,6 +12,7 @@ const EXPLORAR = [
   { href: '/autos', label: 'Alquiler de Autos' },
   { href: '/historias', label: 'Historias de Viajeros' },
   { href: '/agentes', label: 'Escuadrón de IA' },
+  { href: '/app', label: 'Descargar aplicación Android' },
 ];
 
 export default function Footer() {
@@ -22,7 +24,7 @@ export default function Footer() {
         <div>
           <h3 className="footer-brand">{config.brandName}</h3>
           <p className="footer-copy">
-            La plataforma #1 impulsada por IA para descubrir el mundo, reservar tus viajes
+            Información de viajes con IA para descubrir el mundo, comparar tus opciones
             y conseguir el mejor equipamiento de la manera más inteligente.
           </p>
         </div>
@@ -45,8 +47,10 @@ export default function Footer() {
           <ul className="footer-list">
             <li><Link href="/privacidad" className="footer-link">Política de Privacidad</Link></li>
             <li><Link href="/terminos" className="footer-link">Términos y Condiciones</Link></li>
+            <li><Link href="/ia" className="footer-link">Transparencia de IA</Link></li>
+            <li><PrivacyPreferencesButton /></li>
             <li><Link href="/cookies" className="footer-link">Política de Cookies</Link></li>
-            <li><Link href="/tienda" className="footer-link">Aviso de Afiliados</Link></li>
+            <li><Link href="/afiliados" className="footer-link">Aviso de Afiliados</Link></li>
           </ul>
         </div>
       </div>

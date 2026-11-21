@@ -8,6 +8,7 @@
  */
 export function trackTikTokEvent(eventName, properties = {}, user = {}) {
   if (typeof window === 'undefined') return;
+  try { if(localStorage.getItem('idarthur:privacy:v1')!=='marketing')return; } catch { return; }
 
   // 1. Enviar evento al Píxel del Navegador (si está cargado)
   if (window.ttq) {
@@ -31,6 +32,7 @@ export function trackTikTokEvent(eventName, properties = {}, user = {}) {
     ?.split('=')[1];
 
   const payload = {
+    consent: 'marketing-v1',
     event: eventName,
     event_id: `evt_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
     pageUrl: window.location.href,

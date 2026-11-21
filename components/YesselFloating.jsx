@@ -67,7 +67,7 @@ export default function YesselFloating() {
 
   // Escucha del servidor WebSocket de TikTok Live
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !['localhost','127.0.0.1'].includes(window.location.hostname)) return;
     
     let ws;
     let disposed = false;

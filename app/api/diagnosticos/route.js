@@ -1,7 +1,9 @@
+import {adminAuthorized} from '@/utils/adminAccess.mjs';
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 
 export async function GET(request) {
+  if(!adminAuthorized(request))return Response.json({error:'Acceso administrativo requerido.'},{status:401,headers:{'Cache-Control':'no-store'}});
   const { searchParams } = new URL(request.url);
   const checkType = searchParams.get('check') || 'all';
 
@@ -10,7 +12,7 @@ export async function GET(request) {
   if (checkType === 'db' || checkType === 'all') {
     results.database = await new Promise((resolve) => {
       // Execute a quick select command to verify postgres is up and credentials work
-      exec('PGPASSWORD=postgres psql -h localhost -U postgres -d medusadb -c "SELECT 1;"', (err, stdout, stderr) => {
+      exec('psql -h localhost -U postgres -d medusadb -c "SELECT 1;"', (err, stdout, stderr) => {
         if (err) {
           resolve({ 
             success: false, 

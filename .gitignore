@@ -44,3 +44,16 @@ next-env.d.ts
 
 # Modelo generado durante la instalación (no publicar pesos en Git).
 /assets/kokoro-model/
+
+# Flutter and independent API build artifacts
+**/node_modules/
+**/.next/
+**/assets/kokoro-model/
+mobile/app/build/
+mobile/app/.dart_tool/
+mobile/app/android/.gradle/
+mobile/app/android/.kotlin/
+**/key.properties
+**/*.jks
+**/*.keystore
+**/local.properties

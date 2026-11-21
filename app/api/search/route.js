@@ -1,43 +1,17 @@
-import { NextResponse } from 'next/server';
-
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get('q') || '';
-  const type = searchParams.get('type') || 'todos';
-
-  const meiliHost = process.env.MEILISEARCH_HOST || 'http://localhost:7700';
-  const meiliKey = process.env.MEILISEARCH_MASTER_KEY || 'idarthur_meili_master_key_2026';
-
-  try {
-    const searchBody = {
-      q: query,
-      limit: 15,
-    };
-
-    // If a type filter is specified and it is not 'todos' (e.g. 'noticia', 'historia', 'producto'),
-    // we apply a Meilisearch filter using the filterable attribute 'type'
-    if (type && type !== 'todos') {
-      searchBody.filter = `type = "${type}"`;
-    }
-
-    const response = await fetch(`${meiliHost}/indexes/idarthur_unificado/search`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${meiliKey}`
-      },
-      body: JSON.stringify(searchBody)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Meilisearch search failed with status ${response.status}`);
-    }
-
-    const result = await response.json();
-    return NextResponse.json({ success: true, hits: result.hits });
-
-  } catch (error) {
-    console.error("Search API error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+import {products} from '@/data/tienda';
+import stories from '@/data/historias/stories.json';
+export async function GET(request){
+ const {searchParams:p}=new URL(request.url);
+ const query=(p.get('q')||'').slice(0,300);const type=p.get('type')||'todos';
+ if(!['todos','producto','historia','noticia'].includes(type))return Response.json({error:'Tipo de búsqueda inválido.'},{status:400});
+ if(process.env.MEILISEARCH_HOST&&process.env.MEILISEARCH_MASTER_KEY){
+  try{
+   const response=await fetch(process.env.MEILISEARCH_HOST+'/indexes/idarthur_unificado/search',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+process.env.MEILISEARCH_MASTER_KEY},body:JSON.stringify({q:query,limit:15,...(type==='todos'?{}:{filter:'type = '+JSON.stringify(type)})}),signal:AbortSignal.timeout(2500)});
+   if(response.ok){const data=await response.json();return Response.json({success:true,hits:data.hits,source:'search_service'});}
+  }catch{}
+ }
+ const entries=[...products.map(p=>({id:'producto_'+p.id,type:'producto',title:p.name,description:p.copy,image:p.img,link:'/tienda',subtitle:p.price,content:p.copy,url:'/tienda',price:p.price})),...stories.map(s=>({id:'historia_'+s.id,type:'historia',title:s.titulo,description:s.resumen||s.subtitulo||'',image:s.imagen,link:'/historias/'+s.id,content:s.resumen||s.subtitulo||'',subtitle:s.ano||'',url:'/historias/'+s.id}))];
+ const words=query.toLocaleLowerCase('es').split(/\s+/).filter(Boolean);
+ const hits=entries.filter(e=>(type==='todos'||type===e.type)&&words.every(w=>(e.title+' '+e.description).toLocaleLowerCase('es').includes(w))).slice(0,15);
+ return Response.json({success:true,hits,source:'local_catalog',notice:'Catálogo e historias. Las noticias recientes están en la sección Noticias.'});
 }

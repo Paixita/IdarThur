@@ -9,18 +9,18 @@
     "lint": "eslint",
     "postinstall": "node scripts/prepare-kokoro.mjs && node scripts/install-speech-model.mjs",
     "test:voice": "node --test tests/voice.test.mjs",
-    "prebuild": "node scripts/build-narrations.mjs",
+    "prebuild": "node scripts/build-narrations.mjs && node scripts/export-mobile-content.mjs",
     "test:news": "node --test tests/news.test.mjs",
-    "test:chat": "node --test tests/chat-links.test.mjs tests/travel-research.test.mjs tests/language.test.mjs tests/security-research.test.mjs"
+    "test:chat": "node --test tests/chat-links.test.mjs tests/travel-research.test.mjs tests/language.test.mjs tests/security-research.test.mjs tests/platform.test.mjs"
   },
   "dependencies": {
-    "@ai-sdk/groq": "^3.0.39",
-    "ai": "^6.0.190",
+    "@ai-sdk/groq": "^3.0.45",
+    "ai": "^6.0.214",
     "espeak-ng": "^1.0.2",
     "franc-min": "6.2.0",
     "kokoro-js": "^1.2.1",
-    "next": "16.2.6",
-    "nodemailer": "^9.0.1",
+    "next": "16.4.6",
+    "nodemailer": "^10.6.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tiktok-live-connector": "^2.4.0",
@@ -31,6 +31,9 @@
     "@babel/parser": "7.29.14",
     "@playwright/test": "^1.60.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.2.6"
+    "eslint-config-next": "16.4.6"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
   }
 }

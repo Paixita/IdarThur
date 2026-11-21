@@ -1,0 +1,116 @@
+[
+  {
+    "id": "privacidad",
+    "title": "Privacidad y datos personales",
+    "sections": [
+      [
+        "Alcance y contacto",
+        "Esta política cubre la web y la aplicación Android de IdarThur. Para consultas sobre datos: soporte@idarthur.com. La identificación legal del operador y el canal efectivo deben confirmarse antes de considerar cerrada la revisión jurídica."
+      ],
+      [
+        "Chat e inteligencia artificial",
+        "Yessel y el escuadrón son sistemas de IA. El mensaje y parte del historial se envían por HTTPS a nuestro servicio y a Groq para generar respuestas. No se garantiza anonimato automático: lo que escribas puede contener datos personales. No compartas documentos, tarjetas, contraseñas, códigos ni claves API. No usamos el chat para tomar decisiones legales, de crédito o de elegibilidad."
+      ],
+      [
+        "Voz y micrófono",
+        "Al escuchar una respuesta, el texto se envía al servicio de voz Kokoro alojado por IdarThur. Si falla puede usarse una voz compatible del dispositivo. El micrófono solo se solicita al activar Dictar; el reconocimiento depende del servicio configurado en Android y puede procesar audio en servidores de su proveedor. Revisa el texto antes de enviarlo. No grabamos audio de fondo ni lo enviamos a Yessel como archivo."
+      ],
+      [
+        "Datos locales y proveedores",
+        "La app guarda preferencias, políticas, catálogo y noticias consultadas en el dispositivo. El chat se conserva en memoria mientras la vista está abierta y no se publica como historia. La web y el servidor pueden generar registros técnicos de conexión y errores; Groq, Vercel, GitHub y los servicios de dictado aplican sus propias políticas y pueden procesar datos fuera de tu país. No afirmamos plazos de borrado ni ausencia de retención de proveedores que no hemos verificado."
+      ],
+      [
+        "Finalidades y opciones",
+        "Los datos se usan para responder consultas, reproducir voz, servir contenido y comprobar actualizaciones. Puedes evitar el chat o el micrófono y seguir explorando; retirar el permiso en Android y borrar la caché/preferencias o los datos de la app. No borres datos sin guardar lo que necesites. Para acceso, corrección, supresión o consultas sobre el tratamiento, utiliza el contacto indicado; verificaremos qué datos están bajo control de IdarThur y qué solicitudes corresponden al proveedor."
+      ],
+      [
+        "Seguimiento opcional",
+        "La web solo activa medición publicitaria de TikTok si aceptas esa categoría. Rechazarla no impide usar viajes, compras ni chat. La app no incorpora un SDK de TikTok. Al abrir una página externa, sus cookies y condiciones se gestionan allí."
+      ]
+    ]
+  },
+  {
+    "id": "terminos",
+    "title": "Términos y condiciones",
+    "sections": [
+      [
+        "Servicio de orientación",
+        "IdarThur facilita información de viajes, comparadores y enlaces de afiliados. Los presupuestos de Yessel son orientativos. No hay un proveedor de emisión conectado para confirmar disponibilidad, cobrar, emitir billetes o producir reservas/PNR dentro del chat."
+      ],
+      [
+        "Quién presta el servicio y dónde reclamar",
+        "IdarThur informa, orienta y remite a proveedores externos; no opera vuelos, alojamientos, vehículos ni logística de productos. La aerolínea o emisor de la reserva atiende transporte, cambios, cancelaciones y equipaje; el alojamiento o vendedor de la reserva atiende la estancia; la empresa de alquiler gestiona entrega, seguro, depósito y devoluciones del vehículo; Amazon o el vendedor indicado en el pedido atiende cobro, entrega y garantía según su intervención y sus condiciones. Los reclamos derivados de esos servicios se presentan directamente al proveedor contractual identificado en la confirmación o factura, con el número de reserva/pedido y comprobantes. IdarThur no asume la ejecución de servicios ajenos por el hecho de enlazarlos ni sustituye los canales del proveedor."
+      ],
+      [
+        "Alcance de esta separación",
+        "El vínculo de afiliación no traslada automáticamente todas las responsabilidades a terceros. IdarThur mantiene las obligaciones que legalmente le correspondan por su propia información, publicidad, tratamiento de datos y actuaciones. Nada de estas condiciones excluye derechos irrenunciables, responsabilidades legalmente exigibles ni la posibilidad de reclamar ante la autoridad competente. La aplicación concreta depende del contrato, de los hechos y de la ley aplicable."
+      ],
+      [
+        "Reservas y compras",
+        "Las operaciones se completan en el proveedor externo. Comprueba identidad del vendedor, itinerario, pasajeros, fechas, equipaje, impuestos, moneda, cancelación, visados y condiciones antes de pagar. Amazon y sus vendedores gestionan sus pedidos, entregas y garantías según sus condiciones. Conservas los derechos obligatorios que reconozca la ley aplicable; estos textos no los eliminan."
+      ],
+      [
+        "Uso responsable",
+        "No uses los servicios para fraude, extracción de secretos, acceso no autorizado o daño a terceros. Se pueden limitar solicitudes abusivas. Una respuesta de IA no sustituye evaluación médica, jurídica ni una auditoría de seguridad. Ante una emergencia acude a los servicios adecuados."
+      ],
+      [
+        "Disponibilidad y actualizaciones",
+        "La app puede mostrar contenido guardado cuando falta conexión. Los resultados nuevos, la IA, noticias y reservas dependen de internet y de proveedores externos. La descarga de Android mantiene una dirección estable, pero el código nativo requiere nuevas versiones firmadas. La instalación y permisos se confirman en Android; no hay actualizaciones silenciosas ni garantía de funcionamiento eterno."
+      ]
+    ]
+  },
+  {
+    "id": "cookies",
+    "title": "Cookies y preferencias",
+    "sections": [
+      [
+        "Necesarias",
+        "La web guarda preferencias locales como la decisión de cookies y reproducción de voz. La app guarda configuración, caché de contenido y aceptación del aviso de IA en almacenamiento local. No son publicidad personalizada."
+      ],
+      [
+        "Publicidad opcional",
+        "El píxel de TikTok y los eventos publicitarios de la web solo se habilitan después de aceptar publicidad. Puedes rechazarla o cambiar la elección desde el enlace Preferencias de cookies del pie de página. Al retirar consentimiento, se recarga la web para detener la carga posterior del píxel."
+      ],
+      [
+        "Enlaces externos",
+        "Amazon, Booking, Aviasales y otros proveedores pueden aplicar sus cookies de afiliación, medición o marketing al abrir sus sitios. Consulta y configura sus avisos. No clasificamos las cookies publicitarias como imprescindibles para usar IdarThur."
+      ]
+    ]
+  },
+  {
+    "id": "afiliados",
+    "title": "Aviso de afiliados",
+    "sections": [
+      [
+        "Relación comercial",
+        "Algunos enlaces de vuelos, hoteles, autos y productos incluyen identificadores de afiliación. Si completas una operación, IdarThur puede recibir una comisión según el programa y sus condiciones. Como participante del Programa de Afiliados de Amazon, IdarThur obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables."
+      ],
+      [
+        "Precios e imágenes",
+        "Los precios del catálogo son referencias editoriales y pueden cambiar. El precio, disponibilidad, variante, vendedor y condiciones válidos son los que muestre el proveedor al comprar. Algunas imágenes son ilustraciones generadas con IA; no son una fotografía garantizada del artículo exacto. Una búsqueda en Amazon puede mostrar varios productos: verifica cuál compras."
+      ],
+      [
+        "Elección informada",
+        "Puedes utilizar el chat y comparar opciones sin comprar. No afirmamos que una comisión garantice mejor precio, trato VIP, exclusividad ni calidad. No compartas datos de pago en el chat."
+      ]
+    ]
+  },
+  {
+    "id": "ia",
+    "title": "Transparencia y uso seguro de IA",
+    "sections": [
+      [
+        "Identidad y límites",
+        "Yessel, Natalia y los demás agentes son asistentes artificiales y sus voces son sintéticas. Pueden cometer errores. Conservan parte del diálogo para responder y, cuando se necesita información actual, pueden consultar fuentes mediante herramientas disponibles. Una lista de fuentes no equivale a revalidar inventario ni a certificar seguridad."
+      ],
+      [
+        "Protección",
+        "Las claves del proveedor se mantienen en el servidor y no se incluyen en el APK. Las páginas externas son datos, no instrucciones para cambiar el rol del agente. Se limita el tamaño de los mensajes y el uso del servicio, sin prometer protección absoluta contra ataques. Natalia orienta sobre seguridad; no bloquea atacantes, inspecciona equipos ni garantiza transacciones."
+      ],
+      [
+        "Decisiones y contenido",
+        "Comprueba la información importante con fuentes oficiales y proveedores. Las historias pueden ser ficción o recreaciones basadas en hechos reales y deben identificarse como tales. No se exige publicar conversaciones privadas ni ceder derechos indiscriminadamente para usar el chat."
+      ]
+    ]
+  }
+]

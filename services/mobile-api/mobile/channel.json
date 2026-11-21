@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "versionCode": 2,
+  "versionName": "1.1.0",
+  "apiOrigin": "https://www.idarthur.com",
+  "independentDeployment": false,
+  "apkUrl": "https://www.idarthur.com/downloads/idarthur-1.1.0.apk",
+  "sha256": "ac3e90acb6cca1b1f197ffe5609879ca1f784b7331ea272a62e09933da82a11b",
+  "sizeBytes": 71572959,
+  "ready": true,
+  "releaseNotes": "Nueva app: viajes a Perú, Yessel con contexto y voz, transparencia y actualizaciones verificadas.",
+  "minSdk": 24,
+  "packageName": "com.idarthur.idarthur_app"
+}

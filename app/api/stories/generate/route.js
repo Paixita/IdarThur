@@ -1,9 +1,11 @@
+import {requestGate} from '@/utils/requestGate.mjs';
 import { createGroq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request) {
+  const limited=requestGate(request,{scope:'story-preview',limit:5});if(limited)return limited;
   try {
     const { prompt } = await request.json();
 
@@ -18,7 +20,7 @@ export async function POST(request) {
       model: groq('openai/gpt-oss-20b'),
       system: `Eres Yessel Cronista, el agente de Inteligencia Artificial especializado en relatos y crónicas de viaje de 'IdarThur'.
       Tu misión es recibir una idea o anécdota y redactarla como una historia de viajes altamente cinematográfica, emocionante, inspiradora y profesional en español.
-      
+
       Debes devolver ÚNICAMENTE un objeto JSON válido (sin código markdown extra, sin texto de introducción ni de cierre) con el siguiente formato:
       {
         "titulo": "Título emocionante y atractivo",
@@ -36,7 +38,7 @@ export async function POST(request) {
     });
 
     const cleanText = response.text.trim();
-    
+
     // Función para sanitizar saltos de línea crudos dentro de las comillas en JSON
     const sanitizeJsonString = (str) => {
       return str.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match, p1) => {
