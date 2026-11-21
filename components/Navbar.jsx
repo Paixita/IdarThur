@@ -9,6 +9,7 @@ import config from "@/data/config.json";
 const NAV_ITEMS = [
   { href: '/', label: 'Vuelos', match: (path) => path === '/' },
   { href: '/hoteles', label: 'Hoteles', match: (path) => path.startsWith('/hoteles') },
+  { href: '/cruceros', label: 'Cruceros', match: (path) => path.startsWith('/cruceros') },
   { href: '/noticias', label: 'Noticias', match: (path) => path.startsWith('/noticias') },
   { href: '/eventos', label: 'Eventos', match: (path) => path.startsWith('/eventos') },
   { href: '/tienda', label: 'Tienda', match: (path) => path.startsWith('/tienda') },
