@@ -34,6 +34,11 @@ export default function Navbar() {
           </div>
         </Link>
 
+        <a href="/downloads/idarthur.apk" download="IdarThur.apk"
+          className="nav-download-quick" aria-label="Descargar app para Android">
+          <span>Descargar app</span><small>Android · APK</small>
+        </a>
+
         {/* Botón móvil */}
         <button
           className="mobile-menu-toggle"
@@ -72,6 +77,11 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          <a href="/downloads/idarthur.apk" download="IdarThur.apk"
+            className="nav-link nav-download-menu" onClick={closeMenu}>
+            Descargar APK ↓
+          </a>
 
           <button
             onClick={() => { setIsLoginOpen(true); closeMenu(); }}
@@ -117,6 +127,9 @@ export default function Navbar() {
         .nav-logo-link:focus-visible .nav-logo-container img {
           transform: scale(1.04);
         }
+
+        .nav-download-quick { display: none; }
+        .nav-download-menu { color: #34d399; }
 
         .mobile-menu-toggle {
           display: none;
@@ -210,7 +223,7 @@ export default function Navbar() {
           }
         }
 
-        @media (max-width: 1340px) {
+        @media (max-width: 1500px) {
           .main-nav {
             padding: 10px 16px;
             top: 12px;
@@ -219,6 +232,25 @@ export default function Navbar() {
             width: 196px;
             height: 68px;
           }
+          .nav-download-quick {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 6px 12px;
+            margin-left: auto;
+            margin-right: 16px;
+            border-radius: 12px;
+            background: #34d399;
+            color: #04231a;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.3;
+          }
+          .nav-download-quick small { font-size: 11px; font-weight: 600; }
+          .nav-download-quick:focus-visible { outline: 3px solid white; outline-offset: 3px; }
           .mobile-menu-toggle {
             display: block !important;
           }
@@ -230,7 +262,8 @@ export default function Navbar() {
             right: -100%;
             width: 82%;
             max-width: 340px;
-            height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
             background: rgba(6, 12, 10, 0.97);
             backdrop-filter: blur(18px);
             border-left: 1px solid rgba(16, 185, 129, 0.25);
@@ -261,6 +294,11 @@ export default function Navbar() {
             padding: 15px 20px;
             font-size: 1.1rem;
           }
+        }
+        @media (max-width: 600px) {
+          .main-nav { padding: 8px 10px; }
+          .nav-logo-container { width: 114px; height: 60px; }
+          .nav-download-quick { padding: 6px 10px; margin-right: 10px; }
         }
       `}</style>
     </>
