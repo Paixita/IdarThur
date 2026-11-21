@@ -270,7 +270,7 @@ export async function POST(request) {
             if (tipo === 'tienda') {
               return 'El Agente Gavilán preparó el catálogo de equipaje y tecnología. [Visita la tienda del viajero aquí](/tienda)';
             }
-            return 'El Agente Gavilán encontró rutas de crucero con salidas desde el Caribe. [Ver cruceros aquí](/hoteles#cruceros)';
+            return 'El Agente Gavilán encontró rutas de crucero con salidas desde el Caribe. [Ver cruceros aquí](/cruceros)';
           },
         }),
 

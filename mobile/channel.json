@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "versionCode": 3,
-  "versionName": "1.1.1",
+  "versionCode": 4,
+  "versionName": "1.1.2",
   "apiOrigin": "https://idarthur-mobile-api.vercel.app",
   "independentDeployment": true,
-  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.1.apk",
-  "sha256": "260b92866fdf69c972361d9e2d659bc819dc85d99630b114ce9df411dfc7efcb",
-  "sizeBytes": 71654879,
+  "apkUrl": "https://idarthur-mobile-api.vercel.app/downloads/idarthur-1.1.2.apk",
+  "sha256": "453a225b8e94818a10510435592270aa3eda16a221bf3ffeae6b33a1f0497b3e",
+  "sizeBytes": 72016854,
   "ready": true,
-  "releaseNotes": "Servidor independiente de la web, Yessel con voz, viajes a Perú y actualizaciones verificadas.",
+  "releaseNotes": "Cruceros desde Cartagena en Inicio, con tres rutas, imágenes y enlaces a la naviera.",
   "minSdk": 24,
   "packageName": "com.idarthur.idarthur_app"
 }

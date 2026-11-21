@@ -166,6 +166,39 @@ void main() {
     },
   );
   testWidgets(
+    'Cruceros abre desde Inicio y permite recorrer las tres salidas',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HomeScreen(
+              onNavigateToTab: (_) {},
+              onOpenYessel: () {},
+              onOpenFeature: (_) {},
+              onOpenSquad: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.scrollUntilVisible(find.text('Cruceros'), 250);
+      await tester.ensureVisible(find.text('Cruceros'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cruceros'));
+      await tester.pumpAndSettle();
+      expect(find.text('Cruceros desde Colombia'), findsOneWidget);
+      for (final title in [
+        'Santa Marta y las islas del Caribe',
+        'Aruba y Bonaire',
+        'De Cartagena a Panamá',
+      ]) {
+        await tester.scrollUntilVisible(find.text(title), 180);
+        expect(find.text(title), findsOneWidget);
+      }
+      expect(nativeRoute('/hoteles#cruceros'), '/cruceros');
+    },
+  );
+
+  testWidgets(
     'Inicio permite abrir Perú y conserva legibilidad en pantalla pequeña',
     (tester) async {
       tester.view.physicalSize = const Size(390, 844);

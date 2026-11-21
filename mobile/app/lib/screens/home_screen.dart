@@ -1,3 +1,4 @@
+import 'cruceros_screen.dart';
 import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../widgets/touch_glow.dart';
@@ -138,6 +139,18 @@ class HomeScreen extends StatelessWidget {
                     text: 'Encuentra dónde descansar',
                     tap: () => onOpenFeature(TravelFeature.vipPrices),
                     color: AppColors.gold,
+                  ),
+                  (
+                    icon: Icons.directions_boat,
+                    title: 'Cruceros',
+                    text: 'Salidas desde Cartagena',
+                    tap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const CrucerosScreen(),
+                      ),
+                    ),
+                    color: AppColors.primary,
                   ),
                   (
                     icon: Icons.directions_car,

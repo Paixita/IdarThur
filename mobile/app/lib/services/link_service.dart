@@ -1,3 +1,4 @@
+import '../screens/cruceros_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config/app_config.dart';
@@ -20,6 +21,9 @@ String? nativeRoute(String href) {
     return null;
   }
   final path = uri.path;
+  if (path == '/cruceros' || (path == '/hoteles' && uri.fragment == 'cruceros')) {
+    return '/cruceros';
+  }
   if (path == '/peru' ||
       path == '/tienda' ||
       path == '/autos' ||
@@ -63,6 +67,7 @@ Future<void> openChatLink(BuildContext context, String href) async {
       feature: TravelFeature.vipPrices,
       onOpenNews: news,
     ),
+    '/cruceros' => const CrucerosScreen(),
     '/tienda' => const Scaffold(body: TiendaScreen()),
     '/historias' => const Scaffold(body: HistoriasScreen()),
     '/noticias' => const Scaffold(body: NoticiasScreen()),
